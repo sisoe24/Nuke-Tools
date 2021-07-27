@@ -1,0 +1,186 @@
+{
+    "name": "nuke-tools",
+    "displayName": "Nuke Tools",
+    "publisher": "virgilsisoe",
+    "description": "",
+    "version": "0.0.1",
+    "extensionPack": [
+        "virgilsisoe.nuke-python-snippets"
+    ],
+    "icon": "images/nuke_icon.png",
+    "engines": {
+        "vscode": "^1.58.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:nuke-tools.launchNuke",
+        "onCommand:nuke-tools.launchNukeAlt",
+        "onCommand:nuke-tools.launchNukeOptArgs",
+        "onCommand:nuke-tools.runInsideNuke",
+        "onCommand:nuke-tools.showNetworkAddresses",
+        "onCommand:nuke-tools.testRunInsideNuke"
+    ],
+    "main": "./out/extension.js",
+    "keywords": [
+        "nuke",
+        "python",
+        "thefoundry",
+        "foundry"
+    ],
+    "contributes": {
+        "commands": [
+            {
+                "command": "nuke-tools.launchNuke",
+                "title": "Launch main executable",
+                "shortTitle": "Nuke",
+                "category": "Nuke",
+                "icon": "images/wordWrap.svg"
+            },
+            {
+                "command": "nuke-tools.launchNukeAlt",
+                "title": "Launch alternative executable",
+                "category": "Nuke"
+            },
+            {
+                "command": "nuke-tools.launchNukeOptArgs",
+                "title": "Launch main executable with prompt",
+                "shortTitle": "Launch Nuke",
+                "category": "Nuke"
+            },
+            {
+                "command": "nuke-tools.runInsideNuke",
+                "title": "Run Inside Nuke",
+                "category": "Nuke",
+                "icon": {
+                    "dark": "images/play-dark.svg",
+                    "light": "images/play-light.svg"
+                },
+                "enablement": "resourceLangId == python"
+            },
+            {
+                "command": "nuke-tools.showNetworkAddresses",
+                "title": "Show Network addresses",
+                "category": "Nuke"
+            },
+            {
+                "command": "nuke-tools.testRunInsideNuke",
+                "title": "Debug test custom msg inside Nuke",
+                "category": "Nuke"
+            }
+        ],
+        "configuration": [
+            {
+                "title": "Nuke Tools",
+                "properties": {
+                    "nukeTools.nukeExecutable.primaryExecutablePath": {
+                        "type": "string",
+                        "default": "",
+                        "description": "Path to Nuke executable file."
+                    },
+                    "nukeTools.nukeExecutable.secondaryExecutablePath": {
+                        "type": "string",
+                        "default": "",
+                        "description": "Path to alternative Nuke executable file."
+                    },
+                    "nukeTools.nukeExecutable.options.defaultCommandLineArguments": {
+                        "type": "string",
+                        "default": "",
+                        "markdownDescription": "Command line arguments to be added at each execution. [docs](https://learn.foundry.com/nuke/content/comp_environment/configuring_nuke/command_line_operations.html)"
+                    },
+                    "nukeTools.nukeExecutable.options.restartInstance": {
+                        "type": "boolean",
+                        "default": false,
+                        "markdownDescription": "**Use with caution**. Restart the terminal instance instead of creating new ones."
+                    },
+                    "nukeTools.other.clearPreviousOutput": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Clear previous console output before next execution."
+                    },
+                    "nukeTools.network.enableManualConnection": {
+                        "type": "boolean",
+                        "default": false,
+                        "markdownDescription": "If enabled, `#nukeTools.network.port#` and `#nukeTools.network.host#` will override the default settings."
+                    },
+                    "nukeTools.network.port": {
+                        "type": "string",
+                        "markdownDescription": "Specify a different port for the connection. This will not work if `#nukeTools.network.enableManualConnection#` is not enabled."
+                    },
+                    "nukeTools.network.host": {
+                        "type": "string",
+                        "markdownDescription": "Specify a different host/ip for the connection. This will not work if `#nukeTools.network.enableManualConnection#` is not enabled."
+                    }
+                }
+            }
+        ],
+        "menus": {
+            "editor/title": [
+                {
+                    "when": "resourceLangId == python",
+                    "command": "nuke-tools.runInsideNuke",
+                    "group": "navigation"
+                }
+            ],
+            "editor/context": [
+                {
+                    "when": "resourceLangId == python",
+                    "command": "nuke-tools.runInsideNuke",
+                    "group": "10_commands"
+                }
+            ]
+        },
+        "keybindings": [
+            {
+                "command": "nuke-tools.launchNuke",
+                "key": "alt+shift+n",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "nuke-tools.runInsideNuke",
+                "key": "alt+shift+r",
+                "when": "editorTextFocus"
+            }
+        ],
+        "languages": [
+            {
+                "id": "nuke-tools-output",
+                "mimetypes": [
+                    "text/x-code-output"
+                ]
+            }
+        ],
+        "grammars": [
+            {
+                "language": "nuke-tools-output",
+                "scopeName": "nuke-tools.output",
+                "path": "./syntaxes/nuke-tools-output.tmLanguage."
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile && npm run lint",
+        "lint": "eslint src --ext ts",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/glob": "^7.1.3",
+        "@types/mocha": "^8.2.2",
+        "@types/node": "14.x",
+        "@types/vscode": "^1.58.0",
+        "@typescript-eslint/eslint-plugin": "^4.26.0",
+        "@typescript-eslint/parser": "^4.26.0",
+        "eslint": "^7.27.0",
+        "glob": "^7.1.7",
+        "mocha": "^8.4.0",
+        "typescript": "^4.3.2",
+        "vscode-test": "^1.5.2"
+    },
+    "dependencies": {
+        "read-ini-file": "^3.0.1"
+    }
+}

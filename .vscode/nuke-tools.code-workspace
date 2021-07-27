@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"typescript.tsc.autoDetect": "off",
+		"cSpell.enabled": true
+	}
+}
