@@ -32,7 +32,9 @@ export async function execOptionalCommand(cmd: string) {
 
 }
 
-// Execute commnad in temrinal
+
+
+// Execute command in terminal
 export function execCommand(cmd: string) {
 
     // TODO: terminal name could be more descriptive
@@ -45,16 +47,9 @@ export function execCommand(cmd: string) {
         });
     }
 
-    if (!require('fs').existsSync(cmd)) {
-        console.log('file path does not exist');
-        vscode.window.showErrorMessage(`Cannot find path: ${cmd}.`);
-        return;
-    }
+    const terminal = vscode.window.createTerminal(require('path').posix.basename(cmd));
 
-    // TODO: should also check if file is executable?
-    // require('fs').statSync(cmd).mode will return a value that kind of helps
-
-    const terminal = vscode.window.createTerminal(require('path').basename(cmd));
+    console.log(cmd);
 
     terminal.sendText(cmd);
     terminal.show(true);

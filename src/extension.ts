@@ -3,7 +3,7 @@
 import { privateEncrypt } from 'crypto';
 import * as vscode from 'vscode';
 import * as launchNuke from './launch-executable';
-import * as socketClient from './socket-client';
+import * as socketClient from './client-socket';
 import * as utils from "./utils";
 
 // https://stackoverflow.com/questions/43007267/how-to-run-a-system-command-from-vscode-extension
@@ -17,19 +17,28 @@ import * as utils from "./utils";
 export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.launchNuke', () => {
-        const execPath = utils.getConfiguration('nukeExecutable.primaryExecutablePath');
-        launchNuke.execDefaultCommand(execPath);
+        const execPath = utils.getExecutable('primaryExecutablePath');
+
+        if (execPath) {
+            launchNuke.execDefaultCommand(execPath);
+        };
+
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.launchNukeAlt', () => {
-        const execPath = utils.getConfiguration('nukeExecutable.secondaryExecutablePath');
-        launchNuke.execDefaultCommand(execPath);
+        const execPath = utils.getExecutable('secondaryExecutablePath');
 
+        if (execPath) {
+            launchNuke.execDefaultCommand(execPath);
+        };
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.launchNukeOptArgs', () => {
-        const execPath = utils.getConfiguration('nukeExecutable.primaryExecutablePath');
-        launchNuke.execOptionalCommand(execPath);
+        const execPath = utils.getExecutable('primaryExecutablePath');
+
+        if (execPath) {
+            launchNuke.execOptionalCommand(execPath);
+        };
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.runInsideNuke', () => {
@@ -43,20 +52,17 @@ export function activate(context: vscode.ExtensionContext) {
             return;
         }
 
-        socketClient.sendText(editor.document.getText());
+        const data = {
+            'file': editor.document.fileName,
+            'text': editor.document.getText()
+        };
+
+        socketClient.sendText(JSON.stringify(data));
 
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.testRunInsideNuke', () => {
-
-        const random = () => Math.round(Math.random() * 10);
-        const r1 = random();
-        const r2 = random();
-        const sum = r1 * r2;
-
-        const cmd = `from __future__ import print_function;result = ${sum};print("Hello from Vscode Test Client. ${r1} * ${r2} =", result)`;
-        socketClient.sendText(cmd);
-
+        socketClient.sendTestMessage();
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.showNetworkAddresses', () => {
@@ -66,4 +72,7 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() { }
+export function deactivate() {
+    // TODO: should force closing connection just in case?
+}
+

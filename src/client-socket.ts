@@ -2,23 +2,32 @@ let net = require('net');
 import * as vscode from 'vscode';
 import * as utils from "./utils";
 
+const os = require('os');
 const output = vscode.window.createOutputChannel('Nuke Tools');
 
-async function connectionError(err: Error) {
-    const msg = "Couldn't connect to Nuke Server.\nCheck the Nuke plugin and try again. If manual connection is enable, verify that the port and host address are correct.";
+// Send test message to Server
+export function sendTestMessage() {
+    const random = () => Math.round(Math.random() * 10);
+    const r1 = random();
+    const r2 = random();
+    const sum = r1 * r2;
 
-    const showMessage = await vscode.window.showErrorMessage(msg, 'Show Error');
+    const hostname = os.hostname();
+    const username = os.userInfo()['username'];
 
-    if (showMessage) {
-        vscode.window.showErrorMessage(err.message);
-        // vscode.window.showErrorMessage(err.stack as string);
-    }
+    const data = {
+        'file': 'vscode/path/tmp_file.py',
+        'text': `from __future__ import print_function;result = ${sum};print("Hello from host: ${hostname} user: ${username} (vscode test client). ${r1} * ${r2} =", result)`
+    };
+
+    sendText(JSON.stringify(data));
 }
 
+// Get Nuke ini in home directory
 function getNukeIni() {
 
     const nukeConfigPath = require('path').join(
-        require('os').homedir(), '.nuke/VscodeServerSocket.ini'
+        os.homedir(), '.nuke/VscodeServerSocket.ini'
     );
 
     return nukeConfigPath;
@@ -73,20 +82,23 @@ function getHost() {
     return host;
 }
 
-
 // Display addresses to user 
 export function getAddresses() {
     return `host: ${getHost()} port: ${getPort()}`;
 }
 
+async function connectionError(err: Error) {
+    const msg = "Couldn't connect to Nuke Server.\nCheck the Nuke plugin and try again. If manual connection is enable, verify that the port and host address are correct.";
+
+    const showMessage = await vscode.window.showErrorMessage(msg, 'Show Error');
+
+    if (showMessage) {
+        vscode.window.showErrorMessage(err.message);
+    }
+}
+
 export function sendText(text: string) {
     let client = new net.Socket();
-
-    const host = getHost();
-    console.log('get host after', host);
-
-    const port = getPort();
-    console.log('get port after', port);
 
     // XXX: server appears to connected by default to localhost even when undefined is supplied.
     client.connect(getPort(), getHost(), function () {

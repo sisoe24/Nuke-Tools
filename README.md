@@ -17,7 +17,6 @@ dunno really try
 * Get output of Nuke execution inside Visual Studio Code.
 * Easy commands for creating a Nuke instance via the terminal with default or optional arguments.
 
-![execute code](/images/execute_code.gif)
 
 ## Available Commands
 
