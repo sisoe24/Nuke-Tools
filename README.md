@@ -2,21 +2,16 @@
 
 A bunch of Nuke related operations that will facilitate writing code for Nuke.
 
-> This is a companion extension for: www.tutut.com. Without the plugin, this extension will not work.
-
-## Installation
-
-dunno really try
+> This is a companion extension for: www.placeholder.com. While some features will still work like launch executable etc, other will require the Server to be initialized inside Nuke.
 
 ## Features
 
 * Execute code inside Nuke from a machine in your local network.
+  * Get output of Nuke execution inside Visual Studio Code.
   * When used locally (same machine) no configuration is required by user, just running the server inside Nuke.
   * Specify a custom address when connection is from/to another computer.
   * Multiple computer can connect to the same Nuke instance.
-* Get output of Nuke execution inside Visual Studio Code.
 * Easy commands for creating a Nuke instance via the terminal with default or optional arguments.
-
 
 ## Available Commands
 
@@ -70,7 +65,11 @@ Same as `nukeTools.network.port`. Host could be the localhost or the local ip.
 
 ## Known Issues
 
-The extension has been tested only on a small amount of simple scripts, so if you encounter any errors feel free to pm or file a bug report with a testable sample of your code.
+The extension has been tested only on a small amount of simple scripts, so if you encounter any errors, would be great to receive a testable sample of the code.
+
+## Other
+
+The extension will be installed alongside with [nuke-python-snippets](https://marketplace.visualstudio.com/items?itemName=virgilsisoe.nuke-python-snippets).
 
 ## Release Notes
 
