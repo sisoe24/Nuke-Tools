@@ -2,11 +2,15 @@
     "name": "nuke-tools",
     "displayName": "Nuke Tools",
     "publisher": "virgilsisoe",
-    "description": "",
+    "description": "A bunch of Nuke related tools that will facilitate writing code for it.",
     "version": "0.0.3",
     "repository": {
         "type": "git",
         "url": "https://github.com/sisoe24/Nuke-Tools"
+    },
+    "galleryBanner": {
+        "theme": "dark",
+        "color": "#FDC842"
     },
     "extensionPack": [
         "virgilsisoe.nuke-python-snippets"
