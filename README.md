@@ -2,7 +2,7 @@
 
 A bunch of Nuke related operations that will facilitate writing code for Nuke.
 
-> This is a companion extension for: www.placeholder.com. While some features will still work like launch executable etc, other will require the Server to be initialized inside Nuke.
+> This is a companion extension for: www.placeholder.com. Some features will work only when the Nuke server is active.
 
 ## Features
 
@@ -64,8 +64,6 @@ Specify a different port for the connection. This will not work if `#nukeTools.n
 Same as `nukeTools.network.port`. Host could be the localhost or the local ip.
 
 ## Known Issues
-
-The extension has been tested only on a small amount of simple scripts, so if you encounter any errors, would be great to receive a testable sample of the code.
 
 ## Other
 
