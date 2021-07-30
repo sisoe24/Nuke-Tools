@@ -8,10 +8,6 @@
         "type": "git",
         "url": "https://github.com/sisoe24/Nuke-Tools"
     },
-    "galleryBanner": {
-        "theme": "dark",
-        "color": "#FDC842"
-    },
     "extensionPack": [
         "virgilsisoe.nuke-python-snippets"
     ],
