@@ -2,7 +2,7 @@
 
 A bunch of Nuke related operations that will facilitate writing code for Nuke.
 
-> This is a companion extension for: NukeServerSocket ([Nukepedia](https://github.com/sisoe24/NukeServerSocket), [Git](https://github.com/sisoe24/NukeServerSocket)) Some features will only work when the server inside Nuke is active.
+> This is a companion extension for: NukeServerSocket ([Nukepedia](http://www.nukepedia.com/python/misc/nukeserversocket), [Git](https://github.com/sisoe24/NukeServerSocket)) Some features will only work when the server inside Nuke is active.
 
 ## Features
 
