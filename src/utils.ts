@@ -12,7 +12,7 @@ export function validatePath(path: string): string {
     }
 
     // if path has spaces then will break
-    path = `'${path}'`;
+    path = `"${path}"`;
 
     // on windows if path has spaces needs the & so just in case
     if (require('os').type() === 'Windows_NT') {
