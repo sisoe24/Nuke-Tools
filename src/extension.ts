@@ -6,8 +6,7 @@ import * as launchNuke from './launch-executable';
 import * as socketClient from './client-socket';
 import * as utils from "./utils";
 
-// https://stackoverflow.com/questions/43007267/how-to-run-a-system-command-from-vscode-extension
-
+// TODO: launch executable from different path than vscode workspace folder
 // TODO: add create pyside plugin template
 // TODO: restart Nuke plugin by checking the Widget name?
 // TODO: colored output
@@ -20,7 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
         const execPath = utils.getExecutable('primaryExecutablePath');
 
         if (execPath) {
-            launchNuke.execDefaultCommand(execPath);
+            launchNuke.execDefaultCommand(execPath, ' Main');
         };
 
     }));
@@ -29,7 +28,7 @@ export function activate(context: vscode.ExtensionContext) {
         const execPath = utils.getExecutable('secondaryExecutablePath');
 
         if (execPath) {
-            launchNuke.execDefaultCommand(execPath);
+            launchNuke.execDefaultCommand(execPath, ' Alt.');
         };
     }));
 

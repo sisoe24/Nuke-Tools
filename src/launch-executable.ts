@@ -13,8 +13,8 @@ export function defaultArgs(cmd: string): string {
 
 }
 
-export function execDefaultCommand(cmd: string) {
-    execCommand(defaultArgs(cmd));
+export function execDefaultCommand(cmd: string, suffix: string) {
+    execCommand(defaultArgs(cmd), suffix);
 }
 
 export async function execOptionalCommand(cmd: string) {
@@ -28,29 +28,34 @@ export async function execOptionalCommand(cmd: string) {
         cmd += ' ' + optArgs;
     }
 
-    execCommand(cmd);
+    execCommand(cmd, ' Main');
 
 }
 
+// the cmd will be wrapped inside single quotes to avoid path splitting
+// and basename will delete everything till the last quote but include optional arguments if any
+function extractCmdBaseName(cmd: string): string {
 
+    // example of what could return: Nuke13.0" -nc
+    const baseNameCmd = require('path').basename(cmd);
+    cmd = baseNameCmd.split('"')[0];
+    return cmd;
+}
 
 // Execute command in terminal
-export function execCommand(cmd: string) {
+export function execCommand(cmd: string, suffix: string) {
 
-    // TODO: terminal name could be more descriptive
+    const terminalTitle = extractCmdBaseName(cmd) + suffix;
 
     if (utils.getConfiguration('nukeExecutable.options.restartInstance')) {
         vscode.window.terminals.forEach((terminal) => {
-            if (terminal.name.startsWith('Nuke')) {
+            if (terminal.name === terminalTitle) {
                 terminal.dispose();
             }
         });
     }
 
-    const terminal = vscode.window.createTerminal(require('path').posix.basename(cmd));
-
-    console.log(cmd);
-
+    const terminal = vscode.window.createTerminal(terminalTitle);
     terminal.sendText(cmd);
     terminal.show(true);
 
