@@ -33,7 +33,10 @@ Every command can be re-assigned to a new shortcut. (see [docs](https://code.vis
 
 ### `nukeTools.nukeExecutable.primaryExecutablePath`
 
-Primary path for the Nuke executable. **Note**: on MacOS is the file inside Show Package Contents -> Contents/MacOS/NukeXX
+Primary path for the Nuke executable.
+
+* On MacOS you can find the file with: _Show Package Contents -> Contents/MacOS/Nuke..._
+* On Windows WSL the path should be the Unix style: _/mnt/c/Program Files/..._
 
 ### `nukeTools.nukeExecutable.secondaryExecutablePath`
 
@@ -45,7 +48,7 @@ Command line arguments to be added at each "Nuke launch" 🚀.
 
 ### `nukeTools.nukeExecutable.options.restartInstance`
 
-Restart the terminal instance instead of creating new ones. **Use with caution** as this option will terminate every Nuke process created by the extension. Useful when rapid testing GUI plugins and don't need to save the Nuke comp. 
+Restart the terminal instance instead of creating new ones. **Use with caution** as this option will terminate every Nuke process created by the extension. Useful when rapid testing GUI plugins and don't need to save the Nuke comp.
 
 ### `nukeTools.other.clearPreviousOutput`
 
@@ -57,7 +60,7 @@ If enabled, `nukeTools.network.port` and `nukeTools.network.host` will take over
 
 ### `nukeTools.network.port`
 
-Specify a different port for the connection. This will not work if `#nukeTools.network.enableManualConnection#` is not enabled. Server address should be taken from the Nuke plugin.
+Specify a different port for the connection. This will not work if `nukeTools.network.enableManualConnection` is not enabled. Server address should be taken from the Nuke plugin.
 
 ### `nukeTools.network.host`
 
