@@ -6,4 +6,16 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-- Initial release
+## [0.0.9] - 09/15/2021
+
+### Fixed
+
+- Fixed file name reference that didn't allow vscode to pick NukeServerSocket port settings automatically.
+
+## [0.0.2] - [0.0.8]
+
+- Minor internal maintenance.
+
+## [0.0.1]
+
+- Initial release.

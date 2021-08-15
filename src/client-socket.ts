@@ -27,7 +27,7 @@ export function sendTestMessage() {
 function getNukeIni() {
 
     const nukeConfigPath = require('path').join(
-        os.homedir(), '.nuke/VscodeServerSocket.ini'
+        os.homedir(), '.nuke/NukeServerSocket.ini'
     );
 
     return nukeConfigPath;
