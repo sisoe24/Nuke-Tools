@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.0.10] - [0.0.12]
+
+- Minor internal maintenance.
+
 ## [0.0.9] - 09/15/2021
 
 ### Fixed
