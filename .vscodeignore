@@ -2,6 +2,9 @@
 .vscode-test/**
 out/test/**
 
+other
+.pytest_cache
+
 src/**
 .gitignore
 .yarnrc
