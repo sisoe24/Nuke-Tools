@@ -6,6 +6,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.0.13] 09/16/2021
+
+### Changed
+
+- Remove Nuke Python Snippets from extension pack.
+
 ## [0.0.10] - [0.0.12]
 
 - Minor internal maintenance.
