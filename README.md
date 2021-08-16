@@ -70,7 +70,7 @@ Same as `nukeTools.network.port`. Host could be the localhost or the local ip.
 
 ## Other
 
-The extension will be installed alongside with [nuke-python-snippets](https://marketplace.visualstudio.com/items?itemName=virgilsisoe.nuke-python-snippets).
+Check also [nuke-python-snippets](https://marketplace.visualstudio.com/items?itemName=virgilsisoe.nuke-python-snippets) for Nuke Python API snippets.
 
 ## Release Notes
 
