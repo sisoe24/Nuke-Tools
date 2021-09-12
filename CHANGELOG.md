@@ -6,7 +6,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-## [0.0.13] 09/16/2021
+## [0.0.14] 09/12/2021
+
+### Added
+
+* Better check for the .ini file in case has wrong/invalid values.
+
+## [0.0.13] 08/16/2021
 
 ### Changed
 
@@ -16,7 +22,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Minor internal maintenance.
 
-## [0.0.9] - 09/15/2021
+## [0.0.9] - 08/15/2021
 
 ### Fixed
 
