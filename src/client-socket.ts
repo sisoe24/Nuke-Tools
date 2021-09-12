@@ -1,4 +1,5 @@
 let net = require('net');
+import { error } from 'console';
 import * as vscode from 'vscode';
 import * as utils from "./utils";
 
@@ -20,6 +21,7 @@ export function sendTestMessage() {
         'text': `from __future__ import print_function;result = ${sum};print("Hello from host: ${hostname} user: ${username} (vscode test client). ${r1} * ${r2} =", result)`
     };
 
+    // sendText(`print("Hello From Vscode Test function: ${sum}")`);
     sendText(JSON.stringify(data));
 }
 
@@ -63,7 +65,26 @@ function getPort(): string {
     if (require('fs').existsSync(configIni)) {
         const loadIniFile = require('read-ini-file');
         const iniContent = loadIniFile.sync(configIni);
-        port = iniContent['server']['port'];
+
+        let errMsg;
+        try {
+            port = iniContent['server']['port'];
+        } catch (err: unknown) {
+            // server/port doesn't exists?
+            errMsg = err;
+        } finally {
+            // port could be empty or be a boolean if it has no value assigned
+            if (!port || errMsg ||typeof port === 'boolean') {
+                port = '54321';
+                const msg = `
+                The configuration for the server/port appears to be invalid.
+                Falling back on port 54321 for now.
+                Try disconnecting and connecting back the server inside Nuke.
+                Error: ${errMsg}
+                `
+                vscode.window.showErrorMessage(msg);
+            }
+        }
     }
 
     port = checkManualConnection(port, 'port');
