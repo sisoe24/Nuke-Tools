@@ -34,6 +34,7 @@ export async function execOptionalCommand(cmd: string) {
 
 // the cmd will be wrapped inside single quotes to avoid path splitting
 // and basename will delete everything till the last quote but include optional arguments if any
+// TODO: this has an undefined behaviour when there is an argument
 function extractCmdBaseName(cmd: string): string {
 
     // example of what could return: Nuke13.0" -nc
