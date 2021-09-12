@@ -1,6 +1,5 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import { privateEncrypt } from 'crypto';
 import * as vscode from 'vscode';
 import * as launchNuke from './launch-executable';
 import * as socketClient from './client-socket';
@@ -8,9 +7,8 @@ import * as utils from "./utils";
 
 // TODO: launch executable from different path than vscode workspace folder
 // TODO: add create pyside plugin template
-// TODO: restart Nuke plugin by checking the Widget name?
-// TODO: colored output
 // TODO: auto completion?
+// TODO: Blinkscript support
 
 
 export function activate(context: vscode.ExtensionContext) {
