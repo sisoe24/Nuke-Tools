@@ -8,8 +8,6 @@ import * as utils from "./utils";
 // TODO: launch executable from different path than vscode workspace folder
 // TODO: add create pyside plugin template
 // TODO: auto completion?
-// TODO: Blinkscript support
-
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -64,6 +62,9 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.showNetworkAddresses', () => {
         vscode.window.showInformationMessage(socketClient.getAddresses());
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) { return; }
+        console.log(editor.document);
     }));
 
 }
