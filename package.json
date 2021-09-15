@@ -58,7 +58,7 @@
                     "dark": "images/play-dark.svg",
                     "light": "images/play-light.svg"
                 },
-                "enablement": "resourceLangId == python"
+                "enablement": "resourceLangId == python || resourceExtname == .blink"
             },
             {
                 "command": "nuke-tools.showNetworkAddresses",
@@ -119,14 +119,14 @@
         "menus": {
             "editor/title": [
                 {
-                    "when": "resourceLangId == python",
+                    "when": "resourceLangId == python || resourceExtname == .blink",
                     "command": "nuke-tools.runInsideNuke",
                     "group": "navigation"
                 }
             ],
             "editor/context": [
                 {
-                    "when": "resourceLangId == python",
+                    "when": "resourceLangId == python || resourceExtname == .blink",
                     "command": "nuke-tools.runInsideNuke",
                     "group": "10_commands"
                 }
