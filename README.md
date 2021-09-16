@@ -2,7 +2,7 @@
 
 A bunch of Nuke related operations that will facilitate writing code for Nuke.
 
-> This is primarily companion extension for: NukeServerSocket ([Nukepedia](http://www.nukepedia.com/python/misc/nukeserversocket), [Git](https://github.com/sisoe24/NukeServerSocket)) Some features will only work when the server inside Nuke is active.
+> This is primarily a companion extension for: [NukeServerSocket](#nukeserversocket). Some features will only work when the server inside Nuke is active.
 
 ## Features
 
@@ -11,6 +11,7 @@ A bunch of Nuke related operations that will facilitate writing code for Nuke.
   * When used locally (same machine) no configuration is required by user, just running the server inside Nuke.
   * Specify a custom address when connection is from/to another computer.
   * Multiple computer can connect to the same Nuke instance.
+  * BlinkScript support.
 * Easy commands for creating a Nuke instance via the terminal with default or optional arguments.
 
 ## Available Commands
@@ -22,7 +23,7 @@ All commands are Available by opening the Command Palette (`Command+Shift+P` on 
 | `Nuke: Launch main executable`             | Launch main executable                          | `alt+shift+n` |
 | `Nuke: Launch alternative executable`      | Launch alternative executable                   |               |
 | `Nuke: Launch main executable with prompt` | Launch main exec. with prompt for optional args |               |
-| `Nuke: Run Inside Nuke`                    | Execute python code inside nuke                 | `alt+shift+r` |
+| `Nuke: Run Inside Nuke`                    | Execute code inside nuke                        | `alt+shift+r` |
 | `Nuke: Show Network Addresses`             | Show network addresses                          |               |
 
 Every command can be re-assigned to a new shortcut. (see [docs](https://code.visualstudio.com/docs/getstarted/keybindings) for more info)
@@ -65,6 +66,22 @@ Specify a different port for the connection. This will not work if `nukeTools.ne
 ### `nukeTools.network.host`
 
 Same as `nukeTools.network.port`. Host could be the localhost or the local ip.
+
+## BlinkScript
+
+>  [NukeServerSocket](#nukeserversocket) >= 0.1.0 is needed in order for this to work.
+
+You can execute code from the text editor directly inside a Nuke BinkScript node.
+
+The extension will take the filename of the current active file and create a blinkscript node inside Nuke with the name as the current filename. If the node already exists then will only modified its source code. Once done will Recompile the source kernel.
+
+The accepted file extension are `.cpp` or `.blink`.
+
+> There used to be an extension on the marketplace for the blink language syntax but it appears to have been taken down. So if you want to use a .blink file, you could set the language id to C++ in order to have the syntax colored. Also the extension [Material Icon Theme](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme) offers a nice Nuke icon for the .blink files.
+
+## NukeServerSocket
+
+Download here the companion plugin for Nuke: [Nukepedia](http://www.nukepedia.com/python/misc/nukeserversocket), [Git](https://github.com/sisoe24/NukeServerSocket).
 
 ## Known Issues
 
