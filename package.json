@@ -28,7 +28,9 @@
         "nuke",
         "python",
         "thefoundry",
-        "foundry"
+        "foundry",
+        "blinkscript",
+        "blink"
     ],
     "contributes": {
         "commands": [
@@ -58,7 +60,7 @@
                     "dark": "images/play-dark.svg",
                     "light": "images/play-light.svg"
                 },
-                "enablement": "resourceLangId == python || resourceExtname == .blink || resourceScheme == untitled"
+                "enablement": "resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled"
             },
             {
                 "command": "nuke-tools.showNetworkAddresses",
@@ -119,14 +121,14 @@
         "menus": {
             "editor/title": [
                 {
-                    "when": "resourceLangId == python || resourceExtname == .blink || resourceScheme == untitled",
+                    "when": "resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled",
                     "command": "nuke-tools.runInsideNuke",
                     "group": "navigation"
                 }
             ],
             "editor/context": [
                 {
-                    "when": "resourceLangId == python || resourceExtname == .blink || resourceScheme == untitled",
+                    "when": "resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled",
                     "command": "nuke-tools.runInsideNuke",
                     "group": "10_commands"
                 }
