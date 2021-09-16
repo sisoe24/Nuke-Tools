@@ -6,7 +6,15 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.2.0] 09/15/2021
+
+### Added
+
+* Support for BlinkScript.
+
 ## [0.0.14] 09/12/2021
+
+> This version was wrongfully uploaded as 0.1.0
 
 ### Added
 
