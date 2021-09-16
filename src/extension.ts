@@ -4,10 +4,6 @@ import * as socketClient from './client-socket';
 import * as utils from "./utils";
 import * as newUpdate from './newUpdateMsg';
 
-// TODO: launch executable from different path than vscode workspace folder
-// TODO: add create pyside plugin template
-// TODO: auto completion?
-// TODO: remote debugging?
 
 export function activate(context: vscode.ExtensionContext) {
 
