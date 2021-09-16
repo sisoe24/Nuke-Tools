@@ -1,15 +1,17 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as launchNuke from './launch-executable';
 import * as socketClient from './client-socket';
 import * as utils from "./utils";
+import * as newUpdate from './newUpdateMsg';
 
 // TODO: launch executable from different path than vscode workspace folder
 // TODO: add create pyside plugin template
 // TODO: auto completion?
+// TODO: remote debugging?
 
 export function activate(context: vscode.ExtensionContext) {
+
+    newUpdate.showUpdateMessage(context);
 
     context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.launchNuke', () => {
         const execPath = utils.getExecutable('primaryExecutablePath');
@@ -73,4 +75,3 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {
     // TODO: should force closing connection just in case?
 }
-
