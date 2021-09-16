@@ -73,11 +73,11 @@ Same as `nukeTools.network.port`. Host could be the localhost or the local ip.
 
 You can execute code from the text editor directly inside a Nuke BinkScript node.
 
-The extension will take the filename of the current active file and create a blinkscript node inside Nuke with the name as the current filename. If the node already exists then will only modified its source code. Once done will Recompile the source kernel.
+The extension will take the name of the current active file and create a blinkscript node inside Nuke with the name as the current filename. If the node already exists then will only modified its source code. Once done will Recompile the source kernel.
 
 The accepted file extension are `.cpp` or `.blink`.
 
-> There used to be an extension on the marketplace for the blink language syntax but it appears to have been taken down. So if you want to use a .blink file, you could set the language id to C++ in order to have the syntax colored. Also the extension [Material Icon Theme](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme) offers a nice Nuke icon for the .blink files.
+> There used to be an extension on the marketplace for the blink language syntax but it appears to have been taken down. If you want to use a .blink file, you could set the language id to C++ in order to have the syntax colored. Also the extension [Material Icon Theme](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme) offers a nice Nuke icon for the .blink files.
 
 ## NukeServerSocket
 
