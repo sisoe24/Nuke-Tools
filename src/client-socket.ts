@@ -43,7 +43,10 @@ function checkManualConnection(field: string, config: string): string {
         const extField = utils.getConfiguration(`network.${config}`);
 
         if (!extField) {
-            const manualErrorMsg = "You have enabled Manual Connection but Network: # appears to be empty. Falling back on default.";
+            const manualErrorMsg = `
+            You have enabled Manual Connection but "Network #" appears to be empty.
+            Falling back on default.
+            `;
 
             vscode.window.showErrorMessage(
                 manualErrorMsg.replace('#', config)
@@ -74,7 +77,7 @@ function getPort(): string {
             errMsg = err;
         } finally {
             // port could be empty or be a boolean if it has no value assigned
-            if (!port || errMsg ||typeof port === 'boolean') {
+            if (!port || errMsg || typeof port === 'boolean') {
                 port = '54321';
                 const msg = `
                 The configuration for the server/port appears to be invalid.
@@ -109,7 +112,11 @@ export function getAddresses() {
 }
 
 async function connectionError(err: Error) {
-    const msg = "Couldn't connect to Nuke Server.\nCheck the Nuke plugin and try again. If manual connection is enable, verify that the port and host address are correct.";
+    const msg = `
+        Couldn't connect to Nuke Server.
+        Check the Nuke plugin and try again.
+        If manual connection is enable, verify that the port and host address are correct.
+    `;
 
     const showMessage = await vscode.window.showErrorMessage(msg, 'Show Error');
 
