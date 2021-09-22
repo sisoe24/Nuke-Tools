@@ -69,7 +69,7 @@
             },
             {
                 "command": "nuke-tools.testRunInsideNuke",
-                "title": "Debug test custom msg inside Nuke",
+                "title": "Debug Message",
                 "category": "Nuke"
             }
         ],
