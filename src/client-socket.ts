@@ -1,5 +1,4 @@
 let net = require('net');
-import { error } from 'console';
 import * as vscode from 'vscode';
 import * as utils from "./utils";
 
@@ -15,10 +14,11 @@ export function sendTestMessage() {
 
     const hostname = os.hostname();
     const username = os.userInfo()['username'];
-
+    
+    // FIXME: such an ugly long string 
     const data = {
         'file': 'vscode/path/tmp_file.py',
-        'text': `from __future__ import print_function;result = ${sum};print("Hello from host: ${hostname} user: ${username} (vscode test client). ${r1} * ${r2} =", result)`
+        'text': `from __future__ import print_function;result = ${sum};print("Hello from host: ${hostname} user: ${username}. Connected to ${getAddresses()}. (vscode test client). ${r1} * ${r2} =", result)`
     };
 
     // sendText(`print("Hello From Vscode Test function: ${sum}")`);
@@ -44,8 +44,8 @@ function checkManualConnection(field: string, config: string): string {
 
         if (!extField) {
             const manualErrorMsg = `
-            You have enabled Manual Connection but "Network #" appears to be empty.
-            Falling back on default.
+            You have enabled Manual Connection but \`Network: #\` 
+            configuration appears to be empty. Falling back on default.
             `;
 
             vscode.window.showErrorMessage(
@@ -113,9 +113,8 @@ export function getAddresses() {
 
 async function connectionError(err: Error) {
     const msg = `
-        Couldn't connect to Nuke Server.
-        Check the Nuke plugin and try again.
-        If manual connection is enable, verify that the port and host address are correct.
+    Couldn't connect to NukeServerSocket. Check the plugin and try again.
+    If manual connection is enable, verify that the port and host address are correct.
     `;
 
     const showMessage = await vscode.window.showErrorMessage(msg, 'Show Error');
