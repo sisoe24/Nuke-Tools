@@ -14,14 +14,16 @@ export function sendTestMessage() {
 
     const hostname = os.hostname();
     const username = os.userInfo()['username'];
-    
+
     // FIXME: such an ugly long string 
     const data = {
         'file': 'vscode/path/tmp_file.py',
-        'text': `from __future__ import print_function;result = ${sum};print("Hello from host: ${hostname} user: ${username}. Connected to ${getAddresses()}. (vscode test client). ${r1} * ${r2} =", result)`
+        'text': `from __future__ import print_function;result = ${sum};print("${hostname} user: ${username}. Connected to ${getAddresses()}. ${r1} * ${r2} =", result)`
     };
 
-    // sendText(`print("Hello From Vscode Test function: ${sum}")`);
+    // send simple string text
+    // sendText(data['text']);
+
     sendText(JSON.stringify(data));
 }
 
