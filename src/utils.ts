@@ -41,6 +41,10 @@ export function getConfiguration(field: string): string {
     return subConfig as string;
 }
 
+/**
+ * Add stubs folder path to workspace settings `python.analysis.extraPaths`.
+ * If path is already present, do nothing.
+ */
 export function addStubsPath() {
     const currentPath = vscode.extensions.getExtension('virgilsisoe.nuke-tools')!.extensionPath;
     const stubsFiles = require('path').join(currentPath, 'Nuke-Python-Stubs', 'nuke_stubs');
