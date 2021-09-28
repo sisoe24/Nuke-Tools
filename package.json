@@ -21,7 +21,8 @@
         "onCommand:nuke-tools.launchNukeOptArgs",
         "onCommand:nuke-tools.runInsideNuke",
         "onCommand:nuke-tools.showNetworkAddresses",
-        "onCommand:nuke-tools.testRunInsideNuke"
+        "onCommand:nuke-tools.testRunInsideNuke",
+        "onCommand:nuke-tools.addPythonStubs"
     ],
     "main": "./out/extension.js",
     "keywords": [
@@ -30,7 +31,8 @@
         "thefoundry",
         "foundry",
         "blinkscript",
-        "blink"
+        "blink",
+        "stubs"
     ],
     "contributes": {
         "commands": [
@@ -70,6 +72,11 @@
             {
                 "command": "nuke-tools.testRunInsideNuke",
                 "title": "Debug Message",
+                "category": "Nuke"
+            },
+            {
+                "command": "nuke-tools.addPythonStubs",
+                "title": "Add Python Stubs",
                 "category": "Nuke"
             }
         ],
