@@ -58,6 +58,10 @@ export function activate(context: vscode.ExtensionContext) {
         socketClient.sendTestMessage();
     }));
 
+    context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.addPythonStubs', () => {
+        utils.addStubsPath();
+    }));
+
     context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.showNetworkAddresses', () => {
         vscode.window.showInformationMessage(socketClient.getAddresses());
     }));
