@@ -1,7 +1,9 @@
 out
 dist
-other
+
 node_modules
 .vscode-test/
+.vscode
 *.vsix
-.DS_Store
+
+Nuke-Python-Stubs
