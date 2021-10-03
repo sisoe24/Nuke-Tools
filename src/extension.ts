@@ -9,6 +9,16 @@ export function activate(context: vscode.ExtensionContext) {
 
     newUpdate.showUpdateMessage(context);
 
+    // Add stubs automatically if config is enabled
+    if (utils.getConfiguration('other.autoAddStubsPath')) {
+        utils.addStubsPath();
+    }
+
+    context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.addPythonStubs', () => {
+        utils.addStubsPath();
+    }));
+
+
     context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.launchNuke', () => {
         const execPath = utils.getExecutable('primaryExecutablePath');
 
@@ -56,10 +66,6 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.testRunInsideNuke', () => {
         socketClient.sendTestMessage();
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.addPythonStubs', () => {
-        utils.addStubsPath();
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.showNetworkAddresses', () => {

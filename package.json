@@ -16,6 +16,7 @@
         "Other"
     ],
     "activationEvents": [
+        "workspaceContains:**/*.py",
         "onCommand:nuke-tools.launchNuke",
         "onCommand:nuke-tools.launchNukeAlt",
         "onCommand:nuke-tools.launchNukeOptArgs",
@@ -103,6 +104,11 @@
                         "type": "boolean",
                         "default": false,
                         "markdownDescription": "**Use with caution**. Restart the terminal instance instead of creating new ones."
+                    },
+                    "nukeTools.other.autoAddStubsPath": {
+                        "type": "boolean",
+                        "default": true,
+                        "markdownDescription": "Automatically add stubs path to `python.analysis.extraPath` workspace setting."
                     },
                     "nukeTools.other.clearPreviousOutput": {
                         "type": "boolean",

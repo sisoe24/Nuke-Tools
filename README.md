@@ -7,6 +7,7 @@ A bunch of Nuke related operations that will facilitate writing code for Nuke.
 - [Nuke Tools README](#nuke-tools-readme)
   - [Features](#features)
   - [Nuke Python Stubs](#nuke-python-stubs)
+    - [Other ways to add the stubs](#other-ways-to-add-the-stubs)
   - [BlinkScript](#blinkscript)
   - [NukeServerSocket](#nukeserversocket)
   - [Available Commands](#available-commands)
@@ -16,6 +17,7 @@ A bunch of Nuke related operations that will facilitate writing code for Nuke.
     - [`nukeTools.nukeExecutable.options.defaultCommandLineArguments`](#nuketoolsnukeexecutableoptionsdefaultcommandlinearguments)
     - [`nukeTools.nukeExecutable.options.restartInstance`](#nuketoolsnukeexecutableoptionsrestartinstance)
     - [`nukeTools.other.clearPreviousOutput`](#nuketoolsotherclearpreviousoutput)
+    - [`nukeTools.other.autoAddStubsPath`](#nuketoolsotherautoaddstubspath)
     - [`nukeTools.network.enableManualConnection`](#nuketoolsnetworkenablemanualconnection)
     - [`nukeTools.network.port`](#nuketoolsnetworkport)
     - [`nukeTools.network.host`](#nuketoolsnetworkhost)
@@ -33,17 +35,23 @@ A bunch of Nuke related operations that will facilitate writing code for Nuke.
 
 ## Nuke Python Stubs
 
-> The stubs are pre-generated and you can check more about the project [here](https://github.com/sisoe24/Nuke-Python-Stubs).
+> The stubs are pre-generated and you can check more about the github project [here](https://github.com/sisoe24/Nuke-Python-Stubs).
 
-Nuke Tools now includes python stubs for Nuke.
+Nuke Tools now includes python stubs for Nuke. 
 
-The command `Add Stubs to Workspace` will add the stubs path to `python.analysis.extraPaths` of your workspace settings folder. 
+Although they are just simple stubs files, _for the most part_ they have the type annotation declared, so vscode will be able to infer the type of the variable.
 
+The command `Add Stubs to Workspace` will add the stubs path to `python.analysis.extraPaths` of your workspace settings folder. Alternatively you could enable the settings: `Auto Add Stubs Path` to automatically add them to each new workspace that contains a `*.py` file.
 
-Alternatively the stubs can be found inside the extension folder: `$HOME/.vscode/extensions/virgilsisoe.nuke-tools/Nuke-Python-Stubs/nuke_stubs`.
+### Other ways to add the stubs
 
-> Note: if you decide to add manually the stubs path to the global settings `python.analysis.extraPaths`, you should keep in mind that, if creating a `python.analysis.extraPaths` workspace settings, it will override the global one. The command `Add Stubs to Workspace` takes care of this by adding the workspace settings only if there is no global setting or the workspace has overwritten the global but it does not have the path.
-> 
+The stubs can be found inside the extension folder: `$HOME/.vscode/extensions/virgilsisoe.nuke-tools/Nuke-Python-Stubs/nuke_stubs`.
+
+There are a few ways to add them:
+
+* Add the path to the global settings `python.analysis.extraPath`. Keep in mind that, if you need a custom settings in your workspace, the workspace settings will override the global one so you need to re add the stubs path to your workspace settings.
+* Add the path to the global setting: `python.analysis.stubPath`. Because this setting is a simple string, only one path can be specified at the time, so if you are using it for something else, you need to move the stubs folder into the location.
+
 ## BlinkScript
 
 >  [NukeServerSocket](#nukeserversocket) >= 0.1.0 is needed in order for this to work.
@@ -101,6 +109,10 @@ Restart the terminal instance instead of creating new ones. **Use with caution**
 ### `nukeTools.other.clearPreviousOutput`
 
 Clear previous console output before next code execution.
+
+### `nukeTools.other.autoAddStubsPath`
+
+Automatically add the stubs path to each new workspace that contains a `*.py` file.
 
 ### `nukeTools.network.enableManualConnection`
 

@@ -38,7 +38,7 @@ export async function showUpdateMessage(context: vscode.ExtensionContext) {
     if (previousVersion === undefined || isNewVersion(previousVersion, currentVersion)) {
 
         // leave an empty string if update doesn't need a message
-        const updateMsg = `BlinkScript support added. Check README for more information.`;
+        const updateMsg = `Stubs file included with extension. Check more on README`;
 
         if (updateMsg) {
             const actions = [{ title: "See how" }];
