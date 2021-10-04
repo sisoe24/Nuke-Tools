@@ -21,6 +21,7 @@ A bunch of Nuke related operations that will facilitate writing code for Nuke.
     - [`nukeTools.network.enableManualConnection`](#nuketoolsnetworkenablemanualconnection)
     - [`nukeTools.network.port`](#nuketoolsnetworkport)
     - [`nukeTools.network.host`](#nuketoolsnetworkhost)
+  - [Overview](#overview)
 
 ## Features
 
@@ -131,3 +132,8 @@ Specify a different port for the connection. This will only work if `nukeTools.n
 ### `nukeTools.network.host`
 
 Same as `nukeTools.network.port`. Host could be the localhost or the local ip.
+
+## Overview
+
+![auto-complete](images/auto_complete.gif)
+
