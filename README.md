@@ -55,7 +55,7 @@ The stubs can be found inside the extension folder: `$HOME/.vscode/extensions/vi
 There are a few ways to add them:
 
 * Add the path to the global settings `python.analysis.extraPath`. Keep in mind that, if you need a custom settings in your workspace, the workspace settings will override the global one so you need to re add the stubs path to your workspace settings. 
-* Add the path to the global setting: `python.analysis.stubPath`. Because this setting is a simple string, only one path can be specified at the time, so if you are using it for something else, you need to move the stubs folder into the location.
+* Add the path to the global setting: `python.analysis.stubPath`. Because this setting is a simple string, only one path can be specified at the time, so if you are using it for something else, you need to move the stubs folder into that location.
 
 Although you could generate the stubs from the git repo, using the ones included with the extension, ensures that futures updates to the stubs will be automatically picked from Nuke Tools.
 
