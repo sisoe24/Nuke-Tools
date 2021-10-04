@@ -41,19 +41,25 @@ export function getConfiguration(field: string): string {
     return subConfig as string;
 }
 
+function getStubsPath() {
+    const currentPath = vscode.extensions.getExtension('virgilsisoe.nuke-tools')!.extensionPath;
+    return require('path').join(currentPath, 'Nuke-Python-Stubs', 'nuke_stubs');
+
+}
+
 /**
  * Add stubs folder path to workspace settings `python.analysis.extraPaths`.
  * If path is already present, do nothing.
  */
 export function addStubsPath() {
-    const currentPath = vscode.extensions.getExtension('virgilsisoe.nuke-tools')!.extensionPath;
-    const stubsFiles = require('path').join(currentPath, 'Nuke-Python-Stubs', 'nuke_stubs');
+
+    const stubsPath = getStubsPath();
 
     const config = vscode.workspace.getConfiguration('python.analysis');
     let extraPaths = config.get('extraPaths') as Array<string>;
 
-    if (!extraPaths.includes(stubsFiles)) {
-        extraPaths.push(stubsFiles);
+    if (!extraPaths.includes(stubsPath)) {
+        extraPaths.push(stubsPath);
         config.update('extraPaths', extraPaths);
     }
 }
