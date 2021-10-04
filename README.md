@@ -39,9 +39,13 @@ A bunch of Nuke related operations that will facilitate writing code for Nuke.
 
 Nuke Tools now includes python stubs for Nuke. 
 
-Although they are just simple stubs files, _for the most part_ they have the type annotation declared, so vscode will be able to infer the type of the variable.
+For the most part, stubs files will have the type annotation declared. This will allow vscode to infer the type of the variable. Some of them are wrong or missing but you can read more about that in the git repo.
 
-The command `Add Stubs to Workspace` will add the stubs path to `python.analysis.extraPaths` of your workspace settings folder. Alternatively you could enable the settings: `Auto Add Stubs Path` to automatically add them to each new workspace that contains a `*.py` file.
+The extension will automatically create the settings `python.analysis.extraPaths` in every directory with a python file and append the stubs path to it (together with all of your global `python.analysis.extraPaths` settings)
+
+Alternatively you could disable the settings `Auto Add Stubs Path` and use the command `Add Python Stubs` to manually add them to the workspace settings.
+
+Then is simple as: `import nuke`
 
 ### Other ways to add the stubs
 
@@ -49,8 +53,10 @@ The stubs can be found inside the extension folder: `$HOME/.vscode/extensions/vi
 
 There are a few ways to add them:
 
-* Add the path to the global settings `python.analysis.extraPath`. Keep in mind that, if you need a custom settings in your workspace, the workspace settings will override the global one so you need to re add the stubs path to your workspace settings.
+* Add the path to the global settings `python.analysis.extraPath`. Keep in mind that, if you need a custom settings in your workspace, the workspace settings will override the global one so you need to re add the stubs path to your workspace settings. 
 * Add the path to the global setting: `python.analysis.stubPath`. Because this setting is a simple string, only one path can be specified at the time, so if you are using it for something else, you need to move the stubs folder into the location.
+
+Although you could generate the stubs from the git repo, using the ones included with the extension, ensures that futures updates to the stubs will be automatically picked from Nuke Tools.
 
 ## BlinkScript
 
