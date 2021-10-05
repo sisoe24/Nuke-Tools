@@ -48,6 +48,8 @@ Alternatively you could disable the settings `Auto Add Stubs Path` and use the c
 
 Then is simple as: `import nuke`
 
+> If you have a folder name `nuke` in your working directory it will not work, as it will try to import that one first.
+
 ### Other ways to add the stubs
 
 The stubs can be found inside the extension folder: `$HOME/.vscode/extensions/virgilsisoe.nuke-tools/Nuke-Python-Stubs/nuke_stubs`.
@@ -135,5 +137,7 @@ Same as `nukeTools.network.port`. Host could be the localhost or the local ip.
 
 ## Overview
 
-![auto-complete](images/auto_complete.gif)
+Python stubs auto-complete
+
+<img title="CommentUncommentDelete" src="https://raw.githubusercontent.com/sisoe24/Nuke-Python-Stubs/main/images/auto_complete.gif" width="80%"/>
 
