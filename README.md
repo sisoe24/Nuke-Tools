@@ -1,6 +1,6 @@
 # Nuke Tools README
 
-A bunch of Nuke related operations that will facilitate writing code for Nuke.
+A bunch of Nuke related tools that will help the development process in Visual Studio Code.
 
 > This is primarily a companion extension for: [NukeServerSocket](#nukeserversocket). Some features will only work when the server inside Nuke is active.
 
@@ -25,20 +25,20 @@ A bunch of Nuke related operations that will facilitate writing code for Nuke.
 
 ## Features
 
-* Execute code inside Nuke from a machine in your local network.
-  * Get output of Nuke execution inside Visual Studio Code.
-  * When used locally (same machine) no configuration is required by user, just running the server inside Nuke.
-  * Specify a custom address when connection is from/to another computer.
-  * Multiple computer can connect to the same Nuke instance.
-  * BlinkScript support.
-* Easy commands for launching Nuke instances via the terminal with default or optional arguments.
-* Included Nuke Python Stubs to be added to `python.analysis.extraPaths` for a simple auto complete feature.
+- Execute code inside Nuke from a machine in your local network.
+  - Get output of Nuke execution inside Visual Studio Code.
+  - When used locally (same machine) no configuration is required, just running the server inside Nuke.
+  - Specify a custom address when connection is from/to another computer.
+  - Multiple computer can connect to the same Nuke instance.
+  - BlinkScript support.
+- Easy commands for launching Nuke instances via the terminal with default or optional arguments.
+- Included Nuke Python Stubs to be added to `python.analysis.extraPaths` for a simple auto complete feature.
 
-## Nuke Python Stubs
+-# Nuke Python Stubs
 
 > The stubs are pre-generated and you can check more about the github project [here](https://github.com/sisoe24/Nuke-Python-Stubs).
 
-Nuke Tools now includes python stubs for Nuke. 
+Nuke Tools now includes python stubs for Nuke.
 
 For the most part, stubs files will have the type annotation declared. This will allow vscode to infer the type of the variable. Some of them are wrong or missing but you can read more about that in the git repo.
 
@@ -56,14 +56,14 @@ The stubs can be found inside the extension folder: `$HOME/.vscode/extensions/vi
 
 There are a few ways to add them:
 
-* Add the path to the global settings `python.analysis.extraPath`. Keep in mind that, if you need a custom settings in your workspace, the workspace settings will override the global one so you need to re add the stubs path to your workspace settings. 
-* Add the path to the global setting: `python.analysis.stubPath`. Because this setting is a simple string, only one path can be specified at the time, so if you are using it for something else, you need to move the stubs folder into that location.
+- Add the path to the global settings `python.analysis.extraPath`. Keep in mind that, if you need a custom settings in your workspace, the workspace settings will override the global one so you need to re add the stubs path to your workspace settings.
+- Add the path to the global setting: `python.analysis.stubPath`. Because this setting is a simple string, only one path can be specified at the time, so if you are using it for something else, you need to move the stubs folder into that location.
 
 Although you could generate the stubs from the git repo, using the ones included with the extension, ensures that futures updates to the stubs will be automatically picked from Nuke Tools.
 
 ## BlinkScript
 
->  [NukeServerSocket](#nukeserversocket) >= 0.1.0 is needed in order for this to work.
+> [NukeServerSocket](#nukeserversocket) >= 0.1.0 is needed in order for this to work.
 
 You can execute code from the text editor directly inside a Nuke BlinkScript node.
 
@@ -75,7 +75,7 @@ The accepted file extension are `.cpp` or `.blink`.
 
 ## NukeServerSocket
 
-Download here the companion plugin for Nuke: [Git](https://github.com/sisoe24/NukeServerSocket), [Nukepedia](http://www.nukepedia.com/python/misc/nukeserversocket).
+Download companion plugin: [Git](https://github.com/sisoe24/NukeServerSocket/releases), [Nukepedia](http://www.nukepedia.com/python/misc/nukeserversocket).
 
 ## Available Commands
 
@@ -100,8 +100,8 @@ Every command can be re-assigned to a new shortcut. (see [docs](https://code.vis
 
 Primary path for the Nuke executable.
 
-* On MacOS you can find the file with: _Show Package Contents -> Contents/MacOS/Nuke..._
-* On Windows WSL the path should be the Unix style: _/mnt/c/Program Files/..._
+- On MacOS you can find the file with: _Show Package Contents -> Contents/MacOS/Nuke..._
+- On Windows WSL the path should be the Unix style: _/mnt/c/Program Files/..._
 
 ### `nukeTools.nukeExecutable.secondaryExecutablePath`
 
@@ -140,4 +140,3 @@ Same as `nukeTools.network.port`. Host could be the localhost or the local ip.
 Python stubs auto-complete
 
 <img title="CommentUncommentDelete" src="https://raw.githubusercontent.com/sisoe24/Nuke-Python-Stubs/main/images/auto_complete.gif" width="80%"/>
-
