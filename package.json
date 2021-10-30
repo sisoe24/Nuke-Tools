@@ -57,7 +57,7 @@
             },
             {
                 "command": "nuke-tools.runInsideNuke",
-                "title": "Run Inside Nuke",
+                "title": "Run Code Inside Nuke",
                 "category": "Nuke",
                 "icon": {
                     "dark": "images/play-dark.svg",
