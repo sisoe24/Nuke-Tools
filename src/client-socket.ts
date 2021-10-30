@@ -86,7 +86,7 @@ function getPort(): string {
                 Falling back on port 54321 for now.
                 Try disconnecting and connecting back the server inside Nuke.
                 Error: ${errMsg}
-                `
+                `;
                 vscode.window.showErrorMessage(msg);
             }
         }
