@@ -26,7 +26,7 @@
             "label": "Install Package",
             "type": "shell",
             "command": "code --uninstall-extension virgilsisoe.nuke-tools && code --force --install-extension nuke-tools-*.vsix",
-        }
+        },
         {
             "label": "Copy package to Windows",
             "type": "shell",

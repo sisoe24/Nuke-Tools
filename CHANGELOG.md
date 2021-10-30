@@ -10,7 +10,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Added
 
-* Support for BlinkScript.
+- Support for BlinkScript.
 
 ## [0.0.14] 09/12/2021
 
@@ -18,7 +18,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Added
 
-* Better check for the .ini file in case has wrong/invalid values.
+- Better check for the .ini file in case has wrong/invalid values.
 
 ## [0.0.13] 08/16/2021
 
