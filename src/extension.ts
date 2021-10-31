@@ -1,77 +1,79 @@
-import * as vscode from 'vscode';
-import * as launchNuke from './launch-executable';
-import * as socketClient from './client-socket';
+import * as vscode from "vscode";
+import * as executables from "./launch-executable";
+import * as socketClient from "./client-socket";
 import * as utils from "./utils";
-import * as newUpdate from './newUpdateMsg';
-
+import * as newUpdate from "./newUpdateMsg";
 
 export function activate(context: vscode.ExtensionContext) {
-
     newUpdate.showUpdateMessage(context);
 
     // Add stubs automatically if config is enabled
-    if (utils.getConfiguration('other.autoAddStubsPath')) {
+    if (utils.getConfiguration("other.autoAddStubsPath")) {
         utils.addStubsPath();
     }
 
-    context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.addPythonStubs', () => {
-        utils.addStubsPath();
-    }));
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.addPythonStubs", () => {
+            utils.addStubsPath();
+        })
+    );
 
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.launchNuke", () => {
+            executables.launchExecutable("primaryExecutablePath", " Main");
+        })
+    );
 
-    context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.launchNuke', () => {
-        const execPath = utils.getExecutable('primaryExecutablePath');
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.launchNukeAlt", () => {
+            executables.launchExecutable("secondaryExecutablePath", " Alt");
+        })
+    );
 
-        if (execPath) {
-            launchNuke.execDefaultCommand(execPath, ' Main');
-        };
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.launchNukeOptArgs", () => {
+            executables.launchExecutablePrompt();
+        })
+    );
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.runInsideNuke", () => {
+            const editor = vscode.window.activeTextEditor;
+            if (!editor) {
+                return;
+            }
 
-    }));
+            if (editor.document.uri.scheme === "output") {
+                vscode.window.showInformationMessage(
+                    "You currently have the Output window in focus. Return the focus on the text editor."
+                );
+                return;
+            }
 
-    context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.launchNukeAlt', () => {
-        const execPath = utils.getExecutable('secondaryExecutablePath');
+            const data = {
+                file: editor.document.fileName,
+                text: editor.document.getText(),
+            };
 
-        if (execPath) {
-            launchNuke.execDefaultCommand(execPath, ' Alt.');
-        };
-    }));
+            socketClient.sendText(JSON.stringify(data));
+        })
+    );
 
-    context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.launchNukeOptArgs', () => {
-        const execPath = utils.getExecutable('primaryExecutablePath');
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.testRunInsideNuke", () => {
+            socketClient.sendTestMessage();
+        })
+    );
 
-        if (execPath) {
-            launchNuke.execOptionalCommand(execPath);
-        };
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.runInsideNuke', () => {
-        const editor = vscode.window.activeTextEditor;
-        if (!editor) { return; }
-
-        if (editor.document.uri.scheme === 'output') {
-            vscode.window.showInformationMessage(
-                'You currently have the Output window in focus. Return the focus on the text editor.'
-            );
-            return;
-        }
-
-        const data = {
-            'file': editor.document.fileName,
-            'text': editor.document.getText()
-        };
-
-        socketClient.sendText(JSON.stringify(data));
-
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.testRunInsideNuke', () => {
-        socketClient.sendTestMessage();
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.showNetworkAddresses', () => {
-        vscode.window.showInformationMessage(socketClient.getAddresses());
-    }));
-
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
+            "nuke-tools.showNetworkAddresses",
+            () => {
+                vscode.window.showInformationMessage(
+                    socketClient.getAddresses()
+                );
+            }
+        )
+    );
 }
 
 // this method is called when your extension is deactivated
