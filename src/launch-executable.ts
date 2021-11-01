@@ -3,104 +3,93 @@ import * as utils from "./utils";
 
 const config = vscode.workspace.getConfiguration(`nukeTools`);
 
-/**
- * Quote path in case it has spaces.
- *
- * @param {string} path - path like string to quote.
- * @returns {string} - the quoted path.
- */
-function quotePath(path: string): string {
-    return `"${path}"`;
-}
+export class ExecutablePath {
+    args: string;
 
-/**
- * If system is Windows should require the & operator.
- * 
- * eg. `& '/path/app name/bin'`
- *
- * @param {string} path - path like string to insert the `&` operator.
- * @returns {string} - string like path.
- */
-function verifyWindowsPath(path: string): string {
-    if (require("os").type() === "Windows_NT") {
-        path = `& ${path}`;
+    constructor(public execName: string) {
+        if (!execName) {
+        }
+        this.execName = execName;
+        this.args = "";
     }
-    return path;
-}
 
-/**
- * Check if path exists. If not, will show an error message to user.
- *
- * @param {string} path - path to check if exists.
- * @returns {boolean} - True if does, False otherwise
- */
-function pathExists(path: string): boolean {
-    if (!require("fs").existsSync(path)) {
-        // TODO: replace console log with log to file
-        console.log("file path does not exist");
-
-        vscode.window.showErrorMessage(`Cannot find path: ${path}.`);
-        return false;
+    /**
+     * Quote path in case it has spaces.
+     *
+     * @param {string} path - path like string to quote.
+     * @returns {string} - the quoted path.
+     */
+    quotePath(path: string): string {
+        return `"${path}"`;
     }
-    return true;
-}
 
-/**
- * Validate executable path.
- * 
- * If path exists, will check if current system is Windows and insert the & operator,
- * and quote it in cases of spaces. If path is not valid will return an empty string.
- *
- * @param {string} path - path like string to check.
- * @returns {string} - string like path is path exists or empty string if path
- * does not exists.
- */
-function validatePath(path: string): string {
-    // TODO: should also check if file is executable?
-    // require('fs').statSync(exec).mode will return a value that kind of helps
-
-    if (pathExists(path)) {
-        return verifyWindowsPath(quotePath(path));
+    /**
+     * If system is Windows should require the & operator.
+     *
+     * eg. `& '/path/app name/bin'`
+     *
+     * @param {string} path - path like string to insert the `&` operator.
+     * @returns {string} - string like path.
+     */
+    verifyWindowsPath(path: string): string {
+        if (require("os").type() === "Windows_NT") {
+            path = `& ${path}`;
+        }
+        return path;
     }
-    return "";
+
+    /**
+     * Get the basename of the executable path.
+     *
+     * @returns {string} - base name of the executable path.
+     */
+    basename(): string {
+        return require("path").basename(this.execName);
+    }
+
+    /**
+     * Check if path exists. If not, will show an error message to user.
+     *
+     * @returns {boolean} - True if does, False otherwise
+     */
+    isValid(): boolean {
+        if (!require("fs").existsSync(this.execName)) {
+            // TODO: replace console log with log to file
+            console.log("file path does not exist");
+
+            vscode.window.showErrorMessage(
+                `Cannot find path: ${this.execName}.`
+            );
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     *  Create the cli command to be executed inside the terminal.
+     *
+     * @returns {string} - string like command for the terminal.
+     */
+    cliCmd(): string {
+        this.execName = this.verifyWindowsPath(this.quotePath(this.execName));
+        return `${this.execName} ${this.args}`.trim();
+    }
 }
 
 /**
  * Get the executable name and returns its path after it has been validated.
  *
  * @param {string} execName - name of the executable from the settings (eg: primaryExecutablePath or secondaryExecutablePath)
- * @returns {string} - string like path of the executable.
+ * @returns {ExecutablePath} - ExecutablePath object.
  */
-export function getExecutable(execName: string): string {
-    const execPath = config.get(`nukeExecutable.${execName}`) as string;
-    return validatePath(execPath);
-}
+export function getExecutable(execName: string): ExecutablePath {
+    const execPath = config.get(`nukeExecutable.${execName}`);
 
-/**
- * Get cli arguments from settings and append them to the executable path.
- * Settings could be empty, in that case will do nothing.
- *
- * @param {string} path - executable path append the arguments.
- * @returns {string} - string like path.
- */
-function appendArgs(path: string): string {
-    const defaultArgs = utils.getConfiguration(
-        "nukeExecutable.options.defaultCommandLineArguments"
-    );
-    if (defaultArgs) {
-        path += " " + defaultArgs;
+    if (!execPath) {
+        throw new Error(`Executable name not found: ${execName}`);
     }
-    return path;
-}
 
-// the cmd will be wrapped inside single quotes to avoid path splitting
-// and basename will delete everything till the last quote but include optional arguments if any
-// TODO: this has an undefined behaviour when there is an argument
-function extractExecBaseName(cmd: string): string {
-    // example of what could return: Nuke13.0" -nc
-    const baseNameCmd = require("path").basename(cmd);
-    cmd = baseNameCmd.split('"')[0];
-    return cmd;
+    return new ExecutablePath(execPath as string);
 }
 
 /**
@@ -108,7 +97,7 @@ function extractExecBaseName(cmd: string): string {
  *
  * @param name - name of the terminal to dispose.
  */
-function restartInstance(name: string) {
+export function restartInstance(name: string) {
     vscode.window.terminals.forEach((terminal) => {
         if (terminal.name === name) {
             terminal.dispose();
@@ -123,16 +112,18 @@ function restartInstance(name: string) {
  * @param {string} cmd - the command to execute.
  * @param {string} suffix - a suffix name to add to the terminal instance name.
  */
-function execCommand(cmd: string, suffix: string) {
-    const terminalTitle = extractExecBaseName(cmd) + suffix;
+export function execCommand(execPath: ExecutablePath) {
+    const basename = execPath.basename();
 
-    const shouldRestart = config.get("nukeExecutable.options.restartInstance");
+    const shouldRestart = config.get<boolean>(
+        "nukeExecutable.options.restartInstance"
+    );
     if (shouldRestart) {
-        restartInstance(terminalTitle);
+        restartInstance(basename);
     }
 
-    const terminal = vscode.window.createTerminal(terminalTitle);
-    terminal.sendText(cmd);
+    const terminal = vscode.window.createTerminal(basename);
+    terminal.sendText(execPath.cliCmd());
     terminal.show(true);
 }
 
@@ -142,11 +133,18 @@ function execCommand(cmd: string, suffix: string) {
  * @param execName
  * @param suffix
  */
-export function launchExecutable(execName: string, suffix: string) {
+export function launchExecutable(execName: string) {
     const execPath = getExecutable(execName);
 
-    if (execPath) {
-        execCommand(appendArgs(execPath), suffix);
+    if (execPath.isValid()) {
+        const defaultArgs = config.get<string>(
+            "nukeExecutable.options.defaultCommandLineArguments"
+        );
+
+        if (defaultArgs) {
+            execPath.args = defaultArgs;
+        }
+        execCommand(execPath);
     }
 }
 
@@ -158,15 +156,15 @@ export function launchExecutable(execName: string, suffix: string) {
 export async function launchExecutablePrompt() {
     let execPath = getExecutable("primaryExecutablePath");
 
-    if (execPath) {
+    if (execPath.isValid()) {
         const optArgs = await vscode.window.showInputBox({
             ignoreFocusOut: true,
             placeHolder: "Optional arguments for current instance",
         });
 
         if (optArgs) {
-            execPath += " " + optArgs;
+            execPath.args = optArgs;
         }
-        execCommand(execPath, " Main");
+        execCommand(execPath);
     }
 }
