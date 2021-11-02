@@ -22,13 +22,13 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.launchNuke", () => {
-            executables.launchExecutable("primaryExecutablePath", " Main");
+            executables.launchExecutable("primaryExecutablePath");
         })
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.launchNukeAlt", () => {
-            executables.launchExecutable("secondaryExecutablePath", " Alt");
+            executables.launchExecutable("secondaryExecutablePath");
         })
     );
 
