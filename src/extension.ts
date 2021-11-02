@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as executables from "./launch_executable";
-import * as socketClient from "./client-socket";
+import * as socketClient from "./socket";
 import * as utils from "./utils";
 import * as newUpdate from "./update_message";
 import { addStubsPath } from "./stubs";
