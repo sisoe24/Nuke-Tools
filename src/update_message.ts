@@ -1,49 +1,85 @@
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
 // This script is based on : https://stackoverflow.com/a/66307695/9392852
 
-// Check for the current and previous version
-function isNewVersion(previousVersion: string, currentVersion: string) {
+export class Version {
+    version: number[];
+    toStr: string;
 
-    // if string doesn't contain a dot
-    if (previousVersion.indexOf(".") === -1) {
-        return true;
+    constructor(version: string | undefined) {
+        if (version === undefined || version.indexOf(".") === -1) {
+            version = "0.0.0";
+        }
+        this.toStr = version;
+        this.version = version.split(".").map(Number);
     }
 
-    // returns int array [1,1,1] i.e. [major, minor, patch]
-    let previousVerArr = previousVersion.split(".").map(Number);
-    let currentVerArr = currentVersion.split(".").map(Number);
-
-    // check by minor update
-    if (currentVerArr[1] > previousVerArr[1]) {
-        return true;
+    major(): number {
+        return this.version[0];
     }
 
-    return false;
+    minor(): number {
+        return this.version[1];
+    }
+
+    patch(): number {
+        return this.version[2];
+    }
+
+    /**
+     * Check if version is bigger than.
+     *
+     * Check happens only for minor and major but no patch. First will check if
+     * minor version is bigger, if not will then check for major version.
+     *
+     * Examples:
+     *  * 1.2.0 vs 1.1.0: true
+     *  * 2.2.0 vs 1.1.0: true
+     *  * 1.2.3 vs 1.2.0: false
+     *
+     * @param version - a Version object to check for version comparison.
+     * @returns - true if yes, false otherwise
+     */
+    isBiggerThan(version: Version, includePatch: boolean): boolean {
+        if (includePatch) {
+            if (this.version > version.version) {
+                return true;
+            }
+            return false;
+        }
+
+        if (this.minor() > version.minor() || this.major() > version.major()) {
+            return true;
+        }
+        return false;
+    }
 }
 
 // Show an update message if minor version is newer.
-export async function showUpdateMessage(context: vscode.ExtensionContext) {
-    const extensionId = 'virgilsisoe.nuke-tools';
+export function showUpdateMessage(context: vscode.ExtensionContext) {
+    const extensionId = "virgilsisoe.nuke-tools";
 
-    // get the variable version stored inside the global state. will be undefined first time
-    const previousVersion = context.globalState.get<string>(extensionId);
+    // get the value stored inside the global state for the key: _value['virgilsisoe.nuke-tools']
+    // the first time there will be no value so it will return undefined.
+    const previousVersion = new Version(
+        context.globalState.get<string>(extensionId) as string
+    );
 
     // get the package.json version
-    const currentVersion = vscode.extensions.getExtension(extensionId)!.packageJSON.version;
+    const currentVersion = new Version(
+        vscode.extensions.getExtension(extensionId)!.packageJSON
+            .version as string
+    );
 
-    // store the current version in a global state variable.
-    context.globalState.update(extensionId, currentVersion);
+    // store the current version in the global state key _value['virgilsisoe.nuke-tools']
+    context.globalState.update(extensionId, currentVersion.toStr);
 
-    if (previousVersion === undefined || isNewVersion(previousVersion, currentVersion)) {
-
-        // leave an empty string if update doesn't need a message
-        const updateMsg = `Stubs file included with extension. Check more on README`;
+    if (currentVersion.isBiggerThan(previousVersion, false)) {
+        console.log("yes is bigger");
+        const updateMsg = ``;
 
         if (updateMsg) {
-            const actions = [{ title: "See how" }];
-            const result = await vscode.window.showInformationMessage(updateMsg);
+            vscode.window.showInformationMessage(updateMsg);
         }
-
     }
 }
