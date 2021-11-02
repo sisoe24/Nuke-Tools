@@ -65,7 +65,7 @@ export function getNukeIni(): string {
  * @returns - the property value.
  */
 function getManualAddress(property: string, defaultValue: string): string {
-    const manualAddress = utils.getConfig(`network.${property}`);
+    const manualAddress = utils.nukeToolsConfig(`network.${property}`);
 
     if (!manualAddress) {
         const manualErrorMsg = `
@@ -127,7 +127,7 @@ export function getPort(): string {
         port = getPortFromIni(configIni, port);
     }
 
-    if (utils.getConfig("network.enableManualConnection")) {
+    if (utils.nukeToolsConfig("network.enableManualConnection")) {
         port = getManualAddress("port", port);
     }
     return port;
@@ -144,7 +144,7 @@ export function getPort(): string {
 function getHost(): string {
     let host = "127.0.0.1";
 
-    if (utils.getConfig("network.enableManualConnection")) {
+    if (utils.nukeToolsConfig("network.enableManualConnection")) {
         host = getManualAddress("host", host);
     }
 
@@ -214,7 +214,7 @@ export function sendText(text: string) {
         console.log(`Socket -> Received :: ${data} of type ${typeof data}`);
         client.destroy(); // kill client after server's response
 
-        const clearOutput = utils.getConfig("other.clearPreviousOutput");
+        const clearOutput = utils.nukeToolsConfig("other.clearPreviousOutput");
         if (clearOutput) {
             output.clear();
         }

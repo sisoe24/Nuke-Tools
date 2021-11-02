@@ -9,7 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
     newUpdate.showUpdateMessage(context);
 
     // Add stubs automatically if config is enabled
-    if (utils.getConfig("other.autoAddStubsPath")) {
+    if (utils.nukeToolsConfig("other.autoAddStubsPath")) {
         addStubsPath();
     }
 

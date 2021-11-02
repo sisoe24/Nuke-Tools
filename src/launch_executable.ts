@@ -81,7 +81,7 @@ export class ExecutablePath {
  * @returns - ExecutablePath object.
  */
 export function getExecutable(execName: string): ExecutablePath {
-    const execPath = utils.getConfig(`nukeExecutable.${execName}`);
+    const execPath = utils.nukeToolsConfig(`nukeExecutable.${execName}`);
 
     if (!execPath) {
         throw new Error(`Executable name not found: ${execName}`);
@@ -113,7 +113,7 @@ export function restartInstance(name: string) {
 export function execCommand(execPath: ExecutablePath) {
     const basename = execPath.basename();
 
-    const shouldRestart = utils.getConfig(
+    const shouldRestart = utils.nukeToolsConfig(
         "nukeExecutable.options.restartInstance"
     );
     if (shouldRestart) {
@@ -135,7 +135,7 @@ export function launchExecutable(execName: string) {
     const execPath = getExecutable(execName);
 
     if (execPath.isValid()) {
-        const defaultArgs = utils.getConfig(
+        const defaultArgs = utils.nukeToolsConfig(
             "nukeExecutable.options.defaultCommandLineArguments"
         );
 
