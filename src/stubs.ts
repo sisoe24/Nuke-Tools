@@ -37,16 +37,19 @@ export function extractVersion(path: string) {
 }
 
 /**
- * Update `python.analysis.extraPath`.
- *
+ * Add stubs path to `python.analysis.extraPaths`.
+ * 
  * Update configuration value only if value is not present or the version is lower
- * than the current version. Note: The update is made by reference.
+ * than the current version. 
+ * 
+ * Note: The update is made by reference.
  *
  * @param extraPaths - The `python.analysis.extraPaths` array object.
  * @param stubsPath - the stubs path to add in the `extraPaths` configuration.
+ * @returns - true if path was added, false otherwise
  */
-export function updateAnalysisPath(extraPaths: string[], stubsPath: string) {
-    let alreadyAdded = false;
+export function addPath(extraPaths: string[], stubsPath: string): boolean {
+    let pathAdded = false;
 
     for (const path of extraPaths) {
         const versionMatch = extractVersion(path);
@@ -57,12 +60,27 @@ export function updateAnalysisPath(extraPaths: string[], stubsPath: string) {
                 const index = extraPaths.indexOf(path);
                 extraPaths[index] = stubsPath;
             }
-            alreadyAdded = true;
+            pathAdded = true;
         }
     }
+    return pathAdded;
+}
 
-    // first time does not match the condition above
-    if (!alreadyAdded) {
+/**
+ * Update `python.analysis.extraPath`.
+ *
+ * If path was already added, will do nothing
+ *
+ * @param extraPaths - The `python.analysis.extraPaths` array object.
+ * @param stubsPath - the stubs path to add in the `extraPaths` configuration.
+ */
+export function updateAnalysisPath(extraPaths: string[], stubsPath: string) {
+    // if path was already added, do nothing and exit
+    if (extraPaths.includes(stubsPath)) {
+        return;
+    }
+
+    if (!addPath(extraPaths, stubsPath)) {
         extraPaths.push(stubsPath);
     }
 }
@@ -73,7 +91,9 @@ export function updateAnalysisPath(extraPaths: string[], stubsPath: string) {
  */
 export function addStubsPath(): boolean {
     if (!isPythonInstalled()) {
-        vscode.window.showErrorMessage("Python extension is not installed.");
+        vscode.window.showErrorMessage(
+            "Python extension is not installed. Could not add stubs path."
+        );
         return false;
     }
 

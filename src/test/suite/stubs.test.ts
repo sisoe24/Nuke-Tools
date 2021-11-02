@@ -39,7 +39,7 @@ suite("Stubs Creation", () => {
         assert.deepStrictEqual(extraPaths, expectedPath);
     });
 
-    test("Dont update Python analysis path", () => {
+    test("Dont update Python analysis path: stubs version is bigger", () => {
         const extraPaths = [
             "path/to/lib",
             "path/virgilsisoe.nuke-tools-0.3.3/Nuke-Python-Stub/nuke_stubs",
@@ -50,7 +50,14 @@ suite("Stubs Creation", () => {
         assert.strictEqual(extraPaths, extraPaths);
     });
 
-    test("Check python.analysis.extraPaths content", () => {
+    test("Dont update Python analysis path: stubs already present", () => {
+        const extraPaths = ["path/to/lib", stubsPath];
+        // this does not update path because stubs path is already present
+        stubs.updateAnalysisPath(extraPaths, stubsPath);
+        assert.strictEqual(extraPaths, extraPaths);
+    });
+
+    test.skip("Check python.analysis.extraPaths content: Work only if extension is installed", () => {
         stubs.addStubsPath();
         const config = vscode.workspace.getConfiguration("python.analysis");
         const extraPaths = config.get("extraPaths") as Array<string>;
