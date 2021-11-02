@@ -3,18 +3,20 @@ import * as executables from "./launch-executable";
 import * as socketClient from "./client-socket";
 import * as utils from "./utils";
 import * as newUpdate from "./newUpdateMsg";
+import { addStubsPath } from "./stubs";
+
 
 export function activate(context: vscode.ExtensionContext) {
     newUpdate.showUpdateMessage(context);
 
     // Add stubs automatically if config is enabled
     if (utils.getConfiguration("other.autoAddStubsPath")) {
-        utils.addStubsPath();
+        addStubsPath();
     }
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.addPythonStubs", () => {
-            utils.addStubsPath();
+            addStubsPath();
         })
     );
 
