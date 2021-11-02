@@ -16,8 +16,8 @@ export class ExecutablePath {
     /**
      * Quote path in case it has spaces.
      *
-     * @param {string} path - path like string to quote.
-     * @returns {string} - the quoted path.
+     * @param path - path like string to quote.
+     * @returns - the quoted path.
      */
     quotePath(path: string): string {
         return `"${path}"`;
@@ -28,8 +28,8 @@ export class ExecutablePath {
      *
      * eg. `& '/path/app name/bin'`
      *
-     * @param {string} path - path like string to insert the `&` operator.
-     * @returns {string} - string like path.
+     * @param path - path like string to insert the `&` operator.
+     * @returns - string like path.
      */
     verifyWindowsPath(path: string): string {
         if (require("os").type() === "Windows_NT") {
@@ -41,7 +41,7 @@ export class ExecutablePath {
     /**
      * Get the basename of the executable path.
      *
-     * @returns {string} - base name of the executable path.
+     * @returns  - base name of the executable path.
      */
     basename(): string {
         return require("path").basename(this.execName);
@@ -50,7 +50,7 @@ export class ExecutablePath {
     /**
      * Check if path exists. If not, will show an error message to user.
      *
-     * @returns {boolean} - True if does, False otherwise
+     * @returns - True if does, False otherwise
      */
     isValid(): boolean {
         if (!require("fs").existsSync(this.execName)) {
@@ -68,7 +68,7 @@ export class ExecutablePath {
     /**
      *  Create the cli command to be executed inside the terminal.
      *
-     * @returns {string} - string like command for the terminal.
+     * @returns  - string like command for the terminal.
      */
     cliCmd(): string {
         this.execName = this.verifyWindowsPath(this.quotePath(this.execName));
@@ -79,8 +79,8 @@ export class ExecutablePath {
 /**
  * Get the executable name and returns its path after it has been validated.
  *
- * @param {string} execName - name of the executable from the settings (eg: primaryExecutablePath or secondaryExecutablePath)
- * @returns {ExecutablePath} - ExecutablePath object.
+ * @param  execName - name of the executable from the settings (eg: primaryExecutablePath or secondaryExecutablePath)
+ * @returns - ExecutablePath object.
  */
 export function getExecutable(execName: string): ExecutablePath {
     const execPath = config.get(`nukeExecutable.${execName}`);
@@ -109,8 +109,8 @@ export function restartInstance(name: string) {
  * Execute the command in the terminal. Before executing the command, if restartInstance
  * is enabled, will dispose of the previous terminal instance.
  *
- * @param {string} cmd - the command to execute.
- * @param {string} suffix - a suffix name to add to the terminal instance name.
+ * @param cmd - the command to execute.
+ * @param suffix - a suffix name to add to the terminal instance name.
  */
 export function execCommand(execPath: ExecutablePath) {
     const basename = execPath.basename();
@@ -149,8 +149,9 @@ export function launchExecutable(execName: string) {
 }
 
 /**
- * Launch main executable with prompt for optional arguments. If executable path
- * is not valid will do nothing.
+ * Launch main executable with prompt for optional arguments.
+ * 
+ * If executable path is not valid will do nothing.
  *
  */
 export async function launchExecutablePrompt() {

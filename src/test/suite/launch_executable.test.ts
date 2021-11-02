@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { setTimeout } from "timers";
 
 import * as assert from "assert";
-import * as executables from "../../launch-executable";
+import * as executables from "../../launch_executable";
 
 const config = vscode.workspace.getConfiguration("nukeTools");
 

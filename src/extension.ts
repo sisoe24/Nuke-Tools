@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import * as executables from "./launch-executable";
+import * as executables from "./launch_executable";
 import * as socketClient from "./client-socket";
 import * as utils from "./utils";
 import * as newUpdate from "./newUpdateMsg";
