@@ -5,12 +5,11 @@ import * as utils from "./utils";
 import * as newUpdate from "./update_message";
 import { addStubsPath } from "./stubs";
 
-
 export function activate(context: vscode.ExtensionContext) {
     newUpdate.showUpdateMessage(context);
 
     // Add stubs automatically if config is enabled
-    if (utils.getConfiguration("other.autoAddStubsPath")) {
+    if (utils.getConfig("other.autoAddStubsPath")) {
         addStubsPath();
     }
 
@@ -37,6 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
             executables.launchExecutablePrompt();
         })
     );
+
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.runInsideNuke", () => {
             const editor = vscode.window.activeTextEditor;
@@ -62,7 +62,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.testRunInsideNuke", () => {
-            socketClient.sendTestMessage();
+            socketClient.sendDebugMessage();
         })
     );
 

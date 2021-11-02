@@ -1,8 +1,6 @@
 import * as vscode from "vscode";
 import * as utils from "./utils";
 
-const config = vscode.workspace.getConfiguration(`nukeTools`);
-
 export class ExecutablePath {
     args: string;
 
@@ -83,7 +81,7 @@ export class ExecutablePath {
  * @returns - ExecutablePath object.
  */
 export function getExecutable(execName: string): ExecutablePath {
-    const execPath = config.get(`nukeExecutable.${execName}`);
+    const execPath = utils.getConfig(`nukeExecutable.${execName}`);
 
     if (!execPath) {
         throw new Error(`Executable name not found: ${execName}`);
@@ -115,7 +113,7 @@ export function restartInstance(name: string) {
 export function execCommand(execPath: ExecutablePath) {
     const basename = execPath.basename();
 
-    const shouldRestart = config.get<boolean>(
+    const shouldRestart = utils.getConfig(
         "nukeExecutable.options.restartInstance"
     );
     if (shouldRestart) {
@@ -137,7 +135,7 @@ export function launchExecutable(execName: string) {
     const execPath = getExecutable(execName);
 
     if (execPath.isValid()) {
-        const defaultArgs = config.get<string>(
+        const defaultArgs = utils.getConfig(
             "nukeExecutable.options.defaultCommandLineArguments"
         );
 
@@ -150,7 +148,7 @@ export function launchExecutable(execName: string) {
 
 /**
  * Launch main executable with prompt for optional arguments.
- * 
+ *
  * If executable path is not valid will do nothing.
  *
  */
