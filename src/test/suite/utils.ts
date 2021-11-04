@@ -21,9 +21,9 @@ export const sleep = (milliseconds: number) => {
  * @param value - the new value for the property.
  */
 export async function updateConfig(name: string, value: any) {
-    vscode.extensions.getExtension("virgilsisoe.nuke-tools")?.activate();
+    // vscode.extensions.getExtension("virgilsisoe.nuke-tools")?.activate();
     const nukeTools = vscode.workspace.getConfiguration("nukeTools");
-    await nukeTools.update(name, value, vscode.ConfigurationTarget.Workspace);
+    return nukeTools.update(name, value, vscode.ConfigurationTarget.Workspace);
 }
 
 /**
@@ -42,6 +42,9 @@ export function tmpFolder(_path?: string) {
 
 /**
  * Clean the settings.json file inside the temporary folder.
+ *
+ * Method will wait for 200ms before completing. This is to give enough time to
+ * vscode to register the changes.
  */
 export async function cleanSettings() {
     const settings = path.join(tmpFolder(), ".vscode", "settings.json");
