@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import * as utils from "./utils";
 import * as os from "os";
 
+// TODO: shouldn't this be an import?
 let net = require("net");
 
 const output = vscode.window.createOutputChannel("Nuke Tools");
@@ -88,13 +89,14 @@ function getManualAddress(property: string, defaultValue: string): string {
  * @param defaultPort - default port value if ini file had no valid value.
  * @returns - the port value.
  */
-function getPortFromIni(configIni: string, defaultPort: string): string {
+export function getPortFromIni(configIni: string, defaultPort: string): string {
+    // TODO; isn't an external module just a single line read too much?
     const loadIniFile = require("read-ini-file");
     const iniContent = loadIniFile.sync(configIni);
 
     let port = iniContent["server"]["port"];
 
-    if (!port || typeof port !== "string" || !port.match(/\d{5}/)) {
+    if (!port || typeof port !== "string" || !port.match(/^\d{5}$/)) {
         const msg = `
             The configuration for the server/port appears to be invalid.
             Falling back on port 54321 for now.
@@ -162,25 +164,13 @@ export function getAddresses(): string {
     return `host: ${getHost()} port: ${getPort()}`;
 }
 
-async function connectionError(err: Error) {
-    const msg = `
-    Couldn't connect to NukeServerSocket. Check the plugin and try again.
-    If manual connection is enable, verify that the port and host address are correct.
-    `;
-
-    const showMessage = await vscode.window.showErrorMessage(msg, "Show Error");
-
-    if (showMessage) {
-        vscode.window.showErrorMessage(err.message);
-    }
-}
-
 /**
  * Send data over TCP network.
  *
  * @param text - Stringified text to be sent as code to be executed inside Nuke.
  */
 export function sendText(text: string) {
+    // TODO: still need to test this.
     let client = new net.Socket();
 
     // server connects by default to localhost even when undefined is supplied.
@@ -205,7 +195,12 @@ export function sendText(text: string) {
     );
 
     client.on("error", function (error: Error) {
-        connectionError(error);
+        const msg = `
+        Couldn't connect to NukeServerSocket. Check the plugin and try again.
+        If manual connection is enable, verify that the port and host address are correct.
+        [Error: ${error.message}]`;
+
+        vscode.window.showErrorMessage(msg);
     });
 
     client.on("data", function (data: Buffer | string) {
