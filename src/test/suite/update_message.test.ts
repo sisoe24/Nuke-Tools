@@ -1,11 +1,8 @@
 import * as update from "../../update_message";
 
 import * as assert from "assert";
-import * as vscode from "vscode";
 
 suite("Version", () => {
-    const currentVersion = "0.3.0";
-
     test("Not a valid constructor", () => {
         for (const constructor of [undefined, "some version"]) {
             const version = new update.Version(constructor);
@@ -62,5 +59,4 @@ suite("Version", () => {
         const version = new update.Version("0.2.1");
         assert.ok(version.isBiggerThan(otherVersion, true));
     });
-
 });
