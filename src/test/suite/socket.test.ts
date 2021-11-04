@@ -1,4 +1,3 @@
-import * as vscode from "vscode";
 import * as assert from "assert";
 import * as path from "path";
 
@@ -31,6 +30,7 @@ suite("Socket", () => {
     });
 
     test("Changing network addresses should not work if enableConnection is false", async () => {
+        // TODO: should call Promise.all. but it doesn't work
         await utils.updateConfig("network.host", "192.136.1.99");
         await utils.updateConfig("network.port", "99999");
 
@@ -39,6 +39,7 @@ suite("Socket", () => {
     });
 
     test("Change network address when enableConnection is true", async () => {
+        // TODO: should call Promise.all. but it doesn't work
         await utils.updateConfig("network.enableManualConnection", true);
         await utils.updateConfig("network.host", "192.186.1.00");
         await utils.updateConfig("network.port", "55555");
