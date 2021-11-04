@@ -1,6 +1,9 @@
 import * as vscode from "vscode";
 import * as utils from "./utils";
 
+/**
+ * ExecutablePath object class.
+ */
 export class ExecutablePath {
     args: string;
 
@@ -52,9 +55,6 @@ export class ExecutablePath {
      */
     isValid(): boolean {
         if (!require("fs").existsSync(this.execName)) {
-            // TODO: replace console log with log to file
-            console.log("file path does not exist");
-
             vscode.window.showErrorMessage(
                 `Cannot find path: ${this.execName}.`
             );
@@ -69,8 +69,8 @@ export class ExecutablePath {
      * @returns  - string like command for the terminal.
      */
     cliCmd(): string {
-        this.execName = this.verifyWindowsPath(this.quotePath(this.execName));
-        return `${this.execName} ${this.args}`.trim();
+        const path = this.verifyWindowsPath(this.quotePath(this.execName));
+        return `${path} ${this.args}`.trim();
     }
 }
 
@@ -113,6 +113,7 @@ export function restartInstance(name: string) {
 export function execCommand(execPath: ExecutablePath) {
     const basename = execPath.basename();
 
+    // TODO: add suffix to terminal
     const shouldRestart = utils.nukeToolsConfig(
         "nukeExecutable.options.restartInstance"
     );
@@ -132,18 +133,19 @@ export function execCommand(execPath: ExecutablePath) {
  * @param suffix
  */
 export function launchExecutable(execName: string) {
-    const execPath = getExecutable(execName);
+    const execObj = getExecutable(execName);
 
-    if (execPath.isValid()) {
+    if (execObj.isValid()) {
         const defaultArgs = utils.nukeToolsConfig(
             "nukeExecutable.options.defaultCommandLineArguments"
         );
 
         if (defaultArgs) {
-            execPath.args = defaultArgs;
+            execObj.args = defaultArgs;
         }
-        execCommand(execPath);
+        execCommand(execObj);
     }
+    return execObj;
 }
 
 /**
@@ -153,17 +155,17 @@ export function launchExecutable(execName: string) {
  *
  */
 export async function launchExecutablePrompt() {
-    let execPath = getExecutable("primaryExecutablePath");
+    const execObj = getExecutable("primaryExecutablePath");
 
-    if (execPath.isValid()) {
+    if (execObj.isValid()) {
         const optArgs = await vscode.window.showInputBox({
             ignoreFocusOut: true,
             placeHolder: "Optional arguments for current instance",
         });
 
         if (optArgs) {
-            execPath.args = optArgs;
+            execObj.args = optArgs;
         }
-        execCommand(execPath);
+        execCommand(execObj);
     }
 }
