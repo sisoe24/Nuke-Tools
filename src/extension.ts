@@ -21,24 +21,31 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.launchNuke", () => {
-            executables.launchExecutable("primaryExecutablePath");
+            executables.launchExecutable(
+                utils.nukeToolsConfig(`nukeExecutable.primaryExecutablePath`)
+            );
         })
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.launchNukeAlt", () => {
-            executables.launchExecutable("secondaryExecutablePath");
+            executables.launchExecutable(
+                utils.nukeToolsConfig(`nukeExecutable.secondaryExecutablePath`)
+            );
         })
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.launchNukeOptArgs", () => {
-            executables.launchExecutablePrompt();
+            executables.launchExecutablePrompt(
+                utils.nukeToolsConfig(`nukeExecutable.primaryExecutablePath`)
+            );
         })
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.runInsideNuke", () => {
+            // todo export to socket client module.
             const editor = vscode.window.activeTextEditor;
             if (!editor) {
                 return;
@@ -67,14 +74,9 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand(
-            "nuke-tools.showNetworkAddresses",
-            () => {
-                vscode.window.showInformationMessage(
-                    socketClient.getAddresses()
-                );
-            }
-        )
+        vscode.commands.registerCommand("nuke-tools.showNetworkAddresses", () => {
+            vscode.window.showInformationMessage(socketClient.getAddresses());
+        })
     );
 }
 

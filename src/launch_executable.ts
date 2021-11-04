@@ -55,9 +55,7 @@ export class ExecutablePath {
      */
     isValid(): boolean {
         if (!require("fs").existsSync(this.execName)) {
-            vscode.window.showErrorMessage(
-                `Cannot find path: ${this.execName}.`
-            );
+            vscode.window.showErrorMessage(`Cannot find path: ${this.execName}.`);
             return false;
         }
         return true;
@@ -72,22 +70,6 @@ export class ExecutablePath {
         const path = this.verifyWindowsPath(this.quotePath(this.execName));
         return `${path} ${this.args}`.trim();
     }
-}
-
-/**
- * Get the executable name and returns its path after it has been validated.
- *
- * @param  execName - name of the executable from the settings (eg: primaryExecutablePath or secondaryExecutablePath)
- * @returns - ExecutablePath object.
- */
-export function getExecutable(execName: string): ExecutablePath {
-    const execPath = utils.nukeToolsConfig(`nukeExecutable.${execName}`);
-
-    if (!execPath) {
-        throw new Error(`Executable name not found: ${execName}`);
-    }
-
-    return new ExecutablePath(execPath as string);
 }
 
 /**
@@ -114,9 +96,7 @@ export function execCommand(execPath: ExecutablePath) {
     const basename = execPath.basename();
 
     // TODO: add suffix to terminal
-    const shouldRestart = utils.nukeToolsConfig(
-        "nukeExecutable.options.restartInstance"
-    );
+    const shouldRestart = utils.nukeToolsConfig("nukeExecutable.options.restartInstance");
     if (shouldRestart) {
         restartInstance(basename);
     }
@@ -133,7 +113,7 @@ export function execCommand(execPath: ExecutablePath) {
  * @param suffix
  */
 export function launchExecutable(execName: string) {
-    const execObj = getExecutable(execName);
+    const execObj = new ExecutablePath(execName);
 
     if (execObj.isValid()) {
         const defaultArgs = utils.nukeToolsConfig(
@@ -154,8 +134,8 @@ export function launchExecutable(execName: string) {
  * If executable path is not valid will do nothing.
  *
  */
-export async function launchExecutablePrompt() {
-    const execObj = getExecutable("primaryExecutablePath");
+export async function launchExecutablePrompt(execName: string) {
+    const execObj = new ExecutablePath(execName);
 
     if (execObj.isValid()) {
         const optArgs = await vscode.window.showInputBox({
