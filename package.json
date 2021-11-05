@@ -20,7 +20,7 @@
         "onCommand:nuke-tools.launchNuke",
         "onCommand:nuke-tools.launchNukeAlt",
         "onCommand:nuke-tools.launchNukeOptArgs",
-        "onCommand:nuke-tools.runInsideNuke",
+        "onCommand:nuke-tools.runCodeInsideNuke",
         "onCommand:nuke-tools.showNetworkAddresses",
         "onCommand:nuke-tools.testRunInsideNuke",
         "onCommand:nuke-tools.addPythonStubs"
@@ -56,7 +56,7 @@
                 "category": "Nuke"
             },
             {
-                "command": "nuke-tools.runInsideNuke",
+                "command": "nuke-tools.runCodeInsideNuke",
                 "title": "Run Code Inside Nuke",
                 "category": "Nuke",
                 "icon": {
@@ -132,26 +132,11 @@
             "editor/title": [
                 {
                     "when": "resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled",
-                    "command": "nuke-tools.runInsideNuke",
+                    "command": "nuke-tools.runCodeInsideNuke",
                     "group": "navigation"
                 }
             ]
-        },
-        "languages": [
-            {
-                "id": "nuke-tools-output",
-                "mimetypes": [
-                    "text/x-code-output"
-                ]
-            }
-        ],
-        "grammars": [
-            {
-                "language": "nuke-tools-output",
-                "scopeName": "nuke-tools.output",
-                "path": "./syntaxes/nuke-tools-output.tmLanguage."
-            }
-        ]
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
