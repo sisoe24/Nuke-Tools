@@ -1,9 +1,7 @@
 import * as vscode from "vscode";
 
 export function getStubsPath(): string {
-    const currentPath = vscode.extensions.getExtension(
-        "virgilsisoe.nuke-tools"
-    )!.extensionPath;
+    const currentPath = vscode.extensions.getExtension("virgilsisoe.nuke-tools")!.extensionPath;
     return require("path").join(currentPath, "Nuke-Python-Stubs", "nuke_stubs");
 }
 
@@ -13,11 +11,10 @@ export function getStubsPath(): string {
  * Python could be not installed, in that case adding the stubs to `analysis.extraPaths`
  * will fail.
  *
- * @returns An extension or undefined
+ * @returns true if extension is installed, false otherwise.
  */
-function isPythonInstalled() {
-    // TODO: cast to boolean
-    return vscode.extensions.getExtension("ms-python.python");
+export function isPythonInstalled(): boolean {
+    return Boolean(vscode.extensions.getExtension("ms-python.python"));
 }
 
 /**
@@ -38,10 +35,10 @@ export function extractVersion(path: string) {
 
 /**
  * Add stubs path to `python.analysis.extraPaths`.
- * 
+ *
  * Update configuration value only if value is not present or the version is lower
- * than the current version. 
- * 
+ * than the current version.
+ *
  * Note: The update is made by reference.
  *
  * @param extraPaths - The `python.analysis.extraPaths` array object.
