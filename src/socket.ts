@@ -4,7 +4,7 @@ import * as os from "os";
 import { Socket } from "net";
 import { readFileSync } from "fs";
 
-const output = vscode.window.createOutputChannel("Nuke Tools");
+const outputWindow = vscode.window.createOutputChannel("Nuke Tools");
 
 /**
  * Prepare a debug message to send to the socket.
@@ -208,6 +208,24 @@ export function sendMessage() {
 }
 
 /**
+ * Write received data from the socket to the output window.
+ * 
+ * @param data text data to write into the output window.
+ */
+function writeToOutputWindow(data: string | Buffer) {
+    if (utils.nukeToolsConfig("other.clearPreviousOutput")) {
+        outputWindow.clear();
+    }
+
+    const editor = vscode.window.activeTextEditor;
+    if (editor) {
+        outputWindow.appendLine(`> Executing: ${editor.document.fileName}`);
+        outputWindow.appendLine(data as string);
+        outputWindow.show(true);
+    }
+}
+
+/**
  * Send data over TCP network.
  *
  * @param text - Stringified text to be sent as code to be executed inside Nuke.
@@ -246,17 +264,7 @@ export function sendData(text: string) {
         console.log(`Socket :: Received -> ${data} of type ${typeof data}`);
         client.destroy(); // kill client after server's response
 
-        const clearOutput = utils.nukeToolsConfig("other.clearPreviousOutput");
-        if (clearOutput) {
-            output.clear();
-        }
-
-        const editor = vscode.window.activeTextEditor;
-        if (editor) {
-            output.appendLine(`> Executing: ${editor.document.fileName} `);
-        }
-        output.appendLine(data as string);
-        output.show(true);
+        writeToOutputWindow(data);
     });
 
     client.on("close", function (hadError: boolean) {
