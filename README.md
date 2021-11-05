@@ -6,7 +6,6 @@ A bunch of Nuke related tools that will help the development process in Visual S
 
 - [Nuke Tools README](#nuke-tools-readme)
   - [Features](#features)
-  - [Nuke Python Stubs](#nuke-python-stubs)
     - [Other ways to add the stubs](#other-ways-to-add-the-stubs)
   - [BlinkScript](#blinkscript)
   - [NukeServerSocket](#nukeserversocket)
@@ -79,20 +78,39 @@ Download companion plugin: [Git](https://github.com/sisoe24/NukeServerSocket/rel
 
 ## Available Commands
 
-All commands are Available by opening the Command Palette (`Command+Shift+P` on macOS and `Ctrl+Shift+P` on Windows/Linux) and typing in one of the following:
+All commands are available by opening the Command Palette (`Command+Shift+P` on macOS and `Ctrl+Shift+P` on Windows/Linux) and typing in one of the following Command Name:
 
-| Command                                    | Description                                     | Shortcut      |
-| ------------------------------------------ | ----------------------------------------------- | ------------- |
-| `Nuke: Launch main executable`             | Launch main executable                          | `alt+shift+n` |
-| `Nuke: Launch alternative executable`      | Launch alternative executable                   |               |
-| `Nuke: Launch main executable with prompt` | Launch main exec. with prompt for optional args |               |
-| `Nuke: Run Inside Nuke`                    | Execute code inside nuke                        | `alt+shift+r` |
-| `Nuke: Show Network Addresses`             | Show network addresses                          |               |
-| `Nuke: Add Stubs to Workspace`             | Add Python stubs path to workspace              |               |
+| Command Name                               | Command ID                        | Description                                     |
+| ------------------------------------------ | --------------------------------- | ----------------------------------------------- |
+| `Nuke: Launch main executable`             | `nuke-tools.launchNuke`           | Launch main executable                          |
+| `Nuke: Launch alternative executable`      | `nuke-tools.launchNukeAlt`        | Launch alternative executable                   |
+| `Nuke: Launch main executable with prompt` | `nuke-tools.launchNukeOptArgs`    | Launch main exec. with prompt for optional args |
+| `Nuke: Run Inside Nuke`                    | `nuke-tools.runCodeInsideNuke`    | Execute code inside nuke                        |
+| `Nuke: Show Network Addresses`             | `nuke-tools.showNetworkAddresses` | Show network addresses                          |
+| `Nuke: Add Stubs to Workspace`             | `nuke-tools.addPythonStubs`       | Add Python stubs path to workspace              |
+| `Nuke: Debug Message`                      | `nuke-tools.testRunInsideNuke`    | Quick test connection                           |
 
-Every command can be re-assigned to a new shortcut. (see [docs](https://code.visualstudio.com/docs/getstarted/keybindings) for more info)
+By default the extension does not provide any shortcut, but every command can be assigned to one. (see [Key Bindings for Visual Studio Code](https://code.visualstudio.com/docs/getstarted/keybindings) for more information)
 
-`Nuke: Run Inside Nuke` can be access also via a button in the Editor Toolbar or the right click context menu.
+Example `json`
+
+```json
+[
+  {
+        "key":"alt+shift+n",
+        "command":"nuke-tools.launchNuke",
+        "when": "editorTextFocus"
+    }
+    {
+        "key":"alt+shift+r",
+        "command":"nuke-tools.runInsideNuke",
+        "when": "editorTextFocus"
+    }
+]
+
+```
+
+`Nuke: Run Inside Nuke` can be access also via a button in the Editor Toolbar.
 
 ## Extension Settings
 
