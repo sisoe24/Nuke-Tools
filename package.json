@@ -135,13 +135,6 @@
                     "command": "nuke-tools.runInsideNuke",
                     "group": "navigation"
                 }
-            ],
-            "editor/context": [
-                {
-                    "when": "resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled",
-                    "command": "nuke-tools.runInsideNuke",
-                    "group": "10_commands"
-                }
             ]
         },
         "keybindings": [
