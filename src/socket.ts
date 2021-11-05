@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import * as utils from "./utils";
 import * as os from "os";
 import { Socket } from "net";
+import { readFileSync } from "fs";
 
 const output = vscode.window.createOutputChannel("Nuke Tools");
 
@@ -80,21 +81,17 @@ function getManualAddress(property: string, defaultValue: string): string {
 /**
  * Get the port value from the NukeServerSocket.ini.
  *
- * If NukeServerSocket.ini has a wrong value (no value, boolean value or incorrect port),
- * will default back on `defaultPort`.
+ * If NukeServerSocket.ini has a wrong value, will default back on `defaultPort`.
  *
  * @param configIni - path of the NukeServerSocket.ini.
  * @param defaultPort - default port value if ini file had no valid value.
  * @returns - the port value.
  */
 export function getPortFromIni(configIni: string, defaultPort: string): string {
-    // TODO; isn't an external module just a single line read too much?
-    const loadIniFile = require("read-ini-file");
-    const iniContent = loadIniFile.sync(configIni);
+    const fileContent = readFileSync(configIni, "utf-8");
+    const match = fileContent.match(/port=(\d{5})(\b|\n)/);
 
-    let port = iniContent["server"]["port"];
-
-    if (!port || typeof port !== "string" || !port.match(/^\d{5}$/)) {
+    if (!match) {
         const msg = `
             The configuration for the server/port appears to be invalid.
             Falling back on port 54321 for now.
@@ -104,7 +101,7 @@ export function getPortFromIni(configIni: string, defaultPort: string): string {
         return defaultPort;
     }
 
-    return port;
+    return match[1];
 }
 
 /**
