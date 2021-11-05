@@ -218,17 +218,17 @@ export function sendData(text: string) {
 
     // server connects by default to localhost even when undefined is supplied.
     client.connect(getPort(), getHost(), function () {
-        console.log("Socket -> Connected");
+        console.log("Socket :: Connected");
         client.write(text);
     });
 
     client.on(
         "lookup",
         function (error: Error | null, address: string, family: string, host: string) {
-            console.log("Socket -> error ::", error);
-            console.log("Socket -> address ::", address);
-            console.log("Socket -> family ::", family);
-            console.log("Socket -> host ::", host);
+            console.log("Socket :: error ->", error);
+            console.log("Socket :: address ->", address);
+            console.log("Socket :: family ->", family);
+            console.log("Socket :: host ->", host);
         }
     );
 
@@ -237,14 +237,13 @@ export function sendData(text: string) {
         Couldn't connect to NukeServerSocket. Check the plugin and try again.
         If manual connection is enable, verify that the port and host address are correct.
         [Error: ${error.message}]`;
-
         vscode.window.showErrorMessage(msg);
     });
 
     client.on("data", function (data: Buffer | string) {
         // Encoding of data is set by socket.setEncoding().
 
-        console.log(`Socket -> Received :: ${data} of type ${typeof data}`);
+        console.log(`Socket :: Received -> ${data} of type ${typeof data}`);
         client.destroy(); // kill client after server's response
 
         const clearOutput = utils.nukeToolsConfig("other.clearPreviousOutput");
@@ -261,10 +260,10 @@ export function sendData(text: string) {
     });
 
     client.on("close", function (hadError: boolean) {
-        console.log("Socket -> Connection closed. Had Errors? ::", hadError);
+        console.log("Socket :: Connection closed. Had Errors? ->", hadError);
     });
 
     client.on("end", function () {
-        console.log("Socket -> Connection ended");
+        console.log("Socket :: Connection ended");
     });
 }
