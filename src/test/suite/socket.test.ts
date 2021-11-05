@@ -61,9 +61,9 @@ suite("Socket", () => {
         const wrongValues = [
             "port",
             "port=",
-            "port=true",
-            "port=9999999",
             "port=value",
+            "port=1234",
+            "port=123456",
         ];
 
         for (const value of wrongValues) {
