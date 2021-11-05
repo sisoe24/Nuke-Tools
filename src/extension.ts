@@ -38,7 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.runInsideNuke", () => {
+        vscode.commands.registerCommand("nuke-tools.runCodeInsideNuke", () => {
             socket.sendMessage();
         })
     );
