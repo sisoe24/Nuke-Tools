@@ -149,6 +149,7 @@ export function launchPrimaryExecutable() {
         "Main"
     );
     launchExecutable(execObj);
+    return execObj;
 }
 
 /**
@@ -160,6 +161,7 @@ export function launchSecondaryExecutable() {
         "Alt."
     );
     launchExecutable(execObj);
+    return execObj;
 }
 
 /**
@@ -182,4 +184,5 @@ export async function launchPromptExecutable() {
         }
         execCommand(execObj);
     }
+    return execObj;
 }
