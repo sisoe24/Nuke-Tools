@@ -58,5 +58,5 @@ export function activate(context: vscode.ExtensionContext) {
 
 // this method is called when your extension is deactivated
 export function deactivate() {
-    // TODO: should force closing connection just in case?
+    // XXX: how to force closing connection? 
 }
