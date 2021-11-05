@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as executables from "./launch_executable";
-import * as socketClient from "./socket";
+import * as socket from "./socket";
 import * as utils from "./utils";
 import * as newUpdate from "./update_message";
 import { addStubsPath } from "./stubs";
@@ -39,37 +39,19 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.runInsideNuke", () => {
-            // todo export to socket client module.
-            const editor = vscode.window.activeTextEditor;
-            if (!editor) {
-                return;
-            }
-
-            if (editor.document.uri.scheme === "output") {
-                vscode.window.showInformationMessage(
-                    "You currently have the Output window in focus. Return the focus on the text editor."
-                );
-                return;
-            }
-
-            const data = {
-                file: editor.document.fileName,
-                text: editor.document.getText(),
-            };
-
-            socketClient.sendText(JSON.stringify(data));
+            socket.sendMessage();
         })
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.testRunInsideNuke", () => {
-            socketClient.sendDebugMessage();
+            socket.sendDebugMessage();
         })
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.showNetworkAddresses", () => {
-            vscode.window.showInformationMessage(socketClient.getAddresses());
+            vscode.window.showInformationMessage(socket.getAddresses());
         })
     );
 }

@@ -165,6 +165,38 @@ export function getAddresses(): string {
 }
 
 /**
+ * Send data over TCP connection.
+ *
+ * The data to be sent over will the current active file name and its content.
+ * Data will be wrapped inside a stringified object before being sent.
+ *
+ *
+ */
+export function sendMessage() {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+        return;
+    }
+
+    // the output window is treated as an active text editor, so if it has the
+    // focus and user tries to execute the command, the text from the output window
+    // window will be sent instead.
+    if (editor.document.uri.scheme === "output") {
+        vscode.window.showInformationMessage(
+            "You currently have the Output window in focus. Return the focus on the text editor."
+        );
+        return;
+    }
+
+    const data = {
+        file: editor.document.fileName,
+        text: editor.document.getText(),
+    };
+
+    sendText(JSON.stringify(data));
+}
+
+/**
  * Send data over TCP network.
  *
  * @param text - Stringified text to be sent as code to be executed inside Nuke.
@@ -181,12 +213,7 @@ export function sendText(text: string) {
 
     client.on(
         "lookup",
-        function (
-            error: Error | null,
-            address: string,
-            family: string,
-            host: string
-        ) {
+        function (error: Error | null, address: string, family: string, host: string) {
             console.log("Socket -> error ::", error);
             console.log("Socket -> address ::", address);
             console.log("Socket -> family ::", family);
