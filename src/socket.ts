@@ -40,7 +40,7 @@ export function prepareDebugMsg(): object {
  * Send a debug test message to the socket connection.
  */
 export function sendDebugMessage() {
-    sendText(JSON.stringify(prepareDebugMsg()));
+    sendData(JSON.stringify(prepareDebugMsg()));
 }
 
 /**
