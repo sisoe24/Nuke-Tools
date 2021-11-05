@@ -1,3 +1,4 @@
+import { basename } from "path";
 import * as vscode from "vscode";
 import * as utils from "./utils";
 
@@ -7,10 +8,16 @@ import * as utils from "./utils";
 export class ExecutablePath {
     args: string;
 
-    constructor(public execName: string) {
-        if (!execName) {
-        }
-        this.execName = execName;
+    /**
+     * Init method for the ExecutablePath object.
+     *
+     * @param execPath - The path for the executable file.
+     * @param terminalSuffix - A suffix for the terminal name that launches the
+     * executable.
+     */
+    constructor(public execPath: string, public terminalSuffix: string) {
+        this.terminalSuffix = terminalSuffix;
+        this.execPath = execPath;
         this.args = "";
     }
 
@@ -45,7 +52,16 @@ export class ExecutablePath {
      * @returns  - base name of the executable path.
      */
     basename(): string {
-        return require("path").basename(this.execName);
+        return require("path").basename(this.execPath);
+    }
+
+    /**
+     * Create the terminal name based on path basename and terminalSuffix argument.
+     *
+     * @returns the terminal name.
+     */
+    terminalName(): string {
+        return `${this.basename()} ${this.terminalSuffix}`;
     }
 
     /**
@@ -54,8 +70,8 @@ export class ExecutablePath {
      * @returns - True if does, False otherwise
      */
     isValid(): boolean {
-        if (!require("fs").existsSync(this.execName)) {
-            vscode.window.showErrorMessage(`Cannot find path: ${this.execName}.`);
+        if (!require("fs").existsSync(this.execPath)) {
+            vscode.window.showErrorMessage(`Cannot find path: ${this.execPath}.`);
             return false;
         }
         return true;
@@ -67,7 +83,7 @@ export class ExecutablePath {
      * @returns  - string like command for the terminal.
      */
     cliCmd(): string {
-        const path = this.verifyWindowsPath(this.quotePath(this.execName));
+        const path = this.verifyWindowsPath(this.quotePath(this.execPath));
         return `${path} ${this.args}`.trim();
     }
 }
@@ -93,15 +109,14 @@ export function restartInstance(name: string) {
  * @param suffix - a suffix name to add to the terminal instance name.
  */
 export function execCommand(execPath: ExecutablePath) {
-    const basename = execPath.basename();
+    const terminalName = execPath.terminalName();
 
-    // TODO: add suffix to terminal
     const shouldRestart = utils.nukeToolsConfig("nukeExecutable.options.restartInstance");
     if (shouldRestart) {
-        restartInstance(basename);
+        restartInstance(terminalName);
     }
 
-    const terminal = vscode.window.createTerminal(basename);
+    const terminal = vscode.window.createTerminal(terminalName);
     terminal.sendText(execPath.cliCmd());
     terminal.show(true);
 }
@@ -109,12 +124,9 @@ export function execCommand(execPath: ExecutablePath) {
 /**
  * Launch executable. If executable path is not valid will do nothing.
  *
- * @param execName
- * @param suffix
+ * @param execObj
  */
-export function launchExecutable(execName: string) {
-    const execObj = new ExecutablePath(execName);
-
+export function launchExecutable(execObj: ExecutablePath) {
     if (execObj.isValid()) {
         const defaultArgs = utils.nukeToolsConfig(
             "nukeExecutable.options.defaultCommandLineArguments"
@@ -129,13 +141,35 @@ export function launchExecutable(execName: string) {
 }
 
 /**
- * Launch main executable with prompt for optional arguments.
- *
- * If executable path is not valid will do nothing.
- *
+ * Launch primary executable from configuration.
  */
-export async function launchExecutablePrompt(execName: string) {
-    const execObj = new ExecutablePath(execName);
+export function launchPrimaryExecutable() {
+    const execObj = new ExecutablePath(
+        utils.nukeToolsConfig(`nukeExecutable.primaryExecutablePath`),
+        "Main"
+    );
+    launchExecutable(execObj);
+}
+
+/**
+ * Launch secondary executable from configuration.
+ */
+export function launchSecondaryExecutable() {
+    const execObj = new ExecutablePath(
+        utils.nukeToolsConfig(`nukeExecutable.secondaryExecutablePath`),
+        "Alt."
+    );
+    launchExecutable(execObj);
+}
+
+/**
+ * Launch main executable with prompt for optional arguments.
+ */
+export async function launchPromptExecutable() {
+    const execObj = new ExecutablePath(
+        utils.nukeToolsConfig(`nukeExecutable.primaryExecutablePath`),
+        "Opt."
+    );
 
     if (execObj.isValid()) {
         const optArgs = await vscode.window.showInputBox({

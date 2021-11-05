@@ -21,25 +21,19 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.launchNuke", () => {
-            executables.launchExecutable(
-                utils.nukeToolsConfig(`nukeExecutable.primaryExecutablePath`)
-            );
+            executables.launchPrimaryExecutable();
         })
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.launchNukeAlt", () => {
-            executables.launchExecutable(
-                utils.nukeToolsConfig(`nukeExecutable.secondaryExecutablePath`)
-            );
+            executables.launchSecondaryExecutable();
         })
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.launchNukeOptArgs", () => {
-            executables.launchExecutablePrompt(
-                utils.nukeToolsConfig(`nukeExecutable.primaryExecutablePath`)
-            );
+            executables.launchPromptExecutable();
         })
     );
 
