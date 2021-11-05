@@ -160,6 +160,27 @@ export function getAddresses(): string {
 }
 
 /**
+ * Prepare the message to be sent to the socket.
+ *
+ * If editor has no selected text, the whole file will be sent. Otherwise only
+ * the selected text.
+ *
+ * @param editor - vscode TextEditor instance.
+ * @returns a stringified object with the data to be sent.
+ */
+function prepareMessage(editor: vscode.TextEditor): string {
+    const document = editor.document;
+    const selection = editor.selection;
+    const selectedWord = document.getText(selection);
+
+    const data = {
+        file: editor.document.fileName,
+        text: selectedWord || editor.document.getText(),
+    };
+    return JSON.stringify(data);
+}
+
+/**
  * Send data over TCP connection.
  *
  * The data to be sent over will the current active file name and its content.
@@ -183,12 +204,7 @@ export function sendMessage() {
         return;
     }
 
-    const data = {
-        file: editor.document.fileName,
-        text: editor.document.getText(),
-    };
-
-    sendText(JSON.stringify(data));
+    sendData(prepareMessage(editor));
 }
 
 /**
@@ -196,7 +212,7 @@ export function sendMessage() {
  *
  * @param text - Stringified text to be sent as code to be executed inside Nuke.
  */
-export function sendText(text: string) {
+export function sendData(text: string) {
     // TODO: still need to test this.
     let client = new Socket();
 
