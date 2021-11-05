@@ -87,17 +87,14 @@
                 "properties": {
                     "nukeTools.nukeExecutable.primaryExecutablePath": {
                         "type": "string",
-                        "default": "",
                         "description": "Path to Nuke executable file."
                     },
                     "nukeTools.nukeExecutable.secondaryExecutablePath": {
                         "type": "string",
-                        "default": "",
                         "description": "Path to alternative Nuke executable file."
                     },
                     "nukeTools.nukeExecutable.options.defaultCommandLineArguments": {
                         "type": "string",
-                        "default": "",
                         "markdownDescription": "Command line arguments to be added at each execution. [docs](https://learn.foundry.com/nuke/content/comp_environment/configuring_nuke/command_line_operations.html)"
                     },
                     "nukeTools.nukeExecutable.options.restartInstance": {
@@ -196,8 +193,5 @@
         "mocha": "^8.4.0",
         "typescript": "^4.3.2",
         "vscode-test": "^1.5.2"
-    },
-    "dependencies": {
-        "read-ini-file": "^3.0.1"
     }
 }
