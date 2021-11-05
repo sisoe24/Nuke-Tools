@@ -1,78 +1,116 @@
 import * as vscode from "vscode";
-import { setTimeout } from "timers";
-
+import * as utils from "./utils";
 import * as assert from "assert";
+import { join } from "path";
 import * as executables from "../../launch_executable";
 
-const config = vscode.workspace.getConfiguration("nukeTools");
+/**
+ * Path to an executable bash file named: myapp.
+ */
+const samplePath = join(utils.tmpFolder(), "path space", "myapp");
 
 suite("ExecutablePath()", () => {
-    const path = "path/app name/bin";
-
     test("quotePath()", () => {
-        const execPath = new executables.ExecutablePath(path);
-        const quotedPath = execPath.quotePath(path);
-        assert.strictEqual(quotedPath, `"${path}"`);
+        const execPath = new executables.ExecutablePath(samplePath, "suffix");
+        const quotedPath = execPath.quotePath(samplePath);
+        assert.strictEqual(quotedPath, `"${samplePath}"`);
     });
 
     test.skip("Check path if on Windows", () => {
-        // TODO: monkey path the os module?
+        // TODO: can monkeypatch the os module?
         it("should insert he & operator if on Windows system");
     });
 
     test("basename()", () => {
-        // TODO: monkey path the os module?
-        const execPath = new executables.ExecutablePath(path);
+        const execPath = new executables.ExecutablePath(samplePath, "suffix");
         const basename = execPath.basename();
-        assert.strictEqual(basename, "bin");
+        assert.strictEqual(basename, "myapp");
     });
 
-    test("isValid()", () => {
-        const home = require("os").homedir();
-        const paths = { "fake/path/bin": false, home: true };
+    test("Path should be invalid.", () => {
+        const execPath = new executables.ExecutablePath("fake/path/bin", "suffix");
+        assert.strictEqual(execPath.isValid(), false);
+    });
 
-        Object.entries(paths).forEach(([path, exists]) => {
-            const execPath = new executables.ExecutablePath(path);
-            assert.strictEqual(execPath.isValid(), exists);
-        });
+    test("Path should be valid.", () => {
+        const execPath = new executables.ExecutablePath(samplePath, "suffix");
+        assert.strictEqual(execPath.isValid(), true);
     });
 
     test("cliCmd()", () => {
-        const execPath = new executables.ExecutablePath(path);
+        const execPath = new executables.ExecutablePath(samplePath, "suffix");
         const cmd = execPath.cliCmd();
-        assert.strictEqual(cmd, `"${path}"`);
+        assert.strictEqual(cmd, `"${samplePath}"`);
     });
 
     test("CLI cmd with arguments", () => {
-        const execPath = new executables.ExecutablePath(path);
-        execPath.args = "-random --args";
+        const execPath = new executables.ExecutablePath(samplePath, "suffix");
+        execPath.args = "-fake --args";
 
-        assert.match(execPath.cliCmd(), /&?\s?".+?" -random --args/g);
+        const pattern = new RegExp('&?\\s?"' + samplePath + '" -fake --args');
+        assert.match(execPath.cliCmd(), pattern);
     });
 });
 
-/**
- * Some tests will need to wait for vscode to register the actions. An example will
- * be creating/killing terminals and configuration update.
- *
- * @param milliseconds - time to sleep
- * @returns
- */
-const sleep = (milliseconds: number) => {
-    return new Promise((resolve) => setTimeout(resolve, milliseconds));
-};
+const sleepTime = 400;
+
+suite("Launch executable", () => {
+    suiteSetup("Setup Clean settings file", async () => {
+        await utils.cleanSettings();
+    });
+
+    teardown("Tear Down settings file", async () => {
+        await utils.cleanSettings();
+    });
+
+    test("Primary executable with no arguments", async () => {
+        await utils.updateConfig("nukeExecutable.primaryExecutablePath", samplePath);
+
+        const execPath = executables.launchPrimaryExecutable();
+
+        const pattern = new RegExp('&?\\s?"' + samplePath + '"');
+        assert.match(execPath.cliCmd(), pattern);
+    });
+
+    test("Primary executable with Default arguments", async () => {
+        await utils.updateConfig("nukeExecutable.primaryExecutablePath", samplePath);
+
+        await utils.updateConfig(
+            "nukeExecutable.options.defaultCommandLineArguments",
+            "-fake --args"
+        );
+
+        const execPath = executables.launchPrimaryExecutable();
+
+        const pattern = new RegExp('&?\\s?"' + samplePath + '" -fake --args');
+        assert.match(execPath.cliCmd(), pattern);
+    });
+
+    test("Alternative executable with Default arguments", async () => {
+        await utils.updateConfig(
+            "nukeExecutable.options.defaultCommandLineArguments",
+            "-fake --args"
+        );
+
+        await utils.updateConfig("nukeExecutable.secondaryExecutablePath", samplePath);
+
+        const execPath = executables.launchSecondaryExecutable();
+
+        const pattern = new RegExp('&?\\s?"' + samplePath + '" -fake --args');
+        assert.match(execPath.cliCmd(), pattern);
+    });
+});
 
 suite("Terminal instance", () => {
     const terminalName = "test";
-    const sleepTime = 200;
 
     test("Terminal was created", () => {
-        const execPath = new executables.ExecutablePath("path/to/bin.app");
+        const execPath = new executables.ExecutablePath("path/to/bin.app", "suffix");
         executables.execCommand(execPath);
 
         let match = false;
         vscode.window.terminals.forEach((terminal) => {
-            if (terminal.name === "bin.app") {
+            if (terminal.name === "bin.app suffix") {
                 match = true;
             }
         });
@@ -89,7 +127,7 @@ suite("Terminal instance", () => {
         executables.restartInstance(terminalName);
         vscode.window.createTerminal(terminalName);
 
-        await sleep(sleepTime);
+        await utils.sleep(200);
 
         let terminalInstances = 0;
         vscode.window.terminals.forEach((terminal) => {
@@ -117,59 +155,6 @@ suite("Terminal instance", () => {
         vscode.window.terminals.forEach((terminal) => {
             terminal.dispose();
         });
-        await sleep(sleepTime);
-    });
-});
-
-async function changeConfig(section: string, settings: any) {
-    await config.update(
-        section,
-        settings,
-        vscode.ConfigurationTarget.Workspace
-    );
-}
-
-
-
-suite.skip("Arguments", () => {
-    test("Optional arguments", async () => {});
-    test("Default arguments", async () => {
-        let result = await Promise.resolve(
-            changeConfig(
-                "nukeExecutable.options.defaultCommandLineArguments",
-                "random args x"
-            )
-        );
-
-        const resolve = (args: any) => {
-            console.log(" resolve ~ args", args);
-        };
-
-        const reject = (args: any) => {
-            console.log(" reject ~ args", args);
-        };
-
-        console.log("what 1");
-        changeConfig(
-            "nukeExecutable.options.defaultCommandLineArguments",
-            "random args"
-        ).then(
-            () => {
-                const path = executables.appendArgs("fake/path");
-                console.log("line 70 ~ path", path);
-                assert.strictEqual(path, "fake/path LOL");
-            },
-            () => {
-                console.log("what 3");
-                reject("bo");
-            }
-        );
-        console.log("what 2");
-        // const config = vscode.workspace.getConfiguration(`nukeTools`);
-        // config.update(
-        //     "nukeExecutable.options.defaultCommandLineArguments",
-        //     "LOLx",
-        //     vscode.ConfigurationTarget.Workspace
-        // );
+        await utils.sleep(sleepTime);
     });
 });
