@@ -1,9 +1,7 @@
 import * as vscode from "vscode";
 import * as utils from "./utils";
 import * as os from "os";
-
-// TODO: shouldn't this be an import?
-let net = require("net");
+import { Socket } from "net";
 
 const output = vscode.window.createOutputChannel("Nuke Tools");
 
@@ -121,7 +119,7 @@ export function getPortFromIni(configIni: string, defaultPort: string): string {
  *
  * @returns - port value for the connection.
  */
-export function getPort(): string {
+export function getPort(): number {
     let port = "54321";
 
     const configIni = getNukeIni();
@@ -132,7 +130,7 @@ export function getPort(): string {
     if (utils.nukeToolsConfig("network.enableManualConnection")) {
         port = getManualAddress("port", port);
     }
-    return port;
+    return parseInt(port);
 }
 
 /**
@@ -203,7 +201,7 @@ export function sendMessage() {
  */
 export function sendText(text: string) {
     // TODO: still need to test this.
-    let client = new net.Socket();
+    let client = new Socket();
 
     // server connects by default to localhost even when undefined is supplied.
     client.connect(getPort(), getHost(), function () {
