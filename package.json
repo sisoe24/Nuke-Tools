@@ -137,18 +137,6 @@
                 }
             ]
         },
-        "keybindings": [
-            {
-                "command": "nuke-tools.launchNuke",
-                "key": "alt+shift+n",
-                "when": "editorTextFocus"
-            },
-            {
-                "command": "nuke-tools.runInsideNuke",
-                "key": "alt+shift+r",
-                "when": "editorTextFocus"
-            }
-        ],
         "languages": [
             {
                 "id": "nuke-tools-output",
