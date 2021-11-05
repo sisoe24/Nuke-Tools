@@ -70,7 +70,7 @@ export function showUpdateMessage(context: vscode.ExtensionContext) {
         vscode.extensions.getExtension(extensionId)!.packageJSON
             .version as string
     );
-
+    // TODO: stash git and find way to clean message
     // store the current version in the global state key _value['virgilsisoe.nuke-tools']
     context.globalState.update(extensionId, currentVersion.toStr);
 
