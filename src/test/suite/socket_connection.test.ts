@@ -1,14 +1,11 @@
 import * as assert from "assert";
-import * as path from "path";
-
-import { writeFileSync } from "fs";
 
 import * as socket from "../../socket";
-import * as utils from "./utils";
 import * as testUtils from "./utils";
 
-import { Server, Socket } from "net";
-import { Range } from "vscode";
+import { Server } from "net";
+
+// ! TODO: not sure about all this
 
 async function server(port: number = 54321, host: string = "localhost") {
     console.log("init server");
@@ -36,7 +33,7 @@ async function server(port: number = 54321, host: string = "localhost") {
     });
 }
 
-suite.only("Send Data", () => {
+suite("Send Data", () => {
     test("Send data to server", async () => {
         await server();
         const data = await socket.sendData("localhost", 54321, "hello");
