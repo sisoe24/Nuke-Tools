@@ -40,6 +40,7 @@ suite("Socket", () => {
 
     test("Change network address when enableConnection is true", async () => {
         // TODO: should call Promise.all. but it doesn't work
+        // TODO: check why NukeServerSocket workspace had this settings.
         await utils.updateConfig("network.enableManualConnection", true);
         await utils.updateConfig("network.host", "192.186.1.00");
         await utils.updateConfig("network.port", "55555");
@@ -58,13 +59,7 @@ suite("Socket", () => {
 
     test("Get default port value from fake.ini when value type is incorrect", () => {
         const fakeIni = path.join(utils.tmpFolder(), "fake.ini");
-        const wrongValues = [
-            "port",
-            "port=",
-            "port=value",
-            "port=1234",
-            "port=123456",
-        ];
+        const wrongValues = ["port", "port=", "port=value", "port=1234", "port=123456"];
 
         for (const value of wrongValues) {
             writeFileSync(fakeIni, `[server]\n${value}`);
@@ -75,4 +70,3 @@ suite("Socket", () => {
     });
 });
 
-suite.skip("Send Data", () => {});
