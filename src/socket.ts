@@ -232,7 +232,6 @@ function writeToOutputWindow(data: string | Buffer) {
  */
 export function sendData(host: string, port: number, data: string) {
     let client = new Socket();
-    let status = "";
 
     try {
         // server connects by default to localhost even when undefined is supplied.
@@ -259,7 +258,6 @@ export function sendData(host: string, port: number, data: string) {
      */
     client.on("data", function (data: Buffer | string) {
         // Encoding of data is set by socket.setEncoding().
-        status = "Message Received";
 
         console.log(`Socket :: Received -> ${data} of type ${typeof data}`);
         client.destroy(); // kill client after server's response
@@ -285,7 +283,6 @@ export function sendData(host: string, port: number, data: string) {
         Couldn't connect to NukeServerSocket. Check the plugin and try again.
         If manual connection is enable, verify that the port and host address are correct.
         [Error: ${error.message}]`;
-        status = "Connection refused";
         vscode.window.showErrorMessage(msg);
     });
 
@@ -295,16 +292,5 @@ export function sendData(host: string, port: number, data: string) {
 
     client.on("end", function () {
         console.log("Socket :: Connection ended");
-    });
-    
-    // ! TODO: not confident about this
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            if (status) {
-                resolve(status);
-            } else {
-                reject("Connection timeout.");
-            }
-        }, 100);
     });
 }
