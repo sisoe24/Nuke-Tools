@@ -40,7 +40,7 @@ export function prepareDebugMsg(): object {
  * Send a debug test message to the socket connection.
  */
 export function sendDebugMessage() {
-    sendData(JSON.stringify(prepareDebugMsg()));
+    sendData(getHost(), getPort(), JSON.stringify(prepareDebugMsg()));
 }
 
 /**
@@ -204,12 +204,12 @@ export function sendMessage() {
         return;
     }
 
-    sendData(prepareMessage(editor));
+    sendData(getHost(), getPort(), prepareMessage(editor));
 }
 
 /**
  * Write received data from the socket to the output window.
- * 
+ *
  * @param data text data to write into the output window.
  */
 function writeToOutputWindow(data: string | Buffer) {
@@ -230,23 +230,53 @@ function writeToOutputWindow(data: string | Buffer) {
  *
  * @param text - Stringified text to be sent as code to be executed inside Nuke.
  */
-export function sendData(text: string) {
-    // TODO: still need to test this.
+export function sendData(host: string, port: number, data: string) {
     let client = new Socket();
+    let status = "";
 
-    // server connects by default to localhost even when undefined is supplied.
-    client.connect(getPort(), getHost(), function () {
-        console.log("Socket :: Connected");
-        client.write(text);
+    try {
+        // server connects by default to localhost even when undefined is supplied.
+        client.connect(port, host, function () {
+            console.log("Socket :: Connected");
+            client.write(data);
+            client.setTimeout(10000);
+        });
+
+    } catch (error) {
+        if (error instanceof RangeError) {
+            console.log("Socket :: port is out of range.");
+            vscode.window.showErrorMessage(
+                `Port is out of range:  Port should be >= 49567 and < 65536. Received: ${port}`
+            );
+            throw new RangeError();
+        } else {
+            console.log(" Connection error: ", error.message);
+        }
+    }
+
+    /**
+     * The data received back from the client.
+     */
+    client.on("data", function (data: Buffer | string) {
+        // Encoding of data is set by socket.setEncoding().
+        status = "Message Received";
+
+        console.log(`Socket :: Received -> ${data} of type ${typeof data}`);
+        client.destroy(); // kill client after server's response
+
+        writeToOutputWindow(data);
     });
 
     client.on(
         "lookup",
         function (error: Error | null, address: string, family: string, host: string) {
-            console.log("Socket :: error ->", error);
             console.log("Socket :: address ->", address);
             console.log("Socket :: family ->", family);
             console.log("Socket :: host ->", host);
+            console.log("Socket :: error ->", error);
+            if (error) {
+                throw new Error(error.message);
+            }
         }
     );
 
@@ -255,16 +285,8 @@ export function sendData(text: string) {
         Couldn't connect to NukeServerSocket. Check the plugin and try again.
         If manual connection is enable, verify that the port and host address are correct.
         [Error: ${error.message}]`;
+        status = "Connection refused";
         vscode.window.showErrorMessage(msg);
-    });
-
-    client.on("data", function (data: Buffer | string) {
-        // Encoding of data is set by socket.setEncoding().
-
-        console.log(`Socket :: Received -> ${data} of type ${typeof data}`);
-        client.destroy(); // kill client after server's response
-
-        writeToOutputWindow(data);
     });
 
     client.on("close", function (hadError: boolean) {
@@ -273,5 +295,16 @@ export function sendData(text: string) {
 
     client.on("end", function () {
         console.log("Socket :: Connection ended");
+    });
+    
+    // ! TODO: not confident about this
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (status) {
+                resolve(status);
+            } else {
+                reject("Connection timeout.");
+            }
+        }, 100);
     });
 }
