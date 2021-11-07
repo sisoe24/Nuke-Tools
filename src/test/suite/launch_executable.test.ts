@@ -47,7 +47,7 @@ suite("ExecutablePath()", () => {
         const execPath = new executables.ExecutablePath(samplePath, "suffix");
         execPath.args = "-fake --args";
 
-        const pattern = new RegExp('&?\\s?"' + samplePath + '" -fake --args');
+        const pattern = new RegExp(`&?\\s?"${samplePath}" -fake --args`);
         assert.match(execPath.cliCmd(), pattern);
     });
 });
