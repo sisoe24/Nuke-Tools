@@ -6,14 +6,15 @@ import * as path from "path";
  *
  * @returns the stubs path or undefined if couldn't resolve the path.
  */
-export function getStubsPath(): string | undefined {
-    const currentPath =
-        vscode.extensions.getExtension("virgilsisoe.nuke-tools")?.extensionPath ?? undefined;
+export function getStubsPath(): string {
+    const currentPath = vscode.extensions.getExtension("virgilsisoe.nuke-tools")?.extensionPath;
 
     if (currentPath) {
         return path.join(currentPath, "Nuke-Python-Stubs", "nuke_stubs");
     }
-    return undefined;
+    const msg = "Could not resolve stubs path: " + currentPath;
+    vscode.window.showErrorMessage(msg);
+    throw new Error(msg);
 }
 
 /**
@@ -107,16 +108,10 @@ export function addStubsPath(): boolean {
         return false;
     }
 
-    const stubsPath = getStubsPath();
-    if (!stubsPath) {
-        vscode.window.showErrorMessage("Could not resolve the stubs path");
-        return false;
-    }
-
     const config = vscode.workspace.getConfiguration("python.analysis");
     const extraPaths = config.get("extraPaths") as Array<string>;
 
-    updateAnalysisPath(extraPaths, stubsPath);
+    updateAnalysisPath(extraPaths, getStubsPath());
     config.update("extraPaths", extraPaths);
     return true;
 }
