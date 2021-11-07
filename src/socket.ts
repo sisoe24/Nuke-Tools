@@ -29,7 +29,7 @@ export function getNukeIni(): string {
  * @returns - the property value.
  */
 function getManualAddress(property: string, defaultValue: string): string {
-    const manualAddress = utils.nukeToolsConfig(`network.${property}`);
+    const manualAddress = utils.nukeToolsConfig(`network.${property}`) as string;
 
     if (!manualAddress) {
         const manualErrorMsg = `
@@ -136,7 +136,7 @@ function writeToOutputWindow(data: string, showDebug: boolean): void {
 
     const editor = vscode.window.activeTextEditor;
     if (editor) {
-        outputWindow.appendLine(`> Executing: ${editor.document.fileName || "unknown"}`);
+        outputWindow.appendLine(`> Executing: ${editor.document.fileName}`);
         outputWindow.appendLine(data);
         outputWindow.show(true);
     }
@@ -196,8 +196,9 @@ export function sendData(host: string, port: number, data: string, timeout = 100
             writeDebugNetwork(showDebug, msg);
             client.destroy(new Error("Port out of range"));
         } else {
-            writeDebugNetwork(showDebug, `Unknown exception. ${error.message}`);
-            client.destroy(new Error(`${error}`));
+            const msg = `Unknown exception. ${error || "unknown"}`;
+            writeDebugNetwork(showDebug, msg);
+            client.destroy(new Error(msg));
         }
     }
 
@@ -284,9 +285,12 @@ export function prepareDebugMsg(): { text: string; file: string } {
     const r1 = random();
     const r2 = random();
 
+    const host = os.hostname();
+    const user = os.userInfo();
+
     let code = `
     from __future__ import print_function
-    print("Hostname: ${os.hostname()} User: ${os.userInfo()["username"]}")
+    print("Hostname: ${host} User: ${user["username"] || "unknown"}")
     print("Connected to ${getAddresses()}")
     print("${r1} * ${r2} =", ${r1 * r2})
     `;
