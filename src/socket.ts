@@ -136,7 +136,7 @@ function writeToOutputWindow(data: string, showDebug: boolean): void {
 
     const editor = vscode.window.activeTextEditor;
     if (editor) {
-        outputWindow.appendLine(`> Executing: ${editor.document.fileName}`);
+        outputWindow.appendLine(`> Executing: ${editor.document.fileName as string}`);
         outputWindow.appendLine(data);
         outputWindow.show(true);
     }
