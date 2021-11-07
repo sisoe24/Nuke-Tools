@@ -8,7 +8,7 @@ import * as vscode from "vscode";
  * @param property - name of the configuration property to get.
  * @returns - the value of the property.
  */
-export function nukeToolsConfig(property: string): any {
+export function nukeToolsConfig(property: string): unknown {
     const config = vscode.workspace.getConfiguration(`nukeTools`);
     const subConfig = config.get(property);
 

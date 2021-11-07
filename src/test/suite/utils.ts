@@ -20,21 +20,19 @@ export const sleep = (milliseconds: number) => {
  * @param name - name of the configuration property to update.
  * @param value - the new value for the property.
  */
-export async function updateConfig(name: string, value: any) {
+export async function updateConfig(name: string, value: unknown) {
     // vscode.extensions.getExtension("virgilsisoe.nuke-tools")?.activate();
     const nukeTools = vscode.workspace.getConfiguration("nukeTools");
     return nukeTools.update(name, value, vscode.ConfigurationTarget.Workspace);
 }
 
 /**
+ * Get the tmp folder path in rootDir.
  *
- * @returns
+ * @returns path of the tmp directory
  */
-export function tmpFolder(_path?: string) {
+export function tmpFolder(): string {
     const cwd = vscode.extensions.getExtension("virgilsisoe.nuke-tools")!.extensionPath;
-    if (_path) {
-        return path.join(cwd, "tmp", _path);
-    }
     return path.join(cwd, "tmp");
 }
 
