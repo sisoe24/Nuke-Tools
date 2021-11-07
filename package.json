@@ -124,6 +124,11 @@
                     "nukeTools.network.host": {
                         "type": "string",
                         "markdownDescription": "Specify a different host/ip for the connection. This will work only if `#nukeTools.network.enableManualConnection#` is enabled."
+                    },
+                    "nukeTools.network.debug": {
+                        "type": "boolean",
+                        "default": false,
+                        "markdownDescription": "Create an output window to debug network connections."
                     }
                 }
             }

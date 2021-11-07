@@ -20,6 +20,7 @@ A bunch of Nuke related tools that will help the development process in Visual S
     - [`nukeTools.network.enableManualConnection`](#nuketoolsnetworkenablemanualconnection)
     - [`nukeTools.network.port`](#nuketoolsnetworkport)
     - [`nukeTools.network.host`](#nuketoolsnetworkhost)
+    - [`nukeTools.network.debug`](#nuketoolsnetworkdebug)
   - [Overview](#overview)
 
 ## Features
@@ -152,6 +153,10 @@ Specify a different port for the connection. This will only work if `nukeTools.n
 ### `nukeTools.network.host`
 
 Same as `nukeTools.network.port`. Host could be the localhost or the local ip.
+
+### `nukeTools.network.debug`
+
+Show network debug information in the output window. Enabling this option, will prevent the console from being cleared after code execution.
 
 ## Overview
 
