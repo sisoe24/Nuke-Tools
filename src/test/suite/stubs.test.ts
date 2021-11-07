@@ -12,6 +12,9 @@ suite("Stubs Creation", () => {
         assert(fs.existsSync(path));
     });
 
+    // TODO: Need to mock the extension path.
+    test.skip("Get stubs path but raises error");
+
     test("Extract version from path", () => {
         const version = stubs.extractVersion(stubsPath);
         assert.strictEqual(version, "0.3.2");
