@@ -8,43 +8,6 @@ import * as path from "path";
 const outputWindow = vscode.window.createOutputChannel("Nuke Tools");
 
 /**
- * Prepare a debug message to send to the socket.
- *
- * Message contains some valid python code and will show the user information.
- *
- * @returns - data object
- */
-export function prepareDebugMsg(): { text: string; file: string } {
-    const random = () => Math.round(Math.random() * 10);
-    const r1 = random();
-    const r2 = random();
-
-    let code = `
-    from __future__ import print_function
-    print("Hostname: ${os.hostname()} User: ${os.userInfo()["username"]}")
-    print("Connected to ${getAddresses()}")
-    print("${r1} * ${r2} =", ${r1 * r2})
-    `;
-
-    // make everything a single line python command
-    code = code.trim().replace(/\n/g, ";");
-
-    const data = {
-        text: code,
-        file: "vscode/path/tmp_file.py",
-    };
-
-    return data;
-}
-
-/**
- * Send a debug test message to the socket connection.
- */
-export function sendDebugMessage(): void {
-    sendData(getHost(), getPort(), JSON.stringify(prepareDebugMsg()));
-}
-
-/**
  * Get the NukeServerSocket.ini file path.
  *
  * The path will be returned even if there is no file.
@@ -161,54 +124,6 @@ export function getAddresses(): string {
 }
 
 /**
- * Prepare the message to be sent to the socket.
- *
- * If editor has no selected text, the whole file will be sent. Otherwise only
- * the selected text.
- *
- * @param editor - vscode TextEditor instance.
- * @returns a stringified object with the data to be sent.
- */
-function prepareMessage(editor: vscode.TextEditor): string {
-    const document = editor.document;
-    const selection = editor.selection;
-    const selectedWord = document.getText(selection);
-
-    const data = {
-        file: editor.document.fileName,
-        text: selectedWord || editor.document.getText(),
-    };
-    return JSON.stringify(data);
-}
-
-/**
- * Send data over TCP connection.
- *
- * The data to be sent over will the current active file name and its content.
- * Data will be wrapped inside a stringified object before being sent.
- *
- *
- */
-export function sendMessage(): void {
-    const editor = vscode.window.activeTextEditor;
-    if (!editor) {
-        return;
-    }
-
-    // the output window is treated as an active text editor, so if it has the
-    // focus and user tries to execute the command, the text from the output window
-    // window will be sent instead.
-    if (editor.document.uri.scheme === "output") {
-        vscode.window.showInformationMessage(
-            "You currently have the Output window in focus. Return the focus on the text editor."
-        );
-        return;
-    }
-
-    sendData(getHost(), getPort(), prepareMessage(editor));
-}
-
-/**
  * Write received data from the socket to the output window.
  *
  * @param data text data to write into the output window.
@@ -250,7 +165,7 @@ function writeDebugNetwork(showDebug: boolean, data: string): void {
  * @param timeout - time for the timeout connection. Defaults to 10000 ms (10sec).
  */
 export function sendData(host: string, port: number, data: string, timeout = 10000): void {
-    let client = new Socket();
+    const client = new Socket();
     const showDebug = utils.nukeToolsConfig("network.debug") as boolean;
 
     writeDebugNetwork(showDebug, `Try connecting to ${host}:${port}`);
@@ -355,4 +270,88 @@ export function sendData(host: string, port: number, data: string, timeout = 100
     client.on("end", function () {
         writeDebugNetwork(showDebug, "Connection ended.");
     });
+}
+
+/**
+ * Prepare a debug message to send to the socket.
+ *
+ * Message contains some valid python code and will show the user information.
+ *
+ * @returns - data object
+ */
+export function prepareDebugMsg(): { text: string; file: string } {
+    const random = () => Math.round(Math.random() * 10);
+    const r1 = random();
+    const r2 = random();
+
+    let code = `
+    from __future__ import print_function
+    print("Hostname: ${os.hostname()} User: ${os.userInfo()["username"]}")
+    print("Connected to ${getAddresses()}")
+    print("${r1} * ${r2} =", ${r1 * r2})
+    `;
+
+    // make everything a single line python command
+    code = code.trim().replace(/\n/g, ";");
+
+    const data = {
+        text: code,
+        file: "vscode/path/tmp_file.py",
+    };
+
+    return data;
+}
+
+/**
+ * Send a debug test message to the socket connection.
+ */
+export function sendDebugMessage(): void {
+    sendData(getHost(), getPort(), JSON.stringify(prepareDebugMsg()));
+}
+
+/**
+ * Prepare the message to be sent to the socket.
+ *
+ * If editor has no selected text, the whole file will be sent. Otherwise only
+ * the selected text.
+ *
+ * @param editor - vscode TextEditor instance.
+ * @returns a stringified object with the data to be sent.
+ */
+function prepareMessage(editor: vscode.TextEditor): string {
+    const document = editor.document;
+    const selection = editor.selection;
+    const selectedWord = document.getText(selection);
+
+    const data = {
+        file: editor.document.fileName,
+        text: selectedWord || editor.document.getText(),
+    };
+    return JSON.stringify(data);
+}
+/**
+ * Send data over TCP connection.
+ *
+ * The data to be sent over will the current active file name and its content.
+ * Data will be wrapped inside a stringified object before being sent.
+ *
+ *
+ */
+export function sendMessage(): void {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+        return;
+    }
+
+    // the output window is treated as an active text editor, so if it has the
+    // focus and user tries to execute the command, the text from the output window
+    // window will be sent instead.
+    if (editor.document.uri.scheme === "output") {
+        vscode.window.showInformationMessage(
+            "You currently have the Output window in focus. Return the focus on the text editor."
+        );
+        return;
+    }
+
+    sendData(getHost(), getPort(), prepareMessage(editor));
 }
