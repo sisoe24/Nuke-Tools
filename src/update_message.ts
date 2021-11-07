@@ -19,8 +19,9 @@ export function showUpdateMessage(context: vscode.ExtensionContext): void {
     const previousMsg = context.globalState.get<string>(extUpdateMsg) as string;
 
     // get the package.json version
-    const currentVersion = vscode.extensions.getExtension(extensionId)!.packageJSON
-        .version as string;
+    // if it cannot resolve the version will return 0.0.0
+    const currentVersion =
+        (vscode.extensions.getExtension(extensionId)?.packageJSON.version as string) ?? "0.0.0";
 
     // store the current version in the global state key _value['virgilsisoe.nuke-tools.version']
     context.globalState.update(extVersion, currentVersion);

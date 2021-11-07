@@ -29,11 +29,15 @@ export async function updateConfig(name: string, value: unknown) {
 /**
  * Get the tmp folder path in rootDir.
  *
- * @returns path of the tmp directory
+ * @returns path of the tmp directory or undefined if it couldn't resolve.
  */
-export function tmpFolder(): string {
-    const cwd = vscode.extensions.getExtension("virgilsisoe.nuke-tools")!.extensionPath;
-    return path.join(cwd, "tmp");
+export function getTmpFolder(): string | undefined {
+    const cwd =
+        vscode.extensions.getExtension("virgilsisoe.nuke-tools")?.extensionPath ?? undefined;
+    if (cwd) {
+        return path.join(cwd, "tmp");
+    }
+    return undefined;
 }
 
 /**
@@ -43,7 +47,12 @@ export function tmpFolder(): string {
  * vscode to register the changes.
  */
 export async function cleanSettings() {
-    const settings = path.join(tmpFolder(), ".vscode", "settings.json");
+    const tmpFolder = getTmpFolder();
+
+    if (!tmpFolder) {
+        return;
+    }
+    const settings = path.join(tmpFolder, ".vscode", "settings.json");
     if (existsSync(settings)) {
         writeFileSync(settings, "{}");
     }

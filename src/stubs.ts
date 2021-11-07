@@ -1,8 +1,18 @@
 import * as vscode from "vscode";
 
-export function getStubsPath(): string {
-    const currentPath = vscode.extensions.getExtension("virgilsisoe.nuke-tools")!.extensionPath;
-    return require("path").join(currentPath, "Nuke-Python-Stubs", "nuke_stubs");
+/**
+ * Get the stubs path inside the rootDir.
+ *
+ * @returns the stubs path or undefined if couldn't resolve the path.
+ */
+export function getStubsPath(): string | undefined {
+    const currentPath =
+        vscode.extensions.getExtension("virgilsisoe.nuke-tools")?.extensionPath ?? undefined;
+
+    if (currentPath) {
+        return require("path").join(currentPath, "Nuke-Python-Stubs", "nuke_stubs");
+    }
+    return undefined;
 }
 
 /**
@@ -51,10 +61,11 @@ export function addPath(extraPaths: string[], stubsPath: string): boolean {
 
     for (const path of extraPaths) {
         const versionMatch = extractVersion(path);
+        const stubsVersion = extractVersion(stubsPath);
 
-        if (versionMatch) {
+        if (versionMatch && stubsVersion) {
             // extract version from current stubs path is mostly needed for testing.
-            if (versionMatch < extractVersion(stubsPath)!) {
+            if (versionMatch < stubsVersion) {
                 const index = extraPaths.indexOf(path);
                 extraPaths[index] = stubsPath;
             }
@@ -96,6 +107,10 @@ export function addStubsPath(): boolean {
     }
 
     const stubsPath = getStubsPath();
+    if (!stubsPath) {
+        vscode.window.showErrorMessage("Could not resolve the stubs path");
+        return false;
+    }
 
     const config = vscode.workspace.getConfiguration("python.analysis");
     const extraPaths = config.get("extraPaths") as Array<string>;
