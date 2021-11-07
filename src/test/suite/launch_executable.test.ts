@@ -119,8 +119,8 @@ suite("Terminal instance", () => {
     });
 
     // TODO: currently don't know how to grab this info
-    test.skip("Check if terminal has cmd line text", () => {});
-    test.skip("Check if terminal is shown", () => {});
+    test.skip("Check if terminal has cmd line text");
+    test.skip("Check if terminal is shown");
 
     test("Restart terminal instance", async () => {
         vscode.window.createTerminal(terminalName);

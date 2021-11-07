@@ -21,7 +21,7 @@ suite("Socket", () => {
         assert.ok(Object.prototype.hasOwnProperty.call(debugMsg, "file"));
     });
 
-    test.skip("sendDebugMessage", () => {});
+    test.skip("sendDebugMessage");
 
     test("Get NukeServerSocket.ini", () => {
         const iniPath = socket.getNukeIni();
