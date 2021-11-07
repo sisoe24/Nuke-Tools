@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import * as path from "path";
 
-import { writeFileSync } from "fs";
+import * as fs from "fs";
 
 import * as socket from "../../socket";
 import * as utils from "./utils";
@@ -26,7 +26,7 @@ suite("Socket", () => {
     test("Get NukeServerSocket.ini", () => {
         const iniPath = socket.getNukeIni();
         // ! TODO: this will fail if file was not created
-        assert(require("fs").existsSync(iniPath));
+        assert(fs.existsSync(iniPath));
     });
 
     test("Changing network addresses should not work if enableConnection is false", async () => {
@@ -50,22 +50,22 @@ suite("Socket", () => {
     });
 
     test("Get port value from fake.ini", () => {
-        const fakeIni = path.join(utils.tmpFolder(), "fake.ini");
-        writeFileSync(fakeIni, "[server]\nport=55555");
+        const fakeIni = path.join(utils.getTmpFolder(), "fake.ini");
+        fs.writeFileSync(fakeIni, "[server]\nport=55555");
 
         const port = socket.getPortFromIni(fakeIni, "54321");
         assert.strictEqual(port, "55555");
     });
 
     test("Get default port value from fake.ini when value type is incorrect", () => {
-        const fakeIni = path.join(utils.tmpFolder(), "fake.ini");
+        const fakeIni = path.join(utils.getTmpFolder(), "fake.ini");
         const wrongValues = ["port", "port=", "port=value", "port=1234", "port=123456"];
 
         for (const value of wrongValues) {
-            writeFileSync(fakeIni, `[server]\n${value}`);
+            fs.writeFileSync(fakeIni, `[server]\n${value}`);
             const port = socket.getPortFromIni(fakeIni, "54321");
             assert.strictEqual(port, "54321");
         }
-        writeFileSync(fakeIni, "");
+        fs.writeFileSync(fakeIni, "");
     });
 });

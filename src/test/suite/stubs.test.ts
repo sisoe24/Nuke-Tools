@@ -2,13 +2,14 @@ import * as vscode from "vscode";
 
 import * as assert from "assert";
 import * as stubs from "../../stubs";
+import * as fs from "fs";
 
 suite("Stubs Creation", () => {
     const stubsPath = "path/virgilsisoe.nuke-tools-0.3.2/Nuke-Python-Stub";
 
     test("Get stubs path", () => {
         const path = stubs.getStubsPath();
-        assert(require("fs").existsSync(path));
+        assert(fs.existsSync(path));
     });
 
     test("Extract version from path", () => {
@@ -26,10 +27,7 @@ suite("Stubs Creation", () => {
 
     test("Update Python analysis path", () => {
         // extra path has already a stub path
-        const extraPaths = [
-            "path/to/lib",
-            "path/virgilsisoe.nuke-tools-0.3.1/Nuke-Python-Stub",
-        ];
+        const extraPaths = ["path/to/lib", "path/virgilsisoe.nuke-tools-0.3.1/Nuke-Python-Stub"];
 
         // this does update path because stubs (0.3.2) version is bigger than
         // extraPaths (0.3.1)

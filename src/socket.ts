@@ -2,7 +2,8 @@ import * as vscode from "vscode";
 import * as utils from "./utils";
 import * as os from "os";
 import { Socket } from "net";
-import { readFileSync } from "fs";
+import * as fs from "fs";
+import * as path from "path";
 
 const outputWindow = vscode.window.createOutputChannel("Nuke Tools");
 
@@ -51,7 +52,7 @@ export function sendDebugMessage(): void {
  * @returns - path like string.
  */
 export function getNukeIni(): string {
-    return require("path").join(os.homedir(), ".nuke/NukeServerSocket.ini");
+    return path.join(os.homedir(), ".nuke/NukeServerSocket.ini");
 }
 
 /**
@@ -88,7 +89,7 @@ function getManualAddress(property: string, defaultValue: string): string {
  * @returns - the port value.
  */
 export function getPortFromIni(configIni: string, defaultPort: string): string {
-    const fileContent = readFileSync(configIni, "utf-8");
+    const fileContent = fs.readFileSync(configIni, "utf-8");
     const match = fileContent.match(/port=(\d{5})(\b|\n)/);
 
     if (!match) {
@@ -120,7 +121,7 @@ export function getPort(): number {
     let port = "54321";
 
     const configIni = getNukeIni();
-    if (require("fs").existsSync(configIni)) {
+    if (fs.existsSync(configIni)) {
         port = getPortFromIni(configIni, port);
     }
 

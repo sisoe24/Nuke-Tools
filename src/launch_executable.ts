@@ -1,5 +1,8 @@
 import * as vscode from "vscode";
 import * as utils from "./utils";
+import * as path from "path";
+import * as os from "os";
+import * as fs from "fs";
 
 /**
  * ExecutablePath object class.
@@ -41,7 +44,7 @@ export class ExecutablePath {
      * @returns - string like path.
      */
     verifyWindowsPath(path: string): string {
-        if (require("os").type() === "Windows_NT") {
+        if (os.type() === "Windows_NT") {
             path = `& ${path}`;
         }
         return path;
@@ -53,7 +56,7 @@ export class ExecutablePath {
      * @returns  - base name of the executable path.
      */
     basename(): string {
-        return require("path").basename(this.execPath);
+        return path.basename(this.execPath);
     }
 
     /**
@@ -71,7 +74,7 @@ export class ExecutablePath {
      * @returns - True if does, False otherwise
      */
     isValid(): boolean {
-        if (!require("fs").existsSync(this.execPath)) {
+        if (!fs.existsSync(this.execPath)) {
             vscode.window.showErrorMessage(`Cannot find path: ${this.execPath}.`);
             return false;
         }

@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import * as path from "path";
 
 /**
  * Get the stubs path inside the rootDir.
@@ -10,7 +11,7 @@ export function getStubsPath(): string | undefined {
         vscode.extensions.getExtension("virgilsisoe.nuke-tools")?.extensionPath ?? undefined;
 
     if (currentPath) {
-        return require("path").join(currentPath, "Nuke-Python-Stubs", "nuke_stubs");
+        return path.join(currentPath, "Nuke-Python-Stubs", "nuke_stubs");
     }
     return undefined;
 }
