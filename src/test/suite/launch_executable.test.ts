@@ -67,8 +67,8 @@ suite("Launch executable", () => {
         await utils.updateConfig("nukeExecutable.primaryExecutablePath", samplePath);
 
         const execPath = executables.launchPrimaryExecutable();
+        const pattern = new RegExp(`&?\\s?"${samplePath}"`);
 
-        const pattern = new RegExp('&?\\s?"' + samplePath + '"');
         assert.match(execPath.cliCmd(), pattern);
     });
 
@@ -82,7 +82,7 @@ suite("Launch executable", () => {
 
         const execPath = executables.launchPrimaryExecutable();
 
-        const pattern = new RegExp('&?\\s?"' + samplePath + '" -fake --args');
+        const pattern = new RegExp(`&?\\s?"${samplePath}" -fake --args`);
         assert.match(execPath.cliCmd(), pattern);
     });
 
@@ -96,7 +96,7 @@ suite("Launch executable", () => {
 
         const execPath = executables.launchSecondaryExecutable();
 
-        const pattern = new RegExp('&?\\s?"' + samplePath + '" -fake --args');
+        const pattern = new RegExp(`&?\\s?"${samplePath}" -fake --args`);
         assert.match(execPath.cliCmd(), pattern);
     });
 });
