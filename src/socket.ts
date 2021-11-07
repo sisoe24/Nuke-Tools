@@ -211,86 +211,147 @@ export function sendMessage() {
  * Write received data from the socket to the output window.
  *
  * @param data text data to write into the output window.
+ * @param showDebug if true, the output window will not be cleared despite the settings.
  */
-function writeToOutputWindow(data: string | Buffer) {
-    if (utils.nukeToolsConfig("other.clearPreviousOutput")) {
+function writeToOutputWindow(data: string, showDebug: boolean = false) {
+    if (utils.nukeToolsConfig("other.clearPreviousOutput") && !showDebug) {
         outputWindow.clear();
     }
 
     const editor = vscode.window.activeTextEditor;
     if (editor) {
         outputWindow.appendLine(`> Executing: ${editor.document.fileName}`);
-        outputWindow.appendLine(data as string);
+        outputWindow.appendLine(data);
         outputWindow.show(true);
+    }
+}
+
+/**
+ *  Write debug information to the output window.
+ *
+ * @param showDebug if true, will output debug information to the output window.
+ * @param data text data to write into the output window.
+ */
+function writeDebugNetwork(showDebug: boolean, data: string) {
+    if (showDebug) {
+        const timestamp = new Date();
+        const msg = `[${timestamp.toISOString()}] - ${data}`;
+        outputWindow.appendLine(msg);
     }
 }
 
 /**
  * Send data over TCP network.
  *
- * @param text - Stringified text to be sent as code to be executed inside Nuke.
+ * @param host - host address for the connection.
+ * @param port - port address for the connection.
+ * @param data - Stringified data to sent as code to be executed inside Nuke.
+ * @param timeout - time for the timeout connection. Defaults to 10000 ms (10sec).
  */
-export function sendData(host: string, port: number, data: string) {
+export function sendData(host: string, port: number, data: string, timeout: number = 10000) {
     let client = new Socket();
+    const showDebug = utils.nukeToolsConfig("network.debug");
+
+    writeDebugNetwork(showDebug, `Try connecting to ${host}:${port}`);
+
+    /**
+     * Set connection timeout.
+     *
+     * Once emitted will close the socket with an error: 'connection timeout'.
+     */
+    client.setTimeout(timeout, () => {
+        writeDebugNetwork(showDebug, "Connection timeout.");
+        client.destroy(new Error("Connection timeout"));
+    });
 
     try {
-        // server connects by default to localhost even when undefined is supplied.
+        /**
+         * Initiate a connection on a given socket.
+         *
+         * If host is undefined, will fallback to localhost.
+         */
         client.connect(port, host, function () {
-            console.log("Socket :: Connected");
+            writeDebugNetwork(showDebug, "Connected.");
             client.write(data);
-            client.setTimeout(10000);
         });
-
     } catch (error) {
         if (error instanceof RangeError) {
-            console.log("Socket :: port is out of range.");
-            vscode.window.showErrorMessage(
-                `Port is out of range:  Port should be >= 49567 and < 65536. Received: ${port}`
-            );
-            throw new RangeError();
+            const msg = `Port is out of range. Value should be >= 49567 and < 65536. Received: ${port}`;
+            writeDebugNetwork(showDebug, msg);
+            client.destroy(new Error("Port out of range"));
         } else {
-            console.log(" Connection error: ", error.message);
+            writeDebugNetwork(showDebug, `Unknown exception. ${error}`);
+            client.destroy(new Error(`${error}`));
         }
     }
 
     /**
-     * The data received back from the client.
+     * Emitted when data is received.
+     *
+     * The argument data will be a Buffer or String. Encoding of data is set by socket.setEncoding().
      */
-    client.on("data", function (data: Buffer | string) {
-        // Encoding of data is set by socket.setEncoding().
-
-        console.log(`Socket :: Received -> ${data} of type ${typeof data}`);
-        client.destroy(); // kill client after server's response
-
-        writeToOutputWindow(data);
+    client.on("data", function (data: string) {
+        writeDebugNetwork(showDebug, `Received: "${data.toString().replace(/\n/g, "\\n")}"\n`);
+        writeToOutputWindow(data, showDebug);
+        client.destroy();
     });
 
+    /**
+     * Emitted after resolving the host name but before connecting.
+     */
     client.on(
         "lookup",
         function (error: Error | null, address: string, family: string, host: string) {
-            console.log("Socket :: address ->", address);
-            console.log("Socket :: family ->", family);
-            console.log("Socket :: host ->", host);
-            console.log("Socket :: error ->", error);
+            writeDebugNetwork(
+                showDebug,
+                "Socket Lookup :: " +
+                    JSON.stringify(
+                        { address: address, family: family, host: host, error: error },
+                        null,
+                        " "
+                    )
+            );
+
+            // console.log(error);
             if (error) {
-                throw new Error(error.message);
+                writeDebugNetwork(showDebug, `${error}`);
             }
         }
     );
 
+    /**
+     * Emitted when an error occurs.
+     *
+     * The 'close' event will be called directly following this event.
+     */
     client.on("error", function (error: Error) {
         const msg = `
-        Couldn't connect to NukeServerSocket. Check the plugin and try again.
-        If manual connection is enable, verify that the port and host address are correct.
-        [Error: ${error.message}]`;
+            Couldn't connect to NukeServerSocket. Check the plugin and try again. 
+            If manual connection is enable, verify that the port and host address are correct. 
+            ${error}`;
         vscode.window.showErrorMessage(msg);
     });
 
-    client.on("close", function (hadError: boolean) {
-        console.log("Socket :: Connection closed. Had Errors? ->", hadError);
+    /**
+     * Emitted when a socket is ready to be used.
+     *
+     * Triggered immediately after 'connect'.
+     */
+    client.on("ready", function () {
+        writeDebugNetwork(showDebug, "Message ready.");
     });
 
+    /**
+     * Emitted once the socket is fully closed.
+     */
+    client.on("close", function (hadError: boolean) {
+        writeDebugNetwork(showDebug, `Connection closed. Had Errors: ${hadError}`);
+    });
+
+    /**
+     * Emitted when the other end of the socket signals the end of transmission.
+     */
     client.on("end", function () {
-        console.log("Socket :: Connection ended");
+        writeDebugNetwork(showDebug, "Connection ended.");
     });
 }
