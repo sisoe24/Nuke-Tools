@@ -221,7 +221,7 @@ function writeToOutputWindow(data: string, showDebug: boolean): void {
 
     const editor = vscode.window.activeTextEditor;
     if (editor) {
-        outputWindow.appendLine(`> Executing: ${editor.document.fileName}`);
+        outputWindow.appendLine(`> Executing: ${editor.document.fileName || "unknown"}`);
         outputWindow.appendLine(data);
         outputWindow.show(true);
     }
@@ -251,7 +251,7 @@ function writeDebugNetwork(showDebug: boolean, data: string): void {
  */
 export function sendData(host: string, port: number, data: string, timeout = 10000): void {
     let client = new Socket();
-    const showDebug = utils.nukeToolsConfig("network.debug");
+    const showDebug = utils.nukeToolsConfig("network.debug") as boolean;
 
     writeDebugNetwork(showDebug, `Try connecting to ${host}:${port}`);
 
@@ -281,7 +281,7 @@ export function sendData(host: string, port: number, data: string, timeout = 100
             writeDebugNetwork(showDebug, msg);
             client.destroy(new Error("Port out of range"));
         } else {
-            writeDebugNetwork(showDebug, `Unknown exception. ${error}`);
+            writeDebugNetwork(showDebug, `Unknown exception. ${error.message}`);
             client.destroy(new Error(`${error}`));
         }
     }
@@ -315,7 +315,7 @@ export function sendData(host: string, port: number, data: string, timeout = 100
 
             // console.log(error);
             if (error) {
-                writeDebugNetwork(showDebug, `${error}`);
+                writeDebugNetwork(showDebug, `${error.message}`);
             }
         }
     );
@@ -329,7 +329,7 @@ export function sendData(host: string, port: number, data: string, timeout = 100
         const msg = `
             Couldn't connect to NukeServerSocket. Check the plugin and try again. 
             If manual connection is enable, verify that the port and host address are correct. 
-            ${error}`;
+            ${error.message}`;
         vscode.window.showErrorMessage(msg);
     });
 
@@ -346,7 +346,7 @@ export function sendData(host: string, port: number, data: string, timeout = 100
      * Emitted once the socket is fully closed.
      */
     client.on("close", function (hadError: boolean) {
-        writeDebugNetwork(showDebug, `Connection closed. Had Errors: ${hadError}`);
+        writeDebugNetwork(showDebug, `Connection closed. Had Errors: ${hadError.toString()}`);
     });
 
     /**
