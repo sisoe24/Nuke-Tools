@@ -196,7 +196,7 @@ export function sendData(host: string, port: number, data: string, timeout = 100
             writeDebugNetwork(showDebug, msg);
             client.destroy(new Error("Port out of range"));
         } else {
-            const msg = `Unknown exception. ${error || "unknown"}`;
+            const msg = `Unknown exception. ${String(error)}`;
             writeDebugNetwork(showDebug, msg);
             client.destroy(new Error(msg));
         }
