@@ -1,6 +1,6 @@
 version = 1
 
-test_patterns = ["src/tests/*"]
+test_patterns = ["src/test/suite/*.test.ts"]
 
 [[analyzers]]
 name = "javascript"
