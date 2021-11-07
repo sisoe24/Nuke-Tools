@@ -13,7 +13,7 @@ const outputWindow = vscode.window.createOutputChannel("Nuke Tools");
  *
  * @returns - data object
  */
-export function prepareDebugMsg(): object {
+export function prepareDebugMsg(): { text: string; file: string } {
     const random = () => Math.round(Math.random() * 10);
     const r1 = random();
     const r2 = random();
