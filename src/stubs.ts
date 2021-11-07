@@ -26,7 +26,7 @@ export function isPythonInstalled(): boolean {
  * @returns the matched version as a string or undefined if no version is found.
  */
 export function extractVersion(path: string): string | undefined {
-    const match = path.match(/virgilsisoe.nuke-tools-(.+?)\//);
+    const match = path.match(/nuke-tools-([^\/]+)/);
     if (match) {
         return match[1];
     }
