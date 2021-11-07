@@ -1,4 +1,5 @@
 import * as assert from "assert";
+import * as vscode from "vscode";
 import * as path from "path";
 
 import * as fs from "fs";
@@ -15,22 +16,9 @@ suite("Socket", () => {
         await utils.cleanSettings();
     });
 
-    test("Prepare debug message", () => {
-        const debugMsg = socket.prepareDebugMsg();
-        assert.ok(Object.prototype.hasOwnProperty.call(debugMsg, "text"));
-        assert.ok(Object.prototype.hasOwnProperty.call(debugMsg, "file"));
-    });
-
-    test.skip("sendDebugMessage");
-
-    test("Get NukeServerSocket.ini", () => {
-        const iniPath = socket.getNukeIni();
-        // ! TODO: this will fail if file was not created
-        assert(fs.existsSync(iniPath));
-    });
-
     test("Changing network addresses should not work if enableConnection is false", async () => {
         // TODO: should call Promise.all. but it doesn't work
+        await utils.updateConfig("network.enableManualConnection", false);
         await utils.updateConfig("network.host", "192.136.1.99");
         await utils.updateConfig("network.port", "99999");
 
@@ -68,4 +56,47 @@ suite("Socket", () => {
         }
         fs.writeFileSync(fakeIni, "");
     });
+
+    test("Prepare debug message", () => {
+        const debugMsg = socket.prepareDebugMsg();
+        assert.ok(Object.prototype.hasOwnProperty.call(debugMsg, "text"));
+        assert.ok(Object.prototype.hasOwnProperty.call(debugMsg, "file"));
+    });
+
+    test("Write debug network", async () => {
+        const msg = socket.writeDebugNetwork(true, "random msg");
+        assert.match(msg, /\[[^\]]+] - random msg/);
+    });
+
+    test("Dont write debug network", async () => {
+        const msg = socket.writeDebugNetwork(false, "random msg");
+        assert.strictEqual(msg, "");
+    });
+
+    test("Write to output window", async () => {
+        const tmpFile = path.join(utils.getTmpFolder(), "test.py");
+        const msg = socket.writeToOutputWindow("random msg", tmpFile, false);
+        assert.strictEqual(msg, `> Executing: ${tmpFile}\\nrandom msg`);
+    });
+
+    test("prepareMessage", async () => {
+        // TODO: should write the message with the test
+        const tmpFile = path.join(utils.getTmpFolder(), "test.py");
+        const document = await vscode.workspace.openTextDocument(tmpFile);
+        await vscode.window.showTextDocument(document, { viewColumn: vscode.ViewColumn.One });
+
+        const editor = vscode.window.activeTextEditor;
+        if (editor) {
+            const msg = socket.prepareMessage(editor);
+
+            assert.ok(Object.prototype.hasOwnProperty.call(msg, "text"));
+            assert.ok(Object.prototype.hasOwnProperty.call(msg, "file"));
+
+            assert.strictEqual(msg["file"], tmpFile);
+            assert.strictEqual(msg["text"], "print('hello')\nprint('world')\n");
+        }
+    });
+
+    test.skip("sendDebugMessage");
+    test.skip("sendMessage");
 });
