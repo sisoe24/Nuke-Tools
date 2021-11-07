@@ -135,7 +135,7 @@ export function launchExecutable(execObj: ExecutablePath): ExecutablePath {
     if (execObj.isValid()) {
         const defaultArgs = utils.nukeToolsConfig(
             "nukeExecutable.options.defaultCommandLineArguments"
-        );
+        ) as string;
 
         if (defaultArgs) {
             execObj.args = defaultArgs;
@@ -152,7 +152,7 @@ export function launchExecutable(execObj: ExecutablePath): ExecutablePath {
  */
 export function launchPrimaryExecutable(): ExecutablePath {
     const execObj = new ExecutablePath(
-        utils.nukeToolsConfig(`nukeExecutable.primaryExecutablePath`),
+        utils.nukeToolsConfig(`nukeExecutable.primaryExecutablePath`) as string,
         "Main"
     );
     launchExecutable(execObj);
@@ -166,7 +166,7 @@ export function launchPrimaryExecutable(): ExecutablePath {
  */
 export function launchSecondaryExecutable(): ExecutablePath {
     const execObj = new ExecutablePath(
-        utils.nukeToolsConfig(`nukeExecutable.secondaryExecutablePath`),
+        utils.nukeToolsConfig(`nukeExecutable.secondaryExecutablePath`) as string,
         "Alt."
     );
     launchExecutable(execObj);
@@ -180,7 +180,7 @@ export function launchSecondaryExecutable(): ExecutablePath {
  */
 export async function launchPromptExecutable(): Promise<ExecutablePath> {
     const execObj = new ExecutablePath(
-        utils.nukeToolsConfig(`nukeExecutable.primaryExecutablePath`),
+        utils.nukeToolsConfig(`nukeExecutable.primaryExecutablePath`) as string,
         "Opt."
     );
 
