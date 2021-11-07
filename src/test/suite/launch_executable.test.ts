@@ -7,7 +7,7 @@ import * as executables from "../../launch_executable";
 /**
  * Path to an executable bash file named: myapp.
  */
-const samplePath = join(utils.tmpFolder(), "path space", "myapp");
+const samplePath = join(utils.getTmpFolder(), "path space", "myapp");
 
 suite("ExecutablePath()", () => {
     test("quotePath()", () => {
