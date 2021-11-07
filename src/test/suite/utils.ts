@@ -31,13 +31,12 @@ export async function updateConfig(name: string, value: unknown) {
  *
  * @returns path of the tmp directory or undefined if it couldn't resolve.
  */
-export function getTmpFolder(): string | undefined {
-    const cwd =
-        vscode.extensions.getExtension("virgilsisoe.nuke-tools")?.extensionPath ?? undefined;
+export function getTmpFolder(): string {
+    const cwd = vscode.extensions.getExtension("virgilsisoe.nuke-tools")?.extensionPath;
     if (cwd) {
         return path.join(cwd, "tmp");
     }
-    return undefined;
+    throw new Error("Could not resolve the tmp folder path");
 }
 
 /**
