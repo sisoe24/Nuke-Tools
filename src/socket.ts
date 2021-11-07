@@ -290,7 +290,8 @@ export function prepareDebugMsg(): { text: string; file: string } {
 
     let code = `
     from __future__ import print_function
-    print("Hostname: ${host} User: ${user["username"] || "unknown"}")
+    print("Hostname: ${host}")
+    print("User: ${user["username"] as string}")
     print("Connected to ${getAddresses()}")
     print("${r1} * ${r2} =", ${r1 * r2})
     `;
