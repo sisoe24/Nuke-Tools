@@ -1,4 +1,3 @@
-import { basename } from "path";
 import * as vscode from "vscode";
 import * as utils from "./utils";
 

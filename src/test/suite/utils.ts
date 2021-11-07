@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as path from "path";
-import { writeFileSync, existsSync, readFileSync } from "fs";
+import { writeFileSync, existsSync } from "fs";
 
 /**
  * Some tests will need to wait for vscode to register the actions. An example will
@@ -31,9 +31,7 @@ export async function updateConfig(name: string, value: any) {
  * @returns
  */
 export function tmpFolder(_path?: string) {
-    const cwd = vscode.extensions.getExtension(
-        "virgilsisoe.nuke-tools"
-    )!.extensionPath;
+    const cwd = vscode.extensions.getExtension("virgilsisoe.nuke-tools")!.extensionPath;
     if (_path) {
         return path.join(cwd, "tmp", _path);
     }

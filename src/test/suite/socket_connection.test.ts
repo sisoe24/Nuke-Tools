@@ -52,6 +52,6 @@ suite("Send Data", () => {
     });
 
     test.skip("Send data but host is unreachable", async () => {
-        const c = await socket.sendData("192.168.1.99", 12456, "hello");
+        await socket.sendData("192.168.1.99", 12456, "hello");
     });
 });

@@ -1,6 +1,5 @@
 import * as assert from "assert";
 
-import * as utils from "../../utils";
 import * as vscode from "vscode";
 
 /**
@@ -20,11 +19,8 @@ import * as vscode from "vscode";
  * 5. Check menus properties: if name matches command and when condition.
  */
 
-const extPackage = vscode.extensions.getExtension(
-    "virgilsisoe.nuke-tools"
-)!.packageJSON;
-const configuration =
-    extPackage["contributes"]["configuration"][0]["properties"];
+const extPackage = vscode.extensions.getExtension("virgilsisoe.nuke-tools")!.packageJSON;
+const configuration = extPackage["contributes"]["configuration"][0]["properties"];
 console.log(configuration);
 const n = {
     "nukeTools.nukeExecutable.primaryExecutablePath": "string",
@@ -41,7 +37,6 @@ suite.only("Configuration properties", () => {
     test("Default values", () => {
         for (const [key, value] of Object.entries(configuration)) {
             console.log(key, value);
-            const k: string = key;
 
             assert.ok(n[key as keyof typeof n] === n[value["type"]]);
         }
