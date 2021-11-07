@@ -93,7 +93,7 @@ export class ExecutablePath {
  *
  * @param name - name of the terminal to dispose.
  */
-export function restartInstance(name: string) {
+export function restartInstance(name: string): void {
     vscode.window.terminals.forEach((terminal) => {
         if (terminal.name === name) {
             terminal.dispose();
@@ -108,7 +108,7 @@ export function restartInstance(name: string) {
  * @param cmd - the command to execute.
  * @param suffix - a suffix name to add to the terminal instance name.
  */
-export function execCommand(execPath: ExecutablePath) {
+export function execCommand(execPath: ExecutablePath): void {
     const terminalName = execPath.terminalName();
 
     const shouldRestart = utils.nukeToolsConfig("nukeExecutable.options.restartInstance");
@@ -124,9 +124,10 @@ export function execCommand(execPath: ExecutablePath) {
 /**
  * Launch executable. If executable path is not valid will do nothing.
  *
- * @param execObj
+ * @param execObj - the executable path object to launch.
+ * @returns - the executable path object created.
  */
-export function launchExecutable(execObj: ExecutablePath) {
+export function launchExecutable(execObj: ExecutablePath): ExecutablePath {
     if (execObj.isValid()) {
         const defaultArgs = utils.nukeToolsConfig(
             "nukeExecutable.options.defaultCommandLineArguments"
@@ -142,8 +143,10 @@ export function launchExecutable(execObj: ExecutablePath) {
 
 /**
  * Launch primary executable from configuration.
+ *
+ * @returns - the executable path object created.
  */
-export function launchPrimaryExecutable() {
+export function launchPrimaryExecutable(): ExecutablePath {
     const execObj = new ExecutablePath(
         utils.nukeToolsConfig(`nukeExecutable.primaryExecutablePath`),
         "Main"
@@ -154,8 +157,10 @@ export function launchPrimaryExecutable() {
 
 /**
  * Launch secondary executable from configuration.
+ *
+ * @returns - the executable path object created.
  */
-export function launchSecondaryExecutable() {
+export function launchSecondaryExecutable(): ExecutablePath {
     const execObj = new ExecutablePath(
         utils.nukeToolsConfig(`nukeExecutable.secondaryExecutablePath`),
         "Alt."
@@ -166,8 +171,10 @@ export function launchSecondaryExecutable() {
 
 /**
  * Launch main executable with prompt for optional arguments.
+ *
+ * @returns - the executable path object created.
  */
-export async function launchPromptExecutable() {
+export async function launchPromptExecutable(): Promise<ExecutablePath> {
     const execObj = new ExecutablePath(
         utils.nukeToolsConfig(`nukeExecutable.primaryExecutablePath`),
         "Opt."

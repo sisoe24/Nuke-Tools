@@ -39,7 +39,7 @@ export function prepareDebugMsg(): object {
 /**
  * Send a debug test message to the socket connection.
  */
-export function sendDebugMessage() {
+export function sendDebugMessage(): void {
     sendData(getHost(), getPort(), JSON.stringify(prepareDebugMsg()));
 }
 
@@ -188,7 +188,7 @@ function prepareMessage(editor: vscode.TextEditor): string {
  *
  *
  */
-export function sendMessage() {
+export function sendMessage(): void {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
         return;
@@ -213,7 +213,7 @@ export function sendMessage() {
  * @param data text data to write into the output window.
  * @param showDebug if true, the output window will not be cleared despite the settings.
  */
-function writeToOutputWindow(data: string, showDebug: boolean = false) {
+function writeToOutputWindow(data: string, showDebug: boolean = false): void {
     if (utils.nukeToolsConfig("other.clearPreviousOutput") && !showDebug) {
         outputWindow.clear();
     }
@@ -232,7 +232,7 @@ function writeToOutputWindow(data: string, showDebug: boolean = false) {
  * @param showDebug if true, will output debug information to the output window.
  * @param data text data to write into the output window.
  */
-function writeDebugNetwork(showDebug: boolean, data: string) {
+function writeDebugNetwork(showDebug: boolean, data: string): void {
     if (showDebug) {
         const timestamp = new Date();
         const msg = `[${timestamp.toISOString()}] - ${data}`;
@@ -248,7 +248,7 @@ function writeDebugNetwork(showDebug: boolean, data: string) {
  * @param data - Stringified data to sent as code to be executed inside Nuke.
  * @param timeout - time for the timeout connection. Defaults to 10000 ms (10sec).
  */
-export function sendData(host: string, port: number, data: string, timeout: number = 10000) {
+export function sendData(host: string, port: number, data: string, timeout: number = 10000): void {
     let client = new Socket();
     const showDebug = utils.nukeToolsConfig("network.debug");
 

@@ -2,13 +2,12 @@ import * as vscode from "vscode";
 
 // This script is based on: https://stackoverflow.com/a/66307695/9392852
 
-
 /**
  * Show update message box if version is newer or update message is different.
- * 
+ *
  * @param context vscode ExtensionContext
  */
-export function showUpdateMessage(context: vscode.ExtensionContext) {
+export function showUpdateMessage(context: vscode.ExtensionContext): void {
     const extensionId = "virgilsisoe.nuke-tools";
 
     // get the value stored inside the global state key: _value['virgilsisoe.nuke-tools.version']
@@ -25,7 +24,7 @@ export function showUpdateMessage(context: vscode.ExtensionContext) {
 
     // store the current version in the global state key _value['virgilsisoe.nuke-tools.version']
     context.globalState.update(extVersion, currentVersion);
-    
+
     const updateMsg = "";
 
     // store the current update message in the global state key _value['virgilsisoe.nuke-tools.updateMsg']

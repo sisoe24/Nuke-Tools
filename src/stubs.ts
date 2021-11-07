@@ -23,9 +23,9 @@ export function isPythonInstalled(): boolean {
  * The version will be inside the path name for the extension (eg: virgilsisoe.nuke-tools-0.3.0)
  *
  * @param path - path like string of the stubs path inside package path.
- * @returns
+ * @returns the matched version as a string or undefined if no version is found.
  */
-export function extractVersion(path: string) {
+export function extractVersion(path: string): string | undefined {
     const match = path.match(/virgilsisoe.nuke-tools-(.+?)\//);
     if (match) {
         return match[1];
@@ -71,7 +71,7 @@ export function addPath(extraPaths: string[], stubsPath: string): boolean {
  * @param extraPaths - The `python.analysis.extraPaths` array object.
  * @param stubsPath - the stubs path to add in the `extraPaths` configuration.
  */
-export function updateAnalysisPath(extraPaths: string[], stubsPath: string) {
+export function updateAnalysisPath(extraPaths: string[], stubsPath: string): void {
     // if path was already added, do nothing and exit
     if (extraPaths.includes(stubsPath)) {
         return;

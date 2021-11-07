@@ -5,7 +5,7 @@ import * as utils from "./utils";
 import * as newUpdate from "./update_message";
 import { addStubsPath } from "./stubs";
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: vscode.ExtensionContext): void {
     newUpdate.showUpdateMessage(context);
 
     // Add stubs automatically if config is enabled
@@ -58,5 +58,5 @@ export function activate(context: vscode.ExtensionContext) {
 
 // this method is called when your extension is deactivated
 export function deactivate() {
-    // XXX: how to force closing connection? 
+    // XXX: how to force closing connection?
 }
