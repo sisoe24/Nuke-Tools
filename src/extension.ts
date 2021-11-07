@@ -32,8 +32,8 @@ export function activate(context: vscode.ExtensionContext): void {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.launchNukeOptArgs", () => {
-            executables.launchPromptExecutable();
+        vscode.commands.registerCommand("nuke-tools.launchNukeOptArgs", async () => {
+            await executables.launchPromptExecutable();
         })
     );
 
