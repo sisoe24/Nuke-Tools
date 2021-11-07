@@ -285,13 +285,9 @@ export function prepareDebugMsg(): { text: string; file: string } {
     const r1 = random();
     const r2 = random();
 
-    const host = os.hostname();
-    const user = os.userInfo();
-
     let code = `
     from __future__ import print_function
-    print("Hostname: ${host}")
-    print("User: ${user["username"] as string}")
+    print("Hostname: ${os.hostname() as string} User: ${os.userInfo()["username"] as string}")
     print("Connected to ${getAddresses()}")
     print("${r1} * ${r2} =", ${r1 * r2})
     `;
