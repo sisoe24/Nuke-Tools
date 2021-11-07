@@ -213,7 +213,7 @@ export function sendMessage(): void {
  * @param data text data to write into the output window.
  * @param showDebug if true, the output window will not be cleared despite the settings.
  */
-function writeToOutputWindow(data: string, showDebug: boolean = false): void {
+function writeToOutputWindow(data: string, showDebug: boolean): void {
     if (utils.nukeToolsConfig("other.clearPreviousOutput") && !showDebug) {
         outputWindow.clear();
     }
@@ -248,7 +248,7 @@ function writeDebugNetwork(showDebug: boolean, data: string): void {
  * @param data - Stringified data to sent as code to be executed inside Nuke.
  * @param timeout - time for the timeout connection. Defaults to 10000 ms (10sec).
  */
-export function sendData(host: string, port: number, data: string, timeout: number = 10000): void {
+export function sendData(host: string, port: number, data: string, timeout = 10000): void {
     let client = new Socket();
     const showDebug = utils.nukeToolsConfig("network.debug");
 

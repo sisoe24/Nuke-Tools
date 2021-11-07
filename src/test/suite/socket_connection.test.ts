@@ -7,7 +7,7 @@ import { Server } from "net";
 
 // ! TODO: not sure about all this
 
-async function server(port: number = 54321, host: string = "localhost") {
+async function server(port = 54321, host = "localhost") {
     console.log("init server");
 
     const _server = new Server();
