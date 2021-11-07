@@ -17,8 +17,8 @@ suite("Socket", () => {
 
     test("Prepare debug message", () => {
         const debugMsg = socket.prepareDebugMsg();
-        assert.ok(debugMsg.hasOwnProperty("text"));
-        assert.ok(debugMsg.hasOwnProperty("file"));
+        assert.ok(Object.prototype.hasOwnProperty.call(debugMsg, "text"));
+        assert.ok(Object.prototype.hasOwnProperty.call(debugMsg, "file"));
     });
 
     test.skip("sendDebugMessage", () => {});
