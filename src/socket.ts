@@ -127,19 +127,20 @@ export function getAddresses(): string {
  * Write received data from the socket to the output window.
  *
  * @param data text data to write into the output window.
+ * @param filePath path to the file that is being executed.
  * @param showDebug if true, the output window will not be cleared despite the settings.
  */
-function writeToOutputWindow(data: string, showDebug: boolean): void {
+export function writeToOutputWindow(data: string, filePath: string, showDebug: boolean): string {
     if (utils.nukeToolsConfig("other.clearPreviousOutput") && !showDebug) {
         outputWindow.clear();
     }
 
-    const editor = vscode.window.activeTextEditor;
-    if (editor) {
-        outputWindow.appendLine(`> Executing: ${editor.document.fileName as string}`);
-        outputWindow.appendLine(data);
-        outputWindow.show(true);
-    }
+    const msg = `> Executing: ${filePath}\n${data}`;
+
+    outputWindow.appendLine(msg);
+    outputWindow.show(true);
+
+    return msg.replace(/\n/g, "\\n");
 }
 
 /**
@@ -148,12 +149,15 @@ function writeToOutputWindow(data: string, showDebug: boolean): void {
  * @param showDebug if true, will output debug information to the output window.
  * @param data text data to write into the output window.
  */
-function writeDebugNetwork(showDebug: boolean, data: string): void {
+export function writeDebugNetwork(showDebug: boolean, data: string): string {
+    let msg = "";
+
     if (showDebug) {
         const timestamp = new Date();
-        const msg = `[${timestamp.toISOString()}] - ${data}`;
+        msg = `[${timestamp.toISOString()}] - ${data}`;
         outputWindow.appendLine(msg);
     }
+    return msg;
 }
 
 /**
@@ -161,10 +165,12 @@ function writeDebugNetwork(showDebug: boolean, data: string): void {
  *
  * @param host - host address for the connection.
  * @param port - port address for the connection.
- * @param data - Stringified data to sent as code to be executed inside Nuke.
+ * @param text - Stringified text to sent as code to be executed inside Nuke.
  * @param timeout - time for the timeout connection. Defaults to 10000 ms (10sec).
  */
-export function sendData(host: string, port: number, data: string, timeout = 10000): void {
+export function sendData(host: string, port: number, text: string, timeout = 10000): void {
+    // TODO: should make a class.
+
     const client = new Socket();
     const showDebug = utils.nukeToolsConfig("network.debug") as boolean;
 
@@ -188,7 +194,8 @@ export function sendData(host: string, port: number, data: string, timeout = 100
          */
         client.connect(port, host, function () {
             writeDebugNetwork(showDebug, "Connected.");
-            client.write(data);
+
+            client.write(text);
         });
     } catch (error) {
         if (error instanceof RangeError) {
@@ -207,9 +214,12 @@ export function sendData(host: string, port: number, data: string, timeout = 100
      *
      * The argument data will be a Buffer or String. Encoding of data is set by socket.setEncoding().
      */
-    client.on("data", function (data: string) {
+    client.on("data", function (data: string | Buffer) {
         writeDebugNetwork(showDebug, `Received: "${data.toString().replace(/\n/g, "\\n")}"\n`);
-        writeToOutputWindow(data, showDebug);
+
+        const filePath = JSON.parse(text)["file"];
+
+        writeToOutputWindow(data.toString(), filePath, showDebug);
         client.destroy();
     });
 
@@ -297,7 +307,7 @@ export function prepareDebugMsg(): { text: string; file: string } {
 
     const data = {
         text: code,
-        file: "vscode/path/tmp_file.py",
+        file: "tmp_file",
     };
 
     return data;
@@ -319,17 +329,18 @@ export function sendDebugMessage(): void {
  * @param editor - vscode TextEditor instance.
  * @returns a stringified object with the data to be sent.
  */
-function prepareMessage(editor: vscode.TextEditor): string {
+export function prepareMessage(editor: vscode.TextEditor): { text: string; file: string } {
     const document = editor.document;
     const selection = editor.selection;
-    const selectedWord = document.getText(selection);
+    const selectedText = document.getText(selection);
 
     const data = {
         file: editor.document.fileName,
-        text: selectedWord || editor.document.getText(),
+        text: selectedText || editor.document.getText(),
     };
-    return JSON.stringify(data);
+    return data;
 }
+
 /**
  * Send data over TCP connection.
  *
@@ -354,5 +365,5 @@ export function sendMessage(): void {
         return;
     }
 
-    sendData(getHost(), getPort(), prepareMessage(editor));
+    sendData(getHost(), getPort(), JSON.stringify(prepareMessage(editor)));
 }
