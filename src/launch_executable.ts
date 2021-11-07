@@ -7,6 +7,8 @@ import * as utils from "./utils";
  */
 export class ExecutablePath {
     args: string;
+    execPath: string;
+    terminalSuffix: string;
 
     /**
      * Init method for the ExecutablePath object.
@@ -15,7 +17,7 @@ export class ExecutablePath {
      * @param terminalSuffix - A suffix for the terminal name that launches the
      * executable.
      */
-    constructor(public execPath: string, public terminalSuffix: string) {
+    constructor(execPath: string, terminalSuffix: string) {
         this.terminalSuffix = terminalSuffix;
         this.execPath = execPath;
         this.args = "";
