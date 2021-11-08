@@ -168,11 +168,21 @@ export function writeDebugNetwork(showDebug: boolean, data: string): string {
  * @param text - Stringified text to sent as code to be executed inside Nuke.
  * @param timeout - time for the timeout connection. Defaults to 10000 ms (10sec).
  */
-export function sendData(host: string, port: number, text: string, timeout = 10000): void {
+export async function sendData(
+    host: string,
+    port: number,
+    text: string,
+    timeout = 10000
+): Promise<{ message: string; error: boolean; errorMessage: string }> {
     // TODO: should make a class.
 
     const client = new Socket();
     const showDebug = utils.nukeToolsConfig("network.debug") as boolean;
+    let status = {
+        message: "",
+        error: false,
+        errorMessage: "",
+    };
 
     writeDebugNetwork(showDebug, `Try connecting to ${host}:${port}`);
 
@@ -194,18 +204,23 @@ export function sendData(host: string, port: number, text: string, timeout = 100
          */
         client.connect(port, host, function () {
             writeDebugNetwork(showDebug, "Connected.");
-
             client.write(text);
+
+            status.message = "Connected";
         });
     } catch (error) {
         if (error instanceof RangeError) {
             const msg = `Port is out of range. Value should be >= 49567 and < 65536. Received: ${port}`;
             writeDebugNetwork(showDebug, msg);
             client.destroy(new Error("Port out of range"));
+
+            status.errorMessage = "Port is out of range";
         } else {
             const msg = `Unknown exception. ${String(error)}`;
             writeDebugNetwork(showDebug, msg);
             client.destroy(new Error(msg));
+
+            status.errorMessage = msg;
         }
     }
 
@@ -220,7 +235,9 @@ export function sendData(host: string, port: number, text: string, timeout = 100
         const filePath = JSON.parse(text)["file"];
 
         writeToOutputWindow(data.toString(), filePath, showDebug);
-        client.destroy();
+
+        client.end();
+        status.message = data.toString();
     });
 
     /**
@@ -242,6 +259,7 @@ export function sendData(host: string, port: number, text: string, timeout = 100
             // console.log(error);
             if (error) {
                 writeDebugNetwork(showDebug, `${error.message}`);
+                status.errorMessage = error.message;
             }
         }
     );
@@ -257,6 +275,8 @@ export function sendData(host: string, port: number, text: string, timeout = 100
             If manual connection is enable, verify that the port and host address are correct. 
             ${error.message}`;
         vscode.window.showErrorMessage(msg);
+
+        status.message = "Connection refused";
     });
 
     /**
@@ -273,6 +293,7 @@ export function sendData(host: string, port: number, text: string, timeout = 100
      */
     client.on("close", function (hadError: boolean) {
         writeDebugNetwork(showDebug, `Connection closed. Had Errors: ${hadError.toString()}`);
+        status.error = hadError;
     });
 
     /**
@@ -280,6 +301,13 @@ export function sendData(host: string, port: number, text: string, timeout = 100
      */
     client.on("end", function () {
         writeDebugNetwork(showDebug, "Connection ended.");
+    });
+
+    // ! TODO: not confident about this
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(status);
+        }, 100);
     });
 }
 
