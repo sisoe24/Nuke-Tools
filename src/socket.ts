@@ -345,7 +345,7 @@ export function prepareDebugMsg(): { text: string; file: string } {
  * Send a debug test message to the socket connection.
  */
 export function sendDebugMessage(): void {
-    sendData(getHost(), getPort(), JSON.stringify(prepareDebugMsg()));
+    void sendData(getHost(), getPort(), JSON.stringify(prepareDebugMsg()));
 }
 
 /**
@@ -393,5 +393,5 @@ export function sendMessage(): void {
         return;
     }
 
-    sendData(getHost(), getPort(), JSON.stringify(prepareMessage(editor)));
+    void sendData(getHost(), getPort(), JSON.stringify(prepareMessage(editor)));
 }
