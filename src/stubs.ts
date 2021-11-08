@@ -12,7 +12,7 @@ export function getStubsPath(): string {
     if (currentPath) {
         return path.join(currentPath, "Nuke-Python-Stubs", "nuke_stubs");
     }
-    const msg = `Could not resolve stubs path: ${currentPath}`;
+    const msg = 'Could not resolve stubs path.';
     vscode.window.showErrorMessage(msg);
     throw new Error(msg);
 }
