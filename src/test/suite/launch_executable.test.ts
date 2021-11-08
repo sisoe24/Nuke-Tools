@@ -138,7 +138,7 @@ suite("Terminal instance", () => {
         assert.strictEqual(terminalInstances, 1);
     });
 
-    test("Create multiple terminal instances", async () => {
+    test("Create multiple terminal instances", () => {
         vscode.window.createTerminal(terminalName);
         vscode.window.createTerminal(terminalName);
 

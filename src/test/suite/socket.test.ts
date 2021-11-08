@@ -63,17 +63,17 @@ suite("Socket", () => {
         assert.ok(Object.prototype.hasOwnProperty.call(debugMsg, "file"));
     });
 
-    test("Write debug network", async () => {
+    test("Write debug network", () => {
         const msg = socket.writeDebugNetwork(true, "random msg");
         assert.match(msg, /\[[^\]]+] - random msg/);
     });
 
-    test("Dont write debug network", async () => {
+    test("Dont write debug network", () => {
         const msg = socket.writeDebugNetwork(false, "random msg");
         assert.strictEqual(msg, "");
     });
 
-    test("Write to output window", async () => {
+    test("Write to output window", () => {
         const tmpFile = path.join(utils.getTmpFolder(), "test.py");
         const msg = socket.writeToOutputWindow("random msg", tmpFile, false);
         assert.strictEqual(msg, `> Executing: ${tmpFile}\\nrandom msg`);

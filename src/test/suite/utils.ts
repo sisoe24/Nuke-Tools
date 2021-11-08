@@ -23,7 +23,7 @@ export const sleep = (milliseconds: number) => {
 export async function updateConfig(name: string, value: unknown) {
     // vscode.extensions.getExtension("virgilsisoe.nuke-tools")?.activate();
     const nukeTools = vscode.workspace.getConfiguration("nukeTools");
-    return nukeTools.update(name, value, vscode.ConfigurationTarget.Workspace);
+    await nukeTools.update(name, value, vscode.ConfigurationTarget.Workspace);
 }
 
 /**

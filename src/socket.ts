@@ -178,7 +178,7 @@ export async function sendData(
 
     const client = new Socket();
     const showDebug = utils.nukeToolsConfig("network.debug") as boolean;
-    let status = {
+    const status = {
         message: "",
         error: false,
         errorMessage: "",
@@ -304,7 +304,7 @@ export async function sendData(
     });
 
     // ! TODO: not confident about this
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         setTimeout(() => {
             resolve(status);
         }, 100);
