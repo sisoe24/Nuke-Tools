@@ -230,11 +230,12 @@ export async function sendData(
      * The argument data will be a Buffer or String. Encoding of data is set by socket.setEncoding().
      */
     client.on("data", function (data: string | Buffer) {
-        writeDebugNetwork(showDebug, `Received: "${data.toString().replace(/\n/g, "\\n")}"\n`);
+        const textData = data.toString();
+
+        writeDebugNetwork(showDebug, `Received: "${textData.replace(/\n/g, "\\n")}"\n`);
 
         const filePath = JSON.parse(text)["file"];
-
-        writeToOutputWindow(data.toString(), filePath, showDebug);
+        writeToOutputWindow(textData, filePath, showDebug);
 
         client.end();
         status.message = data.toString();
