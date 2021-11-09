@@ -1,8 +1,7 @@
-# Nuke Tools README
+# 1. Nuke Tools README
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/b4124a14ccb4467b89ec8cd607b0d16f)](https://www.codacy.com/gh/sisoe24/Nuke-Tools/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sisoe24/Nuke-Tools&amp;utm_campaign=Badge_Grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/b4124a14ccb4467b89ec8cd607b0d16f)](https://www.codacy.com/gh/sisoe24/Nuke-Tools/dashboard?utm_source=github.com&utm_medium=referral&utm_content=sisoe24/Nuke-Tools&utm_campaign=Badge_Coverage)
-[![vscode](https://img.shields.io/visual-studio-marketplace/i/virgilsisoe.nuke-tools)](https://marketplace.visualstudio.com/items?itemName=virgilsisoe.nuke-tools)
 [![vscode](https://img.shields.io/visual-studio-marketplace/last-updated/virgilsisoe.nuke-tools)](https://img.shields.io/visual-studio-marketplace/last-updated/virgilsisoe.nuke-tools)
 [![DeepSource](https://deepsource.io/gh/sisoe24/Nuke-Tools.svg/?label=active+issues&show_trend=true&token=HEB3mg6EWSs71ckagYV0_P2u)](https://deepsource.io/gh/sisoe24/Nuke-Tools/?ref=repository-badge)
 
@@ -10,26 +9,26 @@ A bunch of Nuke related tools that will help the development process in Visual S
 
 > This is primarily a companion extension for: [NukeServerSocket](#nukeserversocket). Some features will only work when the server inside Nuke is active.
 
-- [Nuke Tools README](#nuke-tools-readme)
-  - [Features](#features)
-    - [Other ways to add the stubs](#other-ways-to-add-the-stubs)
-  - [BlinkScript](#blinkscript)
-  - [NukeServerSocket](#nukeserversocket)
-  - [Available Commands](#available-commands)
-  - [Extension Settings](#extension-settings)
-    - [`nukeTools.nukeExecutable.primaryExecutablePath`](#nuketoolsnukeexecutableprimaryexecutablepath)
-    - [`nukeTools.nukeExecutable.secondaryExecutablePath`](#nuketoolsnukeexecutablesecondaryexecutablepath)
-    - [`nukeTools.nukeExecutable.options.defaultCommandLineArguments`](#nuketoolsnukeexecutableoptionsdefaultcommandlinearguments)
-    - [`nukeTools.nukeExecutable.options.restartInstance`](#nuketoolsnukeexecutableoptionsrestartinstance)
-    - [`nukeTools.other.clearPreviousOutput`](#nuketoolsotherclearpreviousoutput)
-    - [`nukeTools.other.autoAddStubsPath`](#nuketoolsotherautoaddstubspath)
-    - [`nukeTools.network.enableManualConnection`](#nuketoolsnetworkenablemanualconnection)
-    - [`nukeTools.network.port`](#nuketoolsnetworkport)
-    - [`nukeTools.network.host`](#nuketoolsnetworkhost)
-    - [`nukeTools.network.debug`](#nuketoolsnetworkdebug)
-  - [Overview](#overview)
+- [1. Nuke Tools README](#1-nuke-tools-readme)
+  - [1.1. Features](#11-features)
+  - [1.2. Nuke Python Stubs](#12-nuke-python-stubs)
+    - [1.2.1. Other ways to add the stubs](#121-other-ways-to-add-the-stubs)
+  - [1.3. BlinkScript](#13-blinkscript)
+  - [1.4. Available Commands](#14-available-commands)
+  - [1.5. Extension Settings](#15-extension-settings)
+    - [1.5.1. `nukeTools.nukeExecutable.primaryExecutablePath`](#151-nuketoolsnukeexecutableprimaryexecutablepath)
+    - [1.5.2. `nukeTools.nukeExecutable.secondaryExecutablePath`](#152-nuketoolsnukeexecutablesecondaryexecutablepath)
+    - [1.5.3. `nukeTools.nukeExecutable.options.defaultCommandLineArguments`](#153-nuketoolsnukeexecutableoptionsdefaultcommandlinearguments)
+    - [1.5.4. `nukeTools.nukeExecutable.options.restartInstance`](#154-nuketoolsnukeexecutableoptionsrestartinstance)
+    - [1.5.5. `nukeTools.other.clearPreviousOutput`](#155-nuketoolsotherclearpreviousoutput)
+    - [1.5.6. `nukeTools.network.enableManualConnection`](#156-nuketoolsnetworkenablemanualconnection)
+    - [1.5.7. `nukeTools.network.port`](#157-nuketoolsnetworkport)
+    - [1.5.8. `nukeTools.network.host`](#158-nuketoolsnetworkhost)
+    - [1.5.9. `nukeTools.network.debug`](#159-nuketoolsnetworkdebug)
+  - [1.6. NukeServerSocket](#16-nukeserversocket)
+  - [1.7. Overview](#17-overview)
 
-## Features
+## 1.1. Features
 
 - Execute code inside Nuke from a machine in your local network.
   - Get output of Nuke execution inside Visual Studio Code.
@@ -40,7 +39,7 @@ A bunch of Nuke related tools that will help the development process in Visual S
 - Easy commands for launching Nuke instances via the terminal with default or optional arguments.
 - Included Nuke Python Stubs to be added to `python.analysis.extraPaths` for a simple auto complete feature.
 
--# Nuke Python Stubs
+## 1.2. Nuke Python Stubs
 
 > The stubs are pre-generated and you can check more about the github project [here](https://github.com/sisoe24/Nuke-Python-Stubs).
 
@@ -48,15 +47,18 @@ Nuke Tools now includes python stubs for Nuke.
 
 For the most part, stubs files will have the type annotation declared. This will allow vscode to infer the type of the variable. Some of them are wrong or missing but you can read more about that in the git repo.
 
-The extension will automatically create the settings `python.analysis.extraPaths` in every directory with a python file and append the stubs path to it (together with all of your global `python.analysis.extraPaths` settings)
-
-Alternatively you could disable the settings `Auto Add Stubs Path` and use the command `Add Python Stubs` to manually add them to the workspace settings.
-
+The command `Add Python Stubs` will add the stubs path to your workspace `python.analysis.extraPaths` settings.
 Then is simple as: `import nuke`
 
-> If you have a folder name `nuke` in your working directory it will not work, as it will try to import that one first.
+> If you have a package named `nuke` in your workspace root, it will not work, as python will import that one first.
 
-### Other ways to add the stubs
+~~The extension will automatically create the settings `python.analysis.extraPaths` in every directory with a python file and append the stubs path to it (together with all of your global `python.analysis.extraPaths` settings)
+Alternatively you could disable the settings `Auto Add Stubs Path` and use the command `Add Python Stubs` to manually add them to the workspace settings.~~
+
+> Note: `Auto Add Stubs Path` is now deprecated and it will be removed in the future versions.
+
+
+### 1.2.1. Other ways to add the stubs
 
 The stubs can be found inside the extension folder: `$HOME/.vscode/extensions/virgilsisoe.nuke-tools/Nuke-Python-Stubs/nuke_stubs`.
 
@@ -67,7 +69,7 @@ There are a few ways to add them:
 
 Although you could generate the stubs from the git repo, using the ones included with the extension, ensures that futures updates to the stubs will be automatically picked from Nuke Tools.
 
-## BlinkScript
+## 1.3. BlinkScript
 
 > [NukeServerSocket](#nukeserversocket) >= 0.1.0 is needed in order for this to work.
 
@@ -79,11 +81,7 @@ The accepted file extension are `.cpp` or `.blink`.
 
 > There used to be an extension on the marketplace for the blink language syntax but it appears to have been taken down. If you want to use a .blink file, you could set the language id to C++ in order to have the syntax colored. Also the extension [Material Icon Theme](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme) offers a nice Nuke icon for the .blink files.
 
-## NukeServerSocket
-
-Download companion plugin: [Git](https://github.com/sisoe24/NukeServerSocket/releases), [Nukepedia](http://www.nukepedia.com/python/misc/nukeserversocket).
-
-## Available Commands
+## 1.4. Available Commands
 
 All commands are available by opening the Command Palette (`Command+Shift+P` on macOS and `Ctrl+Shift+P` on Windows/Linux) and typing in one of the following Command Name:
 
@@ -94,7 +92,7 @@ All commands are available by opening the Command Palette (`Command+Shift+P` on 
 | `Nuke: Launch main executable with prompt` | `nuke-tools.launchNukeOptArgs`    | Launch main exec. with prompt for optional args |
 | `Nuke: Run Inside Nuke`                    | `nuke-tools.runCodeInsideNuke`    | Execute code inside nuke                        |
 | `Nuke: Show Network Addresses`             | `nuke-tools.showNetworkAddresses` | Show network addresses                          |
-| `Nuke: Add Stubs to Workspace`             | `nuke-tools.addPythonStubs`       | Add Python stubs path to workspace              |
+| `Nuke: Add Stubs to Workspace`             | `nuke-tools.addPythonStubs`       | Add stubs path to workspace settings            |
 | `Nuke: Debug Message`                      | `nuke-tools.testRunInsideNuke`    | Quick test connection                           |
 
 By default the extension does not provide any shortcut, but every command can be assigned to one. (see [Key Bindings for Visual Studio Code](https://code.visualstudio.com/docs/getstarted/keybindings) for more information)
@@ -106,65 +104,68 @@ Example `json`
   {
         "key":"alt+shift+n",
         "command":"nuke-tools.launchNuke",
-        "when": "editorTextFocus"
-    }
+    },
     {
         "key":"alt+shift+r",
-        "command":"nuke-tools.runInsideNuke",
+        "command":"nuke-tools.runCodeInsideNuke",
         "when": "editorTextFocus"
     }
 ]
 
 ```
 
-`Nuke: Run Inside Nuke` can be access also via a button in the Editor Toolbar.
+`Nuke: Run Code Inside Nuke` can be access also via a button in the Editor Toolbar.
 
-## Extension Settings
+## 1.5. Extension Settings
 
-### `nukeTools.nukeExecutable.primaryExecutablePath`
+### 1.5.1. `nukeTools.nukeExecutable.primaryExecutablePath`
 
 Primary path for the Nuke executable.
 
 - On MacOS you can find the file with: _Show Package Contents -> Contents/MacOS/Nuke..._
 - On Windows WSL the path should be the Unix style: _/mnt/c/Program Files/..._
 
-### `nukeTools.nukeExecutable.secondaryExecutablePath`
+### 1.5.2. `nukeTools.nukeExecutable.secondaryExecutablePath`
 
 Same as primary executable. Could be a different Nuke version.
 
-### `nukeTools.nukeExecutable.options.defaultCommandLineArguments`
+### 1.5.3. `nukeTools.nukeExecutable.options.defaultCommandLineArguments`
 
 Command line arguments to be added at each "Nuke launch" 🚀.
 
-### `nukeTools.nukeExecutable.options.restartInstance`
+### 1.5.4. `nukeTools.nukeExecutable.options.restartInstance`
 
 Restart the terminal instance instead of creating new ones. **Use with caution** as this option will terminate every Nuke process created by the extension. Useful when rapid testing GUI plugins and don't need to save the Nuke comp.
 
-### `nukeTools.other.clearPreviousOutput`
+### 1.5.5. `nukeTools.other.clearPreviousOutput`
 
 Clear previous console output before next code execution.
 
-### `nukeTools.other.autoAddStubsPath`
+### 1.5.6. `nukeTools.network.enableManualConnection`
 
-Automatically add the stubs path to each new workspace that contains a `*.py` file.
+If enabled, `nukeTools.network.port` and `nukeTools.network.host` will take over the default settings. Needed when connecting to another computer.
 
-### `nukeTools.network.enableManualConnection`
-
-If enabled, `nukeTools.network.port` and `nukeTools.network.host` will take over the default settings. Needed when connecting to/from another computer.
-
-### `nukeTools.network.port`
+### 1.5.7. `nukeTools.network.port`
 
 Specify a different port for the connection. This will only work if `nukeTools.network.enableManualConnection` is enabled. Server address should be taken from the Nuke plugin.
 
-### `nukeTools.network.host`
+### 1.5.8. `nukeTools.network.host`
 
 Same as `nukeTools.network.port`. Host could be the localhost or the local ip.
 
-### `nukeTools.network.debug`
+### 1.5.9. `nukeTools.network.debug`
 
 Show network debug information in the output window. Enabling this option, will prevent the console from being cleared after code execution.
 
-## Overview
+## 1.6. NukeServerSocket
+
+Download companion plugin: [Git](https://github.com/sisoe24/NukeServerSocket/releases), [Nukepedia](http://www.nukepedia.com/python/misc/nukeserversocket).
+
+## 1.7. Overview
+
+Code execution.
+
+<img title="CommentUncommentDelete" src="https://raw.githubusercontent.com/sisoe24/Nuke-Tools/main/images/execute_code.gif" width="80%"/>
 
 Python stubs auto-complete
 
