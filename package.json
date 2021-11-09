@@ -97,8 +97,9 @@
                     },
                     "nukeTools.other.autoAddStubsPath": {
                         "type": "boolean",
-                        "default": true,
-                        "markdownDescription": "Automatically add stubs path to `python.analysis.extraPath` workspace setting."
+                        "default": false,
+                        "markdownDescription": "Automatically add stubs path to `python.analysis.extraPath` workspace setting.",
+                        "deprecationMessage": "This is now deprecated and will be removed in future versions."
                     },
                     "nukeTools.other.clearPreviousOutput": {
                         "type": "boolean",

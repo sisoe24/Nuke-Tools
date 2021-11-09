@@ -8,7 +8,7 @@ import { addStubsPath } from "./stubs";
 export function activate(context: vscode.ExtensionContext): void {
     newUpdate.showUpdateMessage(context);
 
-    // Add stubs automatically if config is enabled
+    // XXX: this is now deprecated and will be removed in future version
     if (utils.nukeToolsConfig("other.autoAddStubsPath")) {
         addStubsPath();
     }
