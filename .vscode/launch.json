@@ -10,7 +10,6 @@
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
-				"--disable-extensions",
 				"${workspaceFolder}/tmp",
 				"--extensionDevelopmentPath=${workspaceFolder}"
 			],
