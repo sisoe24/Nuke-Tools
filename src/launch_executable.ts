@@ -181,7 +181,7 @@ export function launchSecondaryExecutable(): ExecutablePath {
 export async function launchPromptExecutable(): Promise<ExecutablePath> {
     const execObj = new ExecutablePath(
         utils.nukeToolsConfig(`nukeExecutable.primaryExecutablePath`) as string,
-        "Opt."
+        "Main Prompt"
     );
 
     if (execObj.isValid()) {
