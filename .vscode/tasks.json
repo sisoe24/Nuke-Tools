@@ -22,18 +22,5 @@
             "command": "vsce package",
             "problemMatcher": []
         },
-        {
-            "label": "Install Package",
-            "type": "shell",
-            "command": "code --uninstall-extension virgilsisoe.nuke-tools && code --force --install-extension nuke-tools-*.vsix",
-        },
-        {
-            "label": "Copy package to Windows",
-            "type": "shell",
-            "command": "cp nuke-tools-0.0.1.vsix \"/Volumes/GoogleDrive/My Drive/Files/\"",
-            "dependsOn": [
-                "Build Package"
-            ]
-        }
     ]
 }
