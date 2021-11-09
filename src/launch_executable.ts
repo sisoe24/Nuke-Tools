@@ -152,7 +152,7 @@ export function launchExecutable(execObj: ExecutablePath): ExecutablePath {
  */
 export function launchPrimaryExecutable(): ExecutablePath {
     const execObj = new ExecutablePath(
-        utils.nukeToolsConfig(`nukeExecutable.primaryExecutablePath`) as string,
+        utils.nukeToolsConfig("nukeExecutable.primaryExecutablePath") as string,
         "Main"
     );
     launchExecutable(execObj);
