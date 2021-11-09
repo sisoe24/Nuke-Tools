@@ -20,6 +20,15 @@ suite("Stubs Creation", () => {
         assert.strictEqual(version, "0.3.2");
     });
 
+    test("Extract version from path", () => {
+        // TODO: this would fail if I decide to enable extensions when testing
+        assert.ok(!stubs.isPythonInstalled());
+    });
+
+    test("Add stubs but python is not installed", () => {
+        assert.ok(!stubs.addStubsPath());
+    });
+
     test("Add Python analysis path first time", () => {
         const extraPaths = ["path/to/lib"];
         const expectedPath = ["path/to/lib", stubsPath];
