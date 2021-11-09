@@ -9,10 +9,10 @@ import * as vscode from "vscode";
  * @returns - the value of the property.
  */
 export function nukeToolsConfig(property: string): unknown {
-    const config = vscode.workspace.getConfiguration(`nukeTools`);
+    const config = vscode.workspace.getConfiguration("nukeTools");
     const subConfig = config.get(property);
 
-    if (subConfig === undefined) {
+    if (!subConfig) {
         throw new Error(`Configuration: ${property} doesn't exist`);
     }
 
