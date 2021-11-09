@@ -9,7 +9,7 @@ import { writeFileSync, existsSync } from "fs";
  * @param milliseconds - time to sleep
  * @returns
  */
-export const sleep = (milliseconds: number) => {
+export const sleep = (milliseconds: number): Promise<unknown> => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
 };
 
@@ -20,7 +20,7 @@ export const sleep = (milliseconds: number) => {
  * @param name - name of the configuration property to update.
  * @param value - the new value for the property.
  */
-export async function updateConfig(name: string, value: unknown) {
+export async function updateConfig(name: string, value: unknown): Promise<void> {
     // vscode.extensions.getExtension("virgilsisoe.nuke-tools")?.activate();
     const nukeTools = vscode.workspace.getConfiguration("nukeTools");
     await nukeTools.update(name, value, vscode.ConfigurationTarget.Workspace);
@@ -45,7 +45,7 @@ export function getTmpFolder(): string {
  * Method will wait for 200ms before completing. This is to give enough time to
  * vscode to register the changes.
  */
-export async function cleanSettings() {
+export async function cleanSettings(): Promise<void> {
     const tmpFolder = getTmpFolder();
 
     if (!tmpFolder) {
