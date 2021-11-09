@@ -32,20 +32,20 @@ export function activate(context: vscode.ExtensionContext): void {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.launchNukeOptArgs", async () => {
+        vscode.commands.registerCommand("nuke-tools.launchNukeOptArgs", () => {
             void executables.launchPromptExecutable();
         })
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.runCodeInsideNuke", () => {
-            socket.sendMessage();
+            void socket.sendMessage();
         })
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.testRunInsideNuke", () => {
-            socket.sendDebugMessage();
+            void socket.sendDebugMessage();
         })
     );
 
