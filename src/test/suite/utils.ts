@@ -31,7 +31,7 @@ export async function updateConfig(name: string, value: unknown): Promise<void> 
  *
  * @returns path of the tmp directory or undefined if it couldn't resolve.
  */
-export function getTmpFolder(): string {
+export function getDemoFolder(): string {
     const cwd = vscode.extensions.getExtension("virgilsisoe.nuke-tools")?.extensionPath;
     if (cwd) {
         return path.join(cwd, "tmp");
@@ -40,20 +40,13 @@ export function getTmpFolder(): string {
 }
 
 /**
- * Clean the settings.json file inside the temporary folder.
+ * Clean the settings.json file inside the demo folder.
  *
  * Method will wait for 200ms before completing. This is to give enough time to
  * vscode to register the changes.
  */
 export async function cleanSettings(): Promise<void> {
-    const tmpFolder = getTmpFolder();
-
-    if (!tmpFolder) {
-        return;
-    }
-    const settings = path.join(tmpFolder, ".vscode", "settings.json");
-    if (existsSync(settings)) {
-        writeFileSync(settings, "{}");
-    }
+    const settings = path.join(getDemoFolder(), ".vscode", "settings.json");
+    writeFileSync(settings, "{}");
     await sleep(200);
 }
