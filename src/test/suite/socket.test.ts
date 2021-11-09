@@ -120,7 +120,7 @@ suite("Prepare message", () => {
         }
     });
 
-    test("prepareMessage with no selection: entire document", async () => {
+    test("prepareMessage with no selection: entire document", () => {
         const editor = vscode.window.activeTextEditor;
         if (editor) {
             const msg = socket.prepareMessage(editor);
@@ -134,7 +134,7 @@ suite("Prepare message", () => {
         }
     });
 
-    test("prepareMessage with selected text", async () => {
+    test("prepareMessage with selected text", () => {
         const editor = vscode.window.activeTextEditor;
 
         if (editor) {
