@@ -28,7 +28,7 @@ export function getNukeIni(): string {
  * @param defaultValue - a default value to fallback in case property is undefined.
  * @returns - the property value.
  */
-function getManualAddress(property: string, defaultValue: string): string {
+export function getManualAddress(property: string, defaultValue: string): string {
     const manualAddress = utils.nukeToolsConfig(`network.${property}`) as string;
 
     if (!manualAddress) {
@@ -257,7 +257,6 @@ export async function sendData(
                     )
             );
 
-            // console.log(error);
             if (error) {
                 writeDebugNetwork(showDebug, `${error.message}`);
                 status.errorMessage = error.message;
@@ -345,8 +344,8 @@ export function prepareDebugMsg(): { text: string; file: string } {
 /**
  * Send a debug test message to the socket connection.
  */
-export function sendDebugMessage(): void {
-    void sendData(getHost(), getPort(), JSON.stringify(prepareDebugMsg()));
+export function sendDebugMessage() {
+    return sendData(getHost(), getPort(), JSON.stringify(prepareDebugMsg()));
 }
 
 /**
@@ -376,10 +375,10 @@ export function prepareMessage(editor: vscode.TextEditor): { text: string; file:
  * The data to be sent over will the current active file name and its content.
  * Data will be wrapped inside a stringified object before being sent.
  *
- *
  */
-export function sendMessage(): void {
+export function sendMessage() {
     const editor = vscode.window.activeTextEditor;
+
     if (!editor) {
         return;
     }
@@ -394,5 +393,5 @@ export function sendMessage(): void {
         return;
     }
 
-    void sendData(getHost(), getPort(), JSON.stringify(prepareMessage(editor)));
+    return sendData(getHost(), getPort(), JSON.stringify(prepareMessage(editor)));
 }
