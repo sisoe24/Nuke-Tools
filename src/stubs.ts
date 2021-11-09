@@ -35,15 +35,15 @@ export function isPythonInstalled(): boolean {
  * The version will be inside the path name for the extension (eg: virgilsisoe.nuke-tools-0.3.0)
  *
  * @param path - path like string of the stubs path inside package path.
- * @returns the matched version as a string or undefined if no version is found.
+ * @returns the matched version as a `string` or `null` if no version is found.
  */
-export function extractVersion(path: string): string | undefined {
+export function extractVersion(path: string): string | null {
     const pattern = /nuke-tools-([^/]+)/;
     const match = pattern.exec(path);
     if (match) {
         return match[1];
     }
-    return undefined;
+    return null;
 }
 
 /**
