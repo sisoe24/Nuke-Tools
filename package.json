@@ -16,14 +16,7 @@
         "Other"
     ],
     "activationEvents": [
-        "workspaceContains:**/*.py",
-        "onCommand:nuke-tools.launchNuke",
-        "onCommand:nuke-tools.launchNukeAlt",
-        "onCommand:nuke-tools.launchNukeOptArgs",
-        "onCommand:nuke-tools.runCodeInsideNuke",
-        "onCommand:nuke-tools.showNetworkAddresses",
-        "onCommand:nuke-tools.testRunInsideNuke",
-        "onCommand:nuke-tools.addPythonStubs"
+        "onStartupFinished"
     ],
     "main": "./out/extension.js",
     "keywords": [
