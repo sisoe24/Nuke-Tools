@@ -33,7 +33,6 @@ async function server(port = 54321, host = "localhost") {
     });
 }
 
-// TODO: write more tests for the server but need more time to plan it
 suite("Send Data", () => {
     const data = JSON.stringify({ text: "hello", file: "random.file" });
 
@@ -64,4 +63,34 @@ suite("Send Data", () => {
         assert.match(received.errorMessage, /getaddrinfo ENOTFOUND/);
         assert.strictEqual(received.message, "Connection refused");
     });
+
+    test("sendDebugMessage", async () => {
+        // TODO: how to be sure that connection is closed
+        const received = await socket.sendDebugMessage();
+        assert.strictEqual(received.error, true);
+        assert.strictEqual(received.message, "Connection refused");
+    });
+
+    test("sendMessage connected", async () => {
+        await server();
+
+        const received = await socket.sendMessage();
+        if (received) {
+            assert.strictEqual(received.error, false);
+            assert.strictEqual(received.message, "Hello, server.");
+        }
+    });
+
+    test("sendMessage no connection", async () => {
+        // TODO: how to be sure that connection is closed
+
+        const received = await socket.sendMessage();
+        if (received) {
+            assert.strictEqual(received.error, true);
+            assert.strictEqual(received.message, "Connection refused");
+        }
+    });
+
+    test.skip("sendMessage but no active editor");
+    test.skip("sendMessage but active editor is output window");
 });
