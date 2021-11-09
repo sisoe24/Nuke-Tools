@@ -16,6 +16,24 @@ suite("Socket", () => {
         await utils.cleanSettings();
     });
 
+    test("Get manual address", async () => {
+        // TODO: should call Promise.all. but it doesn't work
+        await utils.updateConfig("network.enableManualConnection", true);
+        await utils.updateConfig("network.host", "localhost");
+
+        const address = socket.getManualAddress("host", "randomHost");
+        assert.strictEqual(address, "localhost");
+    });
+
+    test("Get manual address but no address is saved", async () => {
+        // TODO: should call Promise.all. but it doesn't work
+        await utils.updateConfig("network.enableManualConnection", true);
+        await utils.updateConfig("network.host", "");
+
+        const address = socket.getManualAddress("host", "randomHost");
+        assert.strictEqual(address, "randomHost");
+    });
+
     test("Changing network addresses should not work if enableConnection is false", async () => {
         // TODO: should call Promise.all. but it doesn't work
         await utils.updateConfig("network.enableManualConnection", false);
@@ -28,7 +46,7 @@ suite("Socket", () => {
 
     test("Change network address when enableConnection is true", async () => {
         // TODO: should call Promise.all. but it doesn't work
-        // ! TODO: check why NukeServerSocket workspace had this settings.
+        // XXX: check why NukeServerSocket workspace had this settings.
         await utils.updateConfig("network.enableManualConnection", true);
         await utils.updateConfig("network.host", "192.186.1.00");
         await utils.updateConfig("network.port", "55555");
@@ -78,13 +96,31 @@ suite("Socket", () => {
         const msg = socket.writeToOutputWindow("random msg", tmpFile, false);
         assert.strictEqual(msg, `> Executing: ${tmpFile}\\nrandom msg`);
     });
+});
 
-    test("prepareMessage", async () => {
-        // TODO: should write the message with the test
-        const tmpFile = path.join(utils.getTmpFolder(), "test.py");
+suite("Prepare message", () => {
+    const tmpFile = path.join(utils.getTmpFolder(), "test.py");
+
+    setup("Focus file", async () => {
         const document = await vscode.workspace.openTextDocument(tmpFile);
         await vscode.window.showTextDocument(document, { viewColumn: vscode.ViewColumn.One });
 
+        const editor = vscode.window.activeTextEditor;
+        if (editor) {
+            const start = new vscode.Position(0, 0);
+            // deselect any text
+            editor.selection = new vscode.Selection(start, start);
+
+            await editor.edit((editBuilder) => {
+                editBuilder.replace(
+                    new vscode.Range(start, new vscode.Position(editor.document.lineCount, 0)),
+                    "print('hello world')"
+                );
+            });
+        }
+    });
+
+    test("prepareMessage with no selection: entire document", async () => {
         const editor = vscode.window.activeTextEditor;
         if (editor) {
             const msg = socket.prepareMessage(editor);
@@ -93,10 +129,26 @@ suite("Socket", () => {
             assert.ok(Object.prototype.hasOwnProperty.call(msg, "file"));
 
             assert.strictEqual(msg["file"], tmpFile);
-            assert.strictEqual(msg["text"], "print('hello')\nprint('world')\n");
+            assert.strictEqual(msg["text"], "print('hello world')");
+            assert.strictEqual(msg["text"], editor.document.getText());
         }
     });
 
-    test.skip("sendDebugMessage");
-    test.skip("sendMessage");
+    test("prepareMessage with selected text", async () => {
+        const editor = vscode.window.activeTextEditor;
+
+        if (editor) {
+            editor.selection = new vscode.Selection(
+                new vscode.Position(0, 0),
+                new vscode.Position(0, 5)
+            );
+            const msg = socket.prepareMessage(editor);
+
+            assert.ok(Object.prototype.hasOwnProperty.call(msg, "text"));
+            assert.ok(Object.prototype.hasOwnProperty.call(msg, "file"));
+
+            assert.strictEqual(msg["file"], tmpFile);
+            assert.strictEqual(msg["text"], "print");
+        }
+    });
 });
