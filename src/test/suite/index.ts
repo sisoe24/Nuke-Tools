@@ -30,7 +30,7 @@ export async function run(): Promise<void> {
     const nyc = new NYC({
         ...baseConfig,
         cwd: path.join(__dirname, "..", "..", ".."),
-        reporter: ["text-summary", "cobertura", 'lcov'],
+        reporter: ["text-summary", "cobertura", "lcov"],
         all: true,
         silent: false,
         instrument: true,
@@ -63,7 +63,8 @@ export async function run(): Promise<void> {
         timeout: 10 * 1000,
     });
 
-    mocha.color(true);
+    // Color the stdout
+    mocha.options.color = true;
 
     // Add all files to the test suite
     const files = glob.sync("**/*.test.js", { cwd: testsRoot });
@@ -80,7 +81,7 @@ export async function run(): Promise<void> {
     }
 }
 
-async function captureStdout(fn) {
+async function captureStdout(fn: any) {
     let w = process.stdout.write,
         buffer = "";
     process.stdout.write = (s) => {
