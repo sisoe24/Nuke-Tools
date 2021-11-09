@@ -99,6 +99,16 @@ suite("Launch executable", () => {
         const pattern = new RegExp(`&?\\s?"${samplePath}" -fake --args`);
         assert.match(execPath.cliCmd(), pattern);
     });
+
+    test.skip("Primary executable with prompt arguments", async () => {
+        // XXX: this will sto test execution waiting for user input
+        await utils.updateConfig("nukeExecutable.primaryExecutablePath", samplePath);
+
+        const execPath = await executables.launchPromptExecutable();
+
+        const pattern = new RegExp(`&?\\s?"${samplePath}" ok`);
+        assert.match(execPath.cliCmd(), pattern);
+    });
 });
 
 suite("Terminal instance", () => {
