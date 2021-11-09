@@ -232,7 +232,8 @@ export async function sendData(
     client.on("data", function (data: string | Buffer) {
         const textData = data.toString();
 
-        writeDebugNetwork(showDebug, `Received: "${textData.replace(/\n/g, "\\n")}"\n`);
+        const oneLineData = textData.replace(/\n/g, "\\n");
+        writeDebugNetwork(showDebug, `Received: "${oneLineData}"\n`);
 
         const filePath = JSON.parse(text)["file"];
         writeToOutputWindow(textData, filePath, showDebug);
