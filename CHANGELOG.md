@@ -6,13 +6,9 @@ All notable changes to the "nuke-tools" extension will be documented in this fil
 
 Mostly code refactoring and test suite.
 
-### Changed
-
-- Extension now activates on `onStartupFinished`.
-
 ### Fixed
 
-- Adding the stubs will not create a duplicate if extension version is different.
+- Adding the stubs path will not create a duplicate if extension version is different.
 
 ### Removed
 
