@@ -1,80 +1,62 @@
-import * as vscode from 'vscode';
-import * as launchNuke from './launch-executable';
-import * as socketClient from './client-socket';
+import * as vscode from "vscode";
+import * as executables from "./launch_executable";
+import * as socket from "./socket";
 import * as utils from "./utils";
-import * as newUpdate from './newUpdateMsg';
+import * as newUpdate from "./update_message";
+import { addStubsPath } from "./stubs";
 
-
-export function activate(context: vscode.ExtensionContext) {
-
+export function activate(context: vscode.ExtensionContext): void {
     newUpdate.showUpdateMessage(context);
 
-    // Add stubs automatically if config is enabled
-    if (utils.getConfiguration('other.autoAddStubsPath')) {
-        utils.addStubsPath();
+    // XXX: this is now deprecated and will be removed in future version
+    if (utils.nukeToolsConfig("other.autoAddStubsPath")) {
+        addStubsPath();
     }
 
-    context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.addPythonStubs', () => {
-        utils.addStubsPath();
-    }));
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.addPythonStubs", () => {
+            addStubsPath();
+        })
+    );
 
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.launchNuke", () => {
+            executables.launchPrimaryExecutable();
+        })
+    );
 
-    context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.launchNuke', () => {
-        const execPath = utils.getExecutable('primaryExecutablePath');
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.launchNukeAlt", () => {
+            executables.launchSecondaryExecutable();
+        })
+    );
 
-        if (execPath) {
-            launchNuke.execDefaultCommand(execPath, ' Main');
-        };
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.launchNukeOptArgs", () => {
+            void executables.launchPromptExecutable();
+        })
+    );
 
-    }));
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.runCodeInsideNuke", () => {
+            void socket.sendMessage();
+        })
+    );
 
-    context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.launchNukeAlt', () => {
-        const execPath = utils.getExecutable('secondaryExecutablePath');
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.testRunInsideNuke", () => {
+            void socket.sendDebugMessage();
+        })
+    );
 
-        if (execPath) {
-            launchNuke.execDefaultCommand(execPath, ' Alt.');
-        };
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.launchNukeOptArgs', () => {
-        const execPath = utils.getExecutable('primaryExecutablePath');
-
-        if (execPath) {
-            launchNuke.execOptionalCommand(execPath);
-        };
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.runInsideNuke', () => {
-        const editor = vscode.window.activeTextEditor;
-        if (!editor) { return; }
-
-        if (editor.document.uri.scheme === 'output') {
-            vscode.window.showInformationMessage(
-                'You currently have the Output window in focus. Return the focus on the text editor.'
-            );
-            return;
-        }
-
-        const data = {
-            'file': editor.document.fileName,
-            'text': editor.document.getText()
-        };
-
-        socketClient.sendText(JSON.stringify(data));
-
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.testRunInsideNuke', () => {
-        socketClient.sendTestMessage();
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand('nuke-tools.showNetworkAddresses', () => {
-        vscode.window.showInformationMessage(socketClient.getAddresses());
-    }));
-
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.showNetworkAddresses", () => {
+            vscode.window.showInformationMessage(socket.getAddresses());
+        })
+    );
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {
-    // TODO: should force closing connection just in case?
+export function deactivate(): void {
+    // XXX: how to force closing connection?
 }

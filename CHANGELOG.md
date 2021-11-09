@@ -2,15 +2,31 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+## [0.3.2] 11/08/2021
 
-## [Unreleased]
+Mostly code refactoring and test suite.
+
+### Fixed
+
+- Adding the stubs path will not create a duplicate if extension version is different.
+
+### Removed
+
+- Setting `Auto add stubs path` is now deprecated. Path should be added manually when needed with the command `Add Python Stubs`.
+
+## [0.3.0] 10/04/2021
+
+### Added
+
+- Add python stubs folder to root project.
+- New command `Add Python Stubs` that adds the stubs to the project settings.json.
+- New settings `Auto add stubs path` that adds the stubs to the project settings.json when workspace contains a `*.py` file.
 
 ## [0.2.0] 09/15/2021
 
 ### Added
 
-* Support for BlinkScript.
+- Support for BlinkScript.
 
 ## [0.0.14] 09/12/2021
 
@@ -18,7 +34,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Added
 
-* Better check for the .ini file in case has wrong/invalid values.
+- Better check for the .ini file in case has wrong/invalid values.
 
 ## [0.0.13] 08/16/2021
 

@@ -1,15 +1,26 @@
-import * as assert from 'assert';
+import * as assert from "assert";
+import * as utils from "../../utils";
 
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
-import * as vscode from 'vscode';
-// import * as myExtension from '../../extension';
+suite("NukeToolsConfig", () => {
+    test("Get a string valid configuration", () => {
+        assert.strictEqual(
+            typeof utils.nukeToolsConfig("nukeExecutable.primaryExecutablePath"),
+            "string"
+        );
+    });
 
-suite('Extension Test Suite', () => {
-	vscode.window.showInformationMessage('Start all tests.');
+    test("Get a boolean valid configuration", () => {
+        assert.strictEqual(typeof utils.nukeToolsConfig("network.debug"), "boolean");
+    });
 
-	test('Sample test', () => {
-		assert.strictEqual(-1, [1, 2, 3].indexOf(5));
-		assert.strictEqual(-1, [1, 2, 3].indexOf(0));
-	});
+    test("Get invalid configuration", () => {
+        assert.throws(() => {
+            utils.nukeToolsConfig("maya");
+        }, Error);
+    });
+
+    // TODO: dont know how to get vscode context.
+    test.skip("Update message");
 });
+
+// XXX: test extension.ts?
