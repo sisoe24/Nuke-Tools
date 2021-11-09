@@ -250,12 +250,7 @@ export async function sendData(
         function (error: Error | null, address: string, family: string, host: string) {
             writeDebugNetwork(
                 showDebug,
-                "Socket Lookup :: " +
-                    JSON.stringify(
-                        { address: address, family: family, host: host, error: error },
-                        null,
-                        " "
-                    )
+                "Socket Lookup :: " + JSON.stringify({ address, family, host, error }, null, " ")
             );
 
             if (error) {
