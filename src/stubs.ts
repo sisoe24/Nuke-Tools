@@ -38,7 +38,7 @@ export function isPythonInstalled(): boolean {
  * @returns the matched version as a string or undefined if no version is found.
  */
 export function extractVersion(path: string): string | undefined {
-    const pattern = /nuke-tools-([^\/]+)/;
+    const pattern = /nuke-tools-([^/]+)/;
     const match = pattern.exec(path);
     if (match) {
         return match[1];
