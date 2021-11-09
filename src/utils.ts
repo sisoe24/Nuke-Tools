@@ -12,7 +12,7 @@ export function nukeToolsConfig(property: string): unknown {
     const config = vscode.workspace.getConfiguration("nukeTools");
     const subConfig = config.get(property);
 
-    if (typeof subConfig === 'undefined') {
+    if (typeof subConfig === "undefined") {
         throw new Error(`Configuration: ${property} doesn't exist`);
     }
 
