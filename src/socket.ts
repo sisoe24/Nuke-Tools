@@ -340,7 +340,11 @@ export function prepareDebugMsg(): { text: string; file: string } {
 /**
  * Send a debug test message to the socket connection.
  */
-export function sendDebugMessage() {
+export function sendDebugMessage(): Promise<{
+    message: string;
+    error: boolean;
+    errorMessage: string;
+}> {
     return sendData(getHost(), getPort(), JSON.stringify(prepareDebugMsg()));
 }
 
@@ -372,7 +376,13 @@ export function prepareMessage(editor: vscode.TextEditor): { text: string; file:
  * Data will be wrapped inside a stringified object before being sent.
  *
  */
-export function sendMessage() {
+export function sendMessage():
+    | Promise<{
+          message: string;
+          error: boolean;
+          errorMessage: string;
+      }>
+    | undefined {
     const editor = vscode.window.activeTextEditor;
 
     if (!editor) {
