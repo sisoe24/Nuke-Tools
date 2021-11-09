@@ -7,6 +7,8 @@ import * as fs from "fs";
 import * as socket from "../../socket";
 import * as utils from "./utils";
 
+const demoFolder = utils.getDemoFolder();
+
 suite("Socket", () => {
     suiteSetup("Setup Clean settings file", async () => {
         await utils.cleanSettings();
@@ -56,7 +58,7 @@ suite("Socket", () => {
     });
 
     test("Get port value from fake.ini", () => {
-        const fakeIni = path.join(utils.getTmpFolder(), "fake.ini");
+        const fakeIni = path.join(demoFolder, "fake.ini");
         fs.writeFileSync(fakeIni, "[server]\nport=55555");
 
         const port = socket.getPortFromIni(fakeIni, "54321");
@@ -64,7 +66,7 @@ suite("Socket", () => {
     });
 
     test("Get default port value from fake.ini when value type is incorrect", () => {
-        const fakeIni = path.join(utils.getTmpFolder(), "fake.ini");
+        const fakeIni = path.join(demoFolder, "fake.ini");
         const wrongValues = ["port", "port=", "port=value", "port=1234", "port=123456"];
 
         for (const value of wrongValues) {
@@ -92,14 +94,14 @@ suite("Socket", () => {
     });
 
     test("Write to output window", () => {
-        const tmpFile = path.join(utils.getTmpFolder(), "test.py");
+        const tmpFile = path.join(demoFolder, "test.py");
         const msg = socket.writeToOutputWindow("random msg", tmpFile, false);
         assert.strictEqual(msg, `> Executing: ${tmpFile}\\nrandom msg`);
     });
 });
 
 suite("Prepare message", () => {
-    const tmpFile = path.join(utils.getTmpFolder(), "test.py");
+    const tmpFile = path.join(demoFolder, "test.py");
 
     setup("Focus file", async () => {
         const document = await vscode.workspace.openTextDocument(tmpFile);
