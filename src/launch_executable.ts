@@ -166,7 +166,7 @@ export function launchPrimaryExecutable(): ExecutablePath {
  */
 export function launchSecondaryExecutable(): ExecutablePath {
     const execObj = new ExecutablePath(
-        utils.nukeToolsConfig(`nukeExecutable.secondaryExecutablePath`) as string,
+        utils.nukeToolsConfig("nukeExecutable.secondaryExecutablePath") as string,
         "Alt."
     );
     launchExecutable(execObj);
@@ -180,7 +180,7 @@ export function launchSecondaryExecutable(): ExecutablePath {
  */
 export async function launchPromptExecutable(): Promise<ExecutablePath> {
     const execObj = new ExecutablePath(
-        utils.nukeToolsConfig(`nukeExecutable.primaryExecutablePath`) as string,
+        utils.nukeToolsConfig("nukeExecutable.primaryExecutablePath") as string,
         "Main Prompt"
     );
 
