@@ -48,5 +48,5 @@ export function getDemoFolder(): string {
 export async function cleanSettings(): Promise<void> {
     const settings = path.join(getDemoFolder(), ".vscode", "settings.json");
     writeFileSync(settings, "{}");
-    await sleep(200);
+    // await sleep(100);
 }
