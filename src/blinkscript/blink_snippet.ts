@@ -2,8 +2,11 @@ import { readFileSync } from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 
-const fileSnippet = readFileSync(
-    path.join(path.resolve(__dirname, "../.."), "demo/blink_sample.blink"),
+/**
+ * Sample blinkscript file. same as Nuke default blinkscript node.
+ */
+const saturationTemplate = readFileSync(
+    path.join(path.resolve(__dirname, "../.."), "demo/blink_saturation_sample.blink"),
     "utf-8"
 );
 
@@ -17,8 +20,8 @@ export class BlinkSnippets implements vscode.CompletionItemProvider {
         vscode.CompletionItem[] | vscode.CompletionList<vscode.CompletionItem>
     > {
         const kernelCompletion = new vscode.CompletionItem("kernel");
-        kernelCompletion.documentation = new vscode.MarkdownString("Start up kernel template");
-        kernelCompletion.insertText = new vscode.SnippetString(fileSnippet);
+        kernelCompletion.documentation = new vscode.MarkdownString("Saturation sample script.");
+        kernelCompletion.insertText = new vscode.SnippetString(saturationTemplate);
 
         return [kernelCompletion];
     }
