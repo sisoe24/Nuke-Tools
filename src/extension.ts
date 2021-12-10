@@ -5,6 +5,10 @@ import * as utils from "./utils";
 import * as newUpdate from "./update_message";
 import { addStubsPath } from "./stubs";
 
+import { BlinkSnippets } from "./blinkscript/blink_snippet";
+import { BlinkScriptFormat } from "./blinkscript/blink_format";
+import { BlinkScriptCompletionProvider } from "./blinkscript/blink_completion";
+
 export function activate(context: vscode.ExtensionContext): void {
     newUpdate.showUpdateMessage(context);
 
@@ -53,6 +57,24 @@ export function activate(context: vscode.ExtensionContext): void {
         vscode.commands.registerCommand("nuke-tools.showNetworkAddresses", () => {
             vscode.window.showInformationMessage(socket.getAddresses());
         })
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerDocumentFormattingEditProvider(
+            "blinkscript",
+            new BlinkScriptFormat()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider(
+            "blinkscript",
+            new BlinkScriptCompletionProvider()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider("blinkscript", new BlinkSnippets())
     );
 }
 

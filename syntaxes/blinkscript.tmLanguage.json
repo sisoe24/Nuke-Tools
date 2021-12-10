@@ -1,0 +1,186 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "BlinkScript",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#strings"
+        },
+        {
+            "include": "#keywords"
+        },
+        {
+            "include": "#operators"
+        },
+        {
+            "include": "#builtins"
+        },
+        {
+            "include": "#variables"
+        }
+    ],
+    "repository": {
+        "variables": {
+            "patterns": [
+                {
+                    "name": "constant.language.blink",
+                    "match": "(?<=#define\\s+)\\w+"
+                },
+                {
+                    "name": "entity.name.function.blink",
+                    "match": "\\w+?(?=\\()"
+                },
+                {
+                    "name": "entity.name.class.blink",
+                    "match": "(?<=(struct|class|kernel)\\s*)\\w+"
+                },
+                {
+                    "name": "constant.numeric.blink",
+                    "match": "\\b\\d+"
+                },
+                {
+                    "name": "variable.other.object.blink",
+                    "match": "\\w+(?=\\.)"
+                },
+                {
+                    "name": "variable.other.property.blink",
+                    "match": "(?<=\\.|->)\\w+"
+                },
+                {
+                    "name": "variable.other.readwrite.blink",
+                    "match": "\\w+"
+                }
+            ]
+        },
+        "builtins": {
+            "patterns": [
+                {
+                    "name": "entity.other.inherited-class.input-edge-type.blink",
+                    "match": "\\be(EdgeNull|EdgeClamped|EdgeConstant)\\b"
+                },
+                {
+                    "name": "entity.other.inherited-class.input-access.blink",
+                    "match": "\\beAccess(Point|Ranged1D|Ranged2D|Random)\\b"
+                },
+                {
+                    "name": "entity.other.inherited-class.image-access-type.blink",
+                    "match": "\\be(Read|Write|ReadWrite)\\b"
+                },
+                {
+                    "name": "entity.other.inherited-class.kernel-type.blink",
+                    "match": "\\b(ImageComputationKernel|ImageRollingKernel|ImageReductionKernel)\\b"
+                },
+                {
+                    "name": "entity.other.inherited-class.kernel-granularity.blink",
+                    "match": "\\be(ComponentWise|PixelWise)\\b"
+                },
+                {
+                    "name": "entity.name.class.image.blink",
+                    "match": "\\b(Image)\\b"
+                },
+                {
+                    "name": "keyword.other.blink",
+                    "match": "\\b(kernel|param|local)\\b"
+                }
+            ]
+        },
+        "operators": {
+            "patterns": [
+                {
+                    "name": "keyword.operator.arithmetic.blink",
+                    "match": "(\\+|\\*|/|-|=|%)"
+                },
+                {
+                    "name": "keyword.operator.ternary.blink",
+                    "match": "\\?"
+                },
+                {
+                    "name": "keyword.operator.comparison.blink",
+                    "match": "(<=|>=|<|>|==|!=)"
+                }
+            ]
+        },
+        "keywords": {
+            "patterns": [
+                {
+                    "name": "variable.language.this.blink",
+                    "match": "\\bthis\\b"
+                },
+                {
+                    "name": "keyword.control.blink",
+                    "match": "\\b(if|else|while|break|for|return)\\b"
+                },
+                {
+                    "name": "keyword.control.directive.blink",
+                    "match": "#(define|include)"
+                },
+                {
+                    "name": "storage.type.builtin.primitive.blink",
+                    "match": "\\b(float[1-4]?|int|bool|long|short|void|class|struct|double|signed|unsigned)\\b"
+                },
+                {
+                    "name": "storage.type.modifiers.blink",
+                    "match": "\\b(public|private|protected|typename|typedef)\\b"
+                },
+                {
+                    "name": "keyword.other.mix.blink",
+                    "match": "\\b(inline|static|template|union|namespace|explicit)\\b"
+                },
+                {
+                    "name": "storage.type.blink",
+                    "match": "\\b(const|enum)\\b"
+                },
+                {
+                    "name": "keyword.other.unit.suffix.floating-point.blink",
+                    "match": "(?<=\\d\\.\\d*)f"
+                }
+            ]
+        },
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line.double-slash.blink",
+                    "match": "//.*$"
+                },
+                {
+                    "name": "comment.block.blink",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                }
+            ]
+        },
+        "strings": {
+            "patterns": [
+                {
+                    "name": "string.quoted.other.include.blink",
+                    "match": "(?<=#include\\s+)<\\w+?>"
+                },
+                {
+                    "name": "string.quoted.double.blink",
+                    "begin": "\"",
+                    "end": "\"",
+                    "patterns": [
+                        {
+                            "name": "constant.character.escape.blink",
+                            "match": "\\\\."
+                        }
+                    ]
+                },
+                {
+                    "name": "string.quoted.single.blink",
+                    "begin": "'",
+                    "end": "'",
+                    "patterns": [
+                        {
+                            "name": "constant.character.escape.blink",
+                            "match": "\\\\."
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "scopeName": "source.blink"
+}

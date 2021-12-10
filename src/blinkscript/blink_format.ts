@@ -1,0 +1,33 @@
+import * as vscode from "vscode";
+
+export function cleanEmptyLines(text: string): string {
+    return text.replace(/^\s+$/gm, "");
+}
+
+export function cleanMultiSpace(text: string): string {
+    return text.replace(/(?<=[^ \n]) {2,}/gm, " ");
+}
+
+export function unindentBlock(text: string): string {
+    return text.replace(/\s*{/gm, " {");
+}
+
+export function formatFile(text: string): string {
+    text = cleanEmptyLines(text);
+    text = cleanMultiSpace(text);
+    text = unindentBlock(text);
+    return text;
+}
+
+export class BlinkScriptFormat implements vscode.DocumentFormattingEditProvider {
+    public provideDocumentFormattingEdits(
+        document: vscode.TextDocument,
+        options: vscode.FormattingOptions,
+        token: vscode.CancellationToken
+    ): vscode.ProviderResult<vscode.TextEdit[]> {
+        const lines = document.lineCount;
+        const text = formatFile(document.getText());
+
+        return [vscode.TextEdit.replace(new vscode.Range(0, 0, lines, 0), text)];
+    }
+}

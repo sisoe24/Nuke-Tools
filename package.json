@@ -13,7 +13,8 @@
         "vscode": "^1.58.0"
     },
     "categories": [
-        "Other"
+        "Other",
+        "Programming Languages"
     ],
     "activationEvents": [
         "onStartupFinished"
@@ -135,7 +136,27 @@
                     "group": "navigation"
                 }
             ]
-        }
+        },
+        "languages": [
+            {
+                "id": "blinkscript",
+                "aliases": [
+                    "BlinkScript",
+                    "blinkscript"
+                ],
+                "extensions": [
+                    ".blink"
+                ],
+                "configuration": "./syntaxes/language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "blinkscript",
+                "scopeName": "source.blink",
+                "path": "./syntaxes/blinkscript.tmLanguage.json"
+            }
+        ]
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
