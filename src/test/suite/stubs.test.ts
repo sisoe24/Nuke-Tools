@@ -67,8 +67,8 @@ suite("Stubs Creation", () => {
         assert.strictEqual(extraPaths, extraPaths);
     });
 
-    test.skip("Check python.analysis.extraPaths content: Work only if extension is installed", () => {
-        stubs.addStubsPath();
+    test.skip("Check python.analysis.extraPaths content: Work only if extension is installed", async () => {
+        await vscode.commands.executeCommand("nuke-tools.addPythonStubs");
         const config = vscode.workspace.getConfiguration("python.analysis");
         const extraPaths = config.get("extraPaths") as Array<string>;
         assert.deepStrictEqual(extraPaths, [stubs.getStubsPath()]);
