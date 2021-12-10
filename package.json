@@ -147,14 +147,14 @@
                 "extensions": [
                     ".blink"
                 ],
-                "configuration": "./syntaxes/language-configuration.json"
+                "configuration": "./language/language-configuration.json"
             }
         ],
         "grammars": [
             {
                 "language": "blinkscript",
                 "scopeName": "source.blink",
-                "path": "./syntaxes/blinkscript.tmLanguage.json"
+                "path": "./language/blinkscript.tmLanguage.json"
             }
         ]
     },

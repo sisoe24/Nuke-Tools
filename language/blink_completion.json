@@ -1,0 +1,22 @@
+{
+    "kernelTypes": {
+        "ImageComputationKernel": "Used for image processing, this takes zero or more images as input and produces one or more images as output.",
+        "ImageRollingKernel": "Used for image processing, where there is a data dependency between the output at different points in the output space. With an ImageComputationKernel, there are no guarantees about the order in which the output pixels will be filled in. With an ImageRollingKernel, you can choose to \"roll\" the kernel either horizontally or vertically over the iteration bounds, allowing you to carry data along rows or down columns respectively.",
+        "ImageReductionKernel": "Used to \"reduce\" an image down to a value or set of values that represent it, for example to calculate statistics such as the mean or variance of an image."
+    },
+    "kernelGranularity": {
+        "ePixelWise": "At each pixel, a pixel wise kernel can write to all the channels in the output and can access any channel in the input. You would use a pixelwise kernel for any operation where there is interdependence between the channels, for example a saturation.",
+        "eComponentWise": "Componentwise processing means that each channel in the output image will be processed independently. When processing each channel, only values from the corresponding channel in the input(s) can be accessed."
+    },
+    "imageAccess": {
+        "eEdgeClamped": "",
+        "eEdgeConstant": "",
+        "eAccessPoint": "",
+        "eAccessRanged1D": "",
+        "eAccessRanged2D": "",
+        "eAccessRangedRandom": "",
+        "eRead": "",
+        "eWrite": "",
+        "eReadWrite": ""
+    }
+}
