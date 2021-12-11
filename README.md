@@ -14,6 +14,7 @@ A bunch of Nuke related tools that will help the development process in Visual S
   - [1.2. Nuke Python Stubs](#12-nuke-python-stubs)
     - [1.2.1. Other ways to add the stubs](#121-other-ways-to-add-the-stubs)
   - [1.3. BlinkScript](#13-blinkscript)
+    - [1.3.1. Execute BlinkScript](#131-execute-blinkscript)
   - [1.4. Available Commands](#14-available-commands)
   - [1.5. Extension Settings](#15-extension-settings)
     - [1.5.1. `nukeTools.nukeExecutable.primaryExecutablePath`](#151-nuketoolsnukeexecutableprimaryexecutablepath)
@@ -52,12 +53,6 @@ Then is simple as: `import nuke`
 
 > If you have a package named `nuke` in your workspace root, it will not work, as python will import that one first.
 
-~~The extension will automatically create the settings `python.analysis.extraPaths` in every directory with a python file and append the stubs path to it (together with all of your global `python.analysis.extraPaths` settings)
-Alternatively you could disable the settings `Auto Add Stubs Path` and use the command `Add Python Stubs` to manually add them to the workspace settings.~~
-
-> Note: `Auto Add Stubs Path` is now deprecated and it will be removed in the future versions.
-
-
 ### 1.2.1. Other ways to add the stubs
 
 The stubs can be found inside the extension folder: `$HOME/.vscode/extensions/virgilsisoe.nuke-tools/Nuke-Python-Stubs/nuke_stubs`.
@@ -71,15 +66,17 @@ Although you could generate the stubs from the git repo, using the ones included
 
 ## 1.3. BlinkScript
 
-> [NukeServerSocket](#nukeserversocket) >= 0.1.0 is needed in order for this to work.
+> NOTE: I rarely use BlinkScript, so the feature available are in a basic form. If you would like to see something more, feel free to send a request on github or open a pull request. Also check out [Material Icon Theme](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme) that adds a Nuke icon for the .blink files.
 
-You can execute code from the text editor directly inside a Nuke BlinkScript node.
+Basic syntax highlighting, code formatting, simple auto complete and a startup snippet are provided for a `*.blink` file.
 
-The extension will take the name of the current active file and create a blinkscript node inside Nuke with the name as the current filename. If the node already exists then will only modified its source code. Once done will recompile the source kernel.
+### 1.3.1. Execute BlinkScript
 
-The accepted file extension are `.cpp` or `.blink`.
+You also can execute code from the text editor directly inside a Nuke BlinkScript node.
 
-> There used to be an extension on the marketplace for the blink language syntax but it appears to have been taken down. If you want to use a .blink file, you could set the language id to C++ in order to have the syntax colored. Also the extension [Material Icon Theme](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme) offers a nice Nuke icon for the .blink files.
+The extension will take the name of the current active file and create a blinkscript node inside Nuke with the name as the current filename. If the node already exists then will only modified its source code. Once done will recompile the kernel.
+
+The accepted file extension to execute BlinkScript code are `.cpp` or `.blink`.
 
 ## 1.4. Available Commands
 
