@@ -2,7 +2,17 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
-## [0.3.2] 11/08/2021
+## [0.3.4] 12/08/2021
+
+### Added
+
+- BlinkScript syntax highlighting, formatting and simple code suggestion.
+
+### Removed
+
+- `Auto add stubs path` setting.
+
+## [0.3.3] 11/08/2021
 
 Mostly code refactoring and test suite.
 
