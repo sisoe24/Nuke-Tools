@@ -7,7 +7,7 @@ import * as executables from "../../launch_executable";
 /**
  * Path to an executable bash file named: myapp.
  */
-const samplePath = join(utils.getDemoFolder(), "path space", "myapp");
+const samplePath = join(utils.demoPath, "path with space", "nuke");
 
 suite("ExecutablePath()", () => {
     test("quotePath()", () => {
@@ -24,7 +24,7 @@ suite("ExecutablePath()", () => {
     test("basename()", () => {
         const execPath = new executables.ExecutablePath(samplePath, "suffix");
         const basename = execPath.basename();
-        assert.strictEqual(basename, "myapp");
+        assert.strictEqual(basename, "nuke");
     });
 
     test("Path should be invalid.", () => {
@@ -56,11 +56,11 @@ const sleepTime = 400;
 
 suite("Launch executable", () => {
     suiteSetup("Setup Clean settings file", async () => {
-        await utils.cleanSettings();
+        utils.cleanSettings();
     });
 
     teardown("Tear Down settings file", async () => {
-        await utils.cleanSettings();
+        utils.cleanSettings();
     });
 
     test("Primary executable with no arguments", async () => {

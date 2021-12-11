@@ -1,6 +1,42 @@
 import * as vscode from "vscode";
 import * as path from "path";
-import { writeFileSync, existsSync } from "fs";
+import { readFileSync, createWriteStream, existsSync, mkdir, mkdirSync } from "fs";
+
+export const root = path.resolve(__dirname, "../../../");
+export const packageFile = readFileSync(path.join(root, "package.json"), "utf-8");
+
+export const demoPath = path.join(root, "demo");
+
+/**
+ * Get the package.json command names.
+ *
+ * @returns an array with all of the configurations options names.
+ */
+export function packageCommands(): string[] {
+    const _packageCommands = JSON.parse(packageFile).contributes.commands;
+
+    const commands: string[] = [];
+    for (const command of _packageCommands) {
+        commands.push(command.command);
+    }
+    return commands;
+}
+
+/**
+ * Get the package.json configuration names.
+ *
+ * @returns an array with all of the configurations options names.
+ */
+export function packageConfigurations(): string[] {
+    const _packageConfigs = JSON.parse(packageFile).contributes.configuration.properties;
+
+    const configurations: string[] = [];
+    for (const config of Object.keys(_packageConfigs)) {
+        configurations.push(config.replace("nukeTools.", ""));
+    }
+
+    return configurations;
+}
 
 /**
  * Some tests will need to wait for vscode to register the actions. An example will
@@ -21,32 +57,65 @@ export const sleep = (milliseconds: number): Promise<unknown> => {
  * @param value - the new value for the property.
  */
 export async function updateConfig(name: string, value: unknown): Promise<void> {
-    // vscode.extensions.getExtension("virgilsisoe.nuke-tools")?.activate();
-    const nukeTools = vscode.workspace.getConfiguration("nukeTools");
-    await nukeTools.update(name, value, vscode.ConfigurationTarget.Workspace);
+    const config = vscode.workspace.getConfiguration("nukeTools");
+    await config.update(name, value, vscode.ConfigurationTarget.Workspace);
 }
 
 /**
- * Get the tmp folder path in rootDir.
+ * Open and focus a demo file.
  *
- * @returns path of the tmp directory or undefined if it couldn't resolve.
+ * @param filename the name of a file to open.
+ * @param line optional line number for the cursor to start at. Defaults to `0` which would be line `1`.
+ * @param startChar optional position for the cursor to start at. Defaults to `0`
+ * @param endChar optional position for the cursor to end at. If bigger than startChar,
+ * will create a selection. Defaults to `0`
  */
-export function getDemoFolder(): string {
-    const cwd = vscode.extensions.getExtension("virgilsisoe.nuke-tools")?.extensionPath;
-    if (cwd) {
-        return path.join(cwd, "tmp");
+export async function focusDemoFile(
+    filename: string,
+    line = 0,
+    startChar = 0,
+    endChar = 0
+): Promise<vscode.TextEditor> {
+    const filepath = path.join(demoPath, filename);
+    const document = await vscode.workspace.openTextDocument(filepath);
+
+    const startSelection = new vscode.Position(line, startChar);
+
+    let endSelection = null;
+    if (endChar) {
+        endSelection = new vscode.Position(line, endChar);
     }
-    throw new Error("Could not resolve the tmp folder path");
+    const editor = await vscode.window.showTextDocument(document, {
+        selection: new vscode.Selection(startSelection, endSelection || startSelection),
+    });
+
+    return editor;
+}
+
+/**
+ * Create a demo file and write the content to it.
+ *
+ * If file doesn't exist, will get created, otherwise just updated with the new content.
+ * Function will sleep 100ms before returning.
+ *
+ * @param filename name of the file demo to write the content to.
+ * @param content  the content to write.
+ */
+export async function createDemoContent(filename: string, content: string): Promise<void> {
+    const filepath = path.join(demoPath, filename);
+
+    const file = createWriteStream(filepath);
+    file.write(content);
+    file.close();
+
+    await sleep(100);
 }
 
 /**
  * Clean the settings.json file inside the demo folder.
- *
- * Method will wait for 200ms before completing. This is to give enough time to
- * vscode to register the changes.
  */
 export async function cleanSettings(): Promise<void> {
-    const settings = path.join(getDemoFolder(), ".vscode", "settings.json");
-    writeFileSync(settings, "{}");
-    // await sleep(100);
+    const file = path.join(".vscode", "settings.json");
+    // TODO: create vscode folder if doesn't exists
+    void createDemoContent(file, "{}");
 }
