@@ -1,7 +1,7 @@
 import * as assert from "assert";
 
 import * as socket from "../../socket";
-import * as testUtils from "./utils";
+import * as testUtils from "./test_utils";
 
 import { Server } from "net";
 

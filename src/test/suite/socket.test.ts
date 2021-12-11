@@ -5,7 +5,7 @@ import * as path from "path";
 import * as fs from "fs";
 
 import * as socket from "../../socket";
-import * as utils from "./utils";
+import * as utils from "./test_utils";
 
 const demoFolder = utils.getDemoFolder();
 

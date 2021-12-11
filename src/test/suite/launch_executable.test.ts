@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import * as utils from "./utils";
+import * as utils from "./test_utils";
 import * as assert from "assert";
 import { join } from "path";
 import * as executables from "../../launch_executable";
