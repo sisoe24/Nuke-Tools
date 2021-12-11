@@ -1,10 +1,6 @@
 version = 1
 
-<<<<<<< HEAD
-test_patterns = ["src/test/suite/*.test.ts"]
-=======
 test_patterns = ["src/tests/suite/*test.ts"]
->>>>>>> 0.3.2-dev
 
 [[analyzers]]
 name = "javascript"
