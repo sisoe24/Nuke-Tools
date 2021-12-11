@@ -96,12 +96,6 @@
                         "default": false,
                         "markdownDescription": "**Use with caution**. Restart the terminal instance instead of creating new ones."
                     },
-                    "nukeTools.other.autoAddStubsPath": {
-                        "type": "boolean",
-                        "default": false,
-                        "markdownDescription": "Automatically add stubs path to `python.analysis.extraPath` workspace setting.",
-                        "deprecationMessage": "This is now deprecated and will be removed in future versions."
-                    },
                     "nukeTools.other.clearPreviousOutput": {
                         "type": "boolean",
                         "default": false,

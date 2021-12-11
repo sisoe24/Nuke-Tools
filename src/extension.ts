@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import * as executables from "./launch_executable";
 import * as socket from "./socket";
-import * as utils from "./utils";
 import * as newUpdate from "./update_message";
 import { addStubsPath } from "./stubs";
 
@@ -11,11 +10,6 @@ import { BlinkScriptCompletionProvider } from "./blinkscript/blink_completion";
 
 export function activate(context: vscode.ExtensionContext): void {
     newUpdate.showUpdateMessage(context);
-
-    // XXX: this is now deprecated and will be removed in future version
-    if (utils.nukeToolsConfig("other.autoAddStubsPath")) {
-        addStubsPath();
-    }
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.addPythonStubs", () => {
