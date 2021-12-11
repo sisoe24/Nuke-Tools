@@ -4,6 +4,16 @@ import { readFileSync } from "fs";
 import * as vscode from "vscode";
 
 /**
+ * The completion file for blinkscript.
+ */
+const completionFile = JSON.parse(
+    readFileSync(
+        path.join(path.resolve(__dirname, "../.."), "language", "blink_completion.json"),
+        "utf-8"
+    )
+);
+
+/**
  * Create the array for the completion item provider.
  *
  * Each item would have a label and an optional documentation that could be an
@@ -24,12 +34,36 @@ export function createCompletions(object: { [s: string]: string }): vscode.Compl
     return completionArray;
 }
 
-const completionFile = JSON.parse(
-    readFileSync(
-        path.join(path.resolve(__dirname, "../.."), "language", "blink_completion.json"),
-        "utf-8"
-    )
-);
+/**
+ * Get completion items.
+ *
+ * This serves only for internal verification. Function will check if the key is
+ * present and if yes will return the completion array. Otherwise will throw an error invalid key
+ *
+ * @param key key to check if present
+ * @returns
+ */
+export function getCompletions(key: string): vscode.CompletionItem[] {
+    if (!Object.prototype.hasOwnProperty.call(completionFile, key)) {
+        throw new Error(`Invalid completion item: ${key}`);
+    }
+    return createCompletions(completionFile[key]);
+}
+
+const kernelType = {
+    items: getCompletions("kernelTypes"),
+    match: RegExp(/kernel\s\w+\s*:\s*\w+(?!<)$/),
+};
+
+const kernelGranularity = {
+    items: getCompletions("kernelGranularity"),
+    match: RegExp(/kernel\s\w+\s*:\s*\w+\s*</),
+};
+
+const imageAccess = {
+    items: getCompletions("imageAccess"),
+    match: RegExp(/Image\s*</),
+};
 
 export class BlinkScriptCompletionProvider implements vscode.CompletionItemProvider {
     provideCompletionItems(
@@ -40,14 +74,28 @@ export class BlinkScriptCompletionProvider implements vscode.CompletionItemProvi
     ): vscode.ProviderResult<
         vscode.CompletionItem[] | vscode.CompletionList<vscode.CompletionItem>
     > {
-        const linePrefix = document.lineAt(position).text.substr(0, position.character);
+        const linePrefix = document.lineAt(position).text.substring(0, position.character);
 
-        if (linePrefix.match(/kernel\s\w+\s*:\s*\w+(?!<)$/)) {
-            return createCompletions(completionFile.kernelsType);
-        } else if (linePrefix.match(/kernel\s\w+\s*:\s*\w+\s*</)) {
-            return createCompletions(completionFile.kernelGranularity);
-        } else if (linePrefix.match(/Image</)) {
-            return createCompletions(completionFile.imageAccess);
+        /**
+         * `kernel abc :` match
+         */
+        if (kernelType.match.test(linePrefix)) {
+            return kernelType.items;
+        }
+
+        /**
+         * `kernel abc : type <` match
+         */
+        // const kernelGranularity = RegExp(/kernel\s\w+\s*:\s*\w+\s*</);
+        if (kernelGranularity.match.test(linePrefix)) {
+            return kernelGranularity.items;
+        }
+
+        /**
+         * `Image <` match
+         */
+        if (imageAccess.match.test(linePrefix)) {
+            return imageAccess.items;
         }
 
         return null;
