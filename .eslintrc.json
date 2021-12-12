@@ -24,6 +24,7 @@
     "ignorePatterns": [
         "out",
         "dist",
+        "demo",
         "**/*.d.ts",
         "src/test/suite/index.ts",
         "src/test/runTest.ts"
