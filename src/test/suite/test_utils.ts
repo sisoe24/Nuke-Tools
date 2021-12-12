@@ -114,8 +114,7 @@ export async function createDemoContent(filename: string, content: string): Prom
 /**
  * Clean the settings.json file inside the demo folder.
  */
-export async function cleanSettings(): Promise<void> {
+export function cleanSettings(): void {
     const file = path.join(".vscode", "settings.json");
-    // TODO: create vscode folder if doesn't exists
     void createDemoContent(file, "{}");
 }
