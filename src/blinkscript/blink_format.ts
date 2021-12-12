@@ -53,9 +53,7 @@ export function formatFile(text: string): string {
 
 export class BlinkScriptFormat implements vscode.DocumentFormattingEditProvider {
     public provideDocumentFormattingEdits(
-        document: vscode.TextDocument,
-        options: vscode.FormattingOptions,
-        token: vscode.CancellationToken
+        document: vscode.TextDocument
     ): vscode.ProviderResult<vscode.TextEdit[]> {
         const lines = document.lineCount;
         const text = formatFile(document.getText());

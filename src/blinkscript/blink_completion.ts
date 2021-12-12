@@ -6,7 +6,7 @@ import * as vscode from "vscode";
 /**
  * The completion file for blinkscript.
  */
-const completionFile = JSON.parse(
+export const completionFile = JSON.parse(
     readFileSync(
         path.join(path.resolve(__dirname, "../.."), "language", "blinkscript_completion.json"),
         "utf-8"
@@ -68,9 +68,7 @@ const imageAccess = {
 export class BlinkScriptCompletionProvider implements vscode.CompletionItemProvider {
     provideCompletionItems(
         document: vscode.TextDocument,
-        position: vscode.Position,
-        token: vscode.CancellationToken,
-        context: vscode.CompletionContext
+        position: vscode.Position
     ): vscode.ProviderResult<
         vscode.CompletionItem[] | vscode.CompletionList<vscode.CompletionItem>
     > {
