@@ -65,7 +65,20 @@ const imageAccess = {
     match: RegExp(/Image\s*</),
 };
 
+/**
+ * BlinkScript Completion Provider.
+ *
+ * The completion suggestion will be provided only when the cursor is in a specific
+ * position.
+ */
 export class BlinkScriptCompletionProvider implements vscode.CompletionItemProvider {
+    /**
+     * Initialize the provider.
+     *
+     * @param document vscode document
+     * @param position vscode cursor position
+     * @returns an array with the completion items.
+     */
     provideCompletionItems(
         document: vscode.TextDocument,
         position: vscode.Position

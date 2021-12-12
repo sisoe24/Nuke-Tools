@@ -51,7 +51,17 @@ export function formatFile(text: string): string {
     return text;
 }
 
+/**
+ * BlinkScript formatting provider.
+ *
+ */
 export class BlinkScriptFormat implements vscode.DocumentFormattingEditProvider {
+    /**
+     * Initialize the formatting provider.
+     *
+     * @param document vscode document to analyze.
+     * @returns an array with the provider result.
+     */
     public provideDocumentFormattingEdits(
         document: vscode.TextDocument
     ): vscode.ProviderResult<vscode.TextEdit[]> {

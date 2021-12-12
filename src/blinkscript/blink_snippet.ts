@@ -10,7 +10,14 @@ export const saturationTemplate = readFileSync(
     "utf-8"
 );
 
+/**
+ * BlinkScript snippet provider.
+ */
 export class BlinkSnippets implements vscode.CompletionItemProvider {
+    /**
+     * Initialize the snippet provider.
+     * @returns an array of completion items.
+     */
     provideCompletionItems(): vscode.CompletionItem[] {
         const kernelCompletion = new vscode.CompletionItem("kernel");
         kernelCompletion.documentation = "Saturation sample script.";
