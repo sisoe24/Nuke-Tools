@@ -11,12 +11,12 @@ const fakeIni = path.join(utils.demoPath, "fake.ini");
 const tmpFile = path.join(utils.demoPath, "test.py");
 
 suite("Socket", () => {
-    suiteSetup("Setup Clean settings file", async () => {
-        await utils.cleanSettings();
+    suiteSetup("Setup Clean settings file", () => {
+        utils.cleanSettings();
     });
 
-    teardown("Tear Down settings file", async () => {
-        await utils.cleanSettings();
+    teardown("Tear Down settings file", () => {
+        utils.cleanSettings();
     });
 
     test("Get manual address", async () => {
@@ -100,22 +100,7 @@ suite("Socket", () => {
 
 suite("Prepare message", () => {
     setup("Focus file", async () => {
-        const document = await vscode.workspace.openTextDocument(tmpFile);
-        await vscode.window.showTextDocument(document, { viewColumn: vscode.ViewColumn.One });
-
-        const editor = vscode.window.activeTextEditor;
-        if (editor) {
-            const start = new vscode.Position(0, 0);
-            // deselect any text
-            editor.selection = new vscode.Selection(start, start);
-
-            await editor.edit((editBuilder) => {
-                editBuilder.replace(
-                    new vscode.Range(start, new vscode.Position(editor.document.lineCount, 0)),
-                    "print('hello world')"
-                );
-            });
-        }
+        await utils.focusDemoFile("test.py");
     });
 
     test("prepareMessage with no selection: entire document", () => {
