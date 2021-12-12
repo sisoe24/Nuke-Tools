@@ -2,7 +2,7 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
-## [0.3.4] 12/08/2021
+## [0.4.0] 12/12/2021
 
 ### Added
 
