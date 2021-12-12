@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as path from "path";
-import { readFileSync, createWriteStream, existsSync, mkdir, mkdirSync } from "fs";
+import { readFileSync, createWriteStream } from "fs";
 
 export const root = path.resolve(__dirname, "../../../");
 export const packageFile = readFileSync(path.join(root, "package.json"), "utf-8");
