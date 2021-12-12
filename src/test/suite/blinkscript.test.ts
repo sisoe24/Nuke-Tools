@@ -54,7 +54,8 @@ suite("BlinkScript", () => {
             assert.strictEqual(provider[0].label, "kernel");
             assert.strictEqual(provider[0].documentation, "Saturation sample script.");
             if (provider[0].insertText) {
-                assert.strictEqual(provider[0].insertText.value, blinkSnippet.saturationTemplate);
+                const snippetText = provider[0].insertText as vscode.SnippetString;
+                assert.strictEqual(snippetText.value, blinkSnippet.saturationTemplate);
             }
         }
     });
@@ -102,8 +103,10 @@ suite("BlinkScript Code Suggestion", () => {
 
         const kernelType = blinkCompletion.completionFile.kernelTypes;
 
-        for (const item of provider) {
-            assert.ok(Object.prototype.hasOwnProperty.call(kernelType, item.label));
+        if (provider) {
+            for (const item of provider) {
+                assert.ok(Object.prototype.hasOwnProperty.call(kernelType, item.label as string));
+            }
         }
     });
 
@@ -118,8 +121,10 @@ suite("BlinkScript Code Suggestion", () => {
 
         const kernelType = blinkCompletion.completionFile.kernelGranularity;
 
-        for (const item of provider) {
-            assert.ok(Object.prototype.hasOwnProperty.call(kernelType, item.label));
+        if (provider) {
+            for (const item of provider) {
+                assert.ok(Object.prototype.hasOwnProperty.call(kernelType, item.label as string));
+            }
         }
     });
 
@@ -134,8 +139,10 @@ suite("BlinkScript Code Suggestion", () => {
 
         const kernelType = blinkCompletion.completionFile.imageAccess;
 
-        for (const item of provider) {
-            assert.ok(Object.prototype.hasOwnProperty.call(kernelType, item.label));
+        if (provider) {
+            for (const item of provider) {
+                assert.ok(Object.prototype.hasOwnProperty.call(kernelType, item.label as string));
+            }
         }
     });
 });

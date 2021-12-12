@@ -69,9 +69,7 @@ export class BlinkScriptCompletionProvider implements vscode.CompletionItemProvi
     provideCompletionItems(
         document: vscode.TextDocument,
         position: vscode.Position
-    ): vscode.ProviderResult<
-        vscode.CompletionItem[] | vscode.CompletionList<vscode.CompletionItem>
-    > {
+    ): vscode.CompletionItem[] | null {
         const linePrefix = document.lineAt(position).text.substring(0, position.character);
 
         /**
