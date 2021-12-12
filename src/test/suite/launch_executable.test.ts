@@ -55,11 +55,11 @@ suite("ExecutablePath()", () => {
 const sleepTime = 400;
 
 suite("Launch executable", () => {
-    suiteSetup("Setup Clean settings file", async () => {
+    suiteSetup("Setup Clean settings file", () => {
         utils.cleanSettings();
     });
 
-    teardown("Tear Down settings file", async () => {
+    teardown("Tear Down settings file", () => {
         utils.cleanSettings();
     });
 

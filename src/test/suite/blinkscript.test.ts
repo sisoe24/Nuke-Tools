@@ -46,7 +46,7 @@ suite("BlinkScript", () => {
         }
     });
 
-    test("Snippet", async () => {
+    test("Snippet", () => {
         const snippets = new blinkSnippet.BlinkSnippets();
         const provider = snippets.provideCompletionItems();
 
