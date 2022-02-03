@@ -2,6 +2,12 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
+## [0.4.1] 02/02/2022
+
+### Fixed
+
+- BlinkScript sample script incorrect components.
+
 ## [0.4.0] 12/12/2021
 
 ### Added
