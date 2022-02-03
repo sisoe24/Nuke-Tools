@@ -1,5 +1,5 @@
-kernel ${1:name} : ImageComputationKernel<eComponentWise> {
-  Image<eRead, eAccessPoint > src; // the input image
+kernel ${1:name} : ImageComputationKernel<ePixelWise> {
+  Image<eRead, eAccessPoint, eEdgeClamped> src; // the input image
   Image<eWrite> dst; // the output image
 
   param:
@@ -20,13 +20,11 @@ kernel ${1:name} : ImageComputationKernel<eComponentWise> {
     coefficients.x = 0.2126f;
     coefficients.y = 0.7152f;
     coefficients.z = 0.0722f;
-  Axis axis 
   }
 
   void process() {
     // Read the input image
     SampleType(src) input = src();
-    long name = 1;
 
     // Isolate the RGB components
     float3 srcPixel(input.x, input.y, input.z);
