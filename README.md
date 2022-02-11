@@ -4,10 +4,11 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/b4124a14ccb4467b89ec8cd607b0d16f)](https://www.codacy.com/gh/sisoe24/Nuke-Tools/dashboard?utm_source=github.com&utm_medium=referral&utm_content=sisoe24/Nuke-Tools&utm_campaign=Badge_Coverage)
 [![DeepSource](https://deepsource.io/gh/sisoe24/Nuke-Tools.svg/?label=active+issues&show_trend=true&token=HEB3mg6EWSs71ckagYV0_P2u)](https://deepsource.io/gh/sisoe24/Nuke-Tools/?ref=repository-badge)
 
-[![vscode](https://img.shields.io/visual-studio-marketplace/v/virgilsisoe.nuke-tools)](https://img.shields.io/visual-studio-marketplace/last-updated/virgilsisoe.nuke-tools)
-[![vscode](https://img.shields.io/visual-studio-marketplace/last-updated/virgilsisoe.nuke-tools)](https://img.shields.io/visual-studio-marketplace/last-updated/virgilsisoe.nuke-tools)
-[![Installs](https://img.shields.io/visual-studio-marketplace/i/virgilsisoe.nuke-tools)](https://deepsource.io/gh/sisoe24/Nuke-Tools/?ref=repository-badge)
-[![Installs](https://img.shields.io/visual-studio-marketplace/r/virgilsisoe.nuke-tools)](https://deepsource.io/gh/sisoe24/Nuke-Tools/?ref=repository-badge)
+[![Download](https://img.shields.io/badge/Marketplace-Download-blue)](https://marketplace.visualstudio.com/items?itemName=virgilsisoe.nuke-tools)
+[![vscode](https://img.shields.io/visual-studio-marketplace/v/virgilsisoe.nuke-tools)](https://marketplace.visualstudio.com/items?itemName=virgilsisoe.nuke-tools)
+[![vscode](https://img.shields.io/visual-studio-marketplace/last-updated/virgilsisoe.nuke-tools)](https://marketplace.visualstudio.com/items?itemName=virgilsisoe.nuke-tools)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/virgilsisoe.nuke-tools)](https://marketplace.visualstudio.com/items?itemName=virgilsisoe.nuke-tools)
+[![Installs](https://img.shields.io/visual-studio-marketplace/r/virgilsisoe.nuke-tools)](https://marketplace.visualstudio.com/items?itemName=virgilsisoe.nuke-tools)
 
 A bunch of Nuke related tools that will help the development process in Visual Studio Code.
 
