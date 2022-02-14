@@ -97,6 +97,30 @@ export function updateAnalysisPath(extraPaths: string[], stubsPath: string): voi
 }
 
 /**
+ * Correct extraPath analysis entry.
+ * 
+ * When updating the extension, workspace `python.analysis.extraPath` would point
+ * to the old path, thus breaking the stubs path. This functions aims to update the
+ * path each time vscode would reload. 
+ * 
+ * XXX: Should find a more stable way, like having the stubs path in a different path.
+ * 
+ * TODO: testing
+ */
+export function correctAnalysisPath(): void {
+    const config = vscode.workspace.getConfiguration("python.analysis");
+    const extraPaths = config.get("extraPaths") as Array<string>;
+
+    for (let index = 0; index < extraPaths.length; index++) {
+        if (extraPaths[index].match("nuke-tools")) {
+            extraPaths.splice(index, 1, getStubsPath());
+            config.update("extraPaths", extraPaths);
+            break;
+        }
+    }
+}
+
+/**
  * Add stubs folder path to workspace settings `python.analysis.extraPaths`.
  * If path is already present, do nothing.
  */
