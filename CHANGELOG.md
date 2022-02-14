@@ -2,6 +2,16 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
+## [0.4.3] 02/02/2022
+
+### Fixed
+
+- Stubs path now will automatically update to reflect the extension path when a new version is released.
+
+### Changed
+
+- Some stubs file will now return `[Node]` instead of `list()`.
+
 ## [0.4.1] 02/02/2022
 
 ### Fixed
