@@ -2,6 +2,12 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
+## [0.4.4] 02/17/2022
+
+### Fixed
+
+- Correctly import `nukescripts` module when using the stubs path.
+
 ## [0.4.3] 02/02/2022
 
 ### Fixed
