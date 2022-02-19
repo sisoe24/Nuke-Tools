@@ -2,6 +2,12 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
+## [0.4.5] 02/18/2022
+
+### Fixed
+
+- Fixed formatting error in stubs main init file.
+
 ## [0.4.4] 02/17/2022
 
 ### Fixed
