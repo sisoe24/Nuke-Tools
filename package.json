@@ -74,6 +74,11 @@
                 "command": "nuke-tools.addPythonStubs",
                 "title": "Add Python Stubs",
                 "category": "Nuke"
+            },
+            {
+                "command": "nuke-tools.addNukeServerSocket",
+                "title": "Install NukeServerSocket",
+                "category": "Nuke"
             }
         ],
         "configuration": [
@@ -178,5 +183,9 @@
         "ts-node": "^10.4.0",
         "typescript": "^4.3.2",
         "vscode-test": "^1.5.2"
+    },
+    "dependencies": {
+        "@types/fs-extra": "^9.0.13",
+        "fs-extra": "^10.0.1"
     }
 }

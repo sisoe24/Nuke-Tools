@@ -1,7 +1,10 @@
 import * as vscode from "vscode";
+
 import * as executables from "./launch_executable";
 import * as socket from "./socket";
 import * as newUpdate from "./update_message";
+
+import { addNss } from "./nuke_server_socket";
 import { addStubsPath, correctAnalysisPath } from "./stubs";
 
 import { BlinkSnippets } from "./blinkscript/blink_snippet";
@@ -16,6 +19,12 @@ export function activate(context: vscode.ExtensionContext): void {
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.addPythonStubs", () => {
             addStubsPath();
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.addNukeServerSocket", () => {
+            addNss();
         })
     );
 
