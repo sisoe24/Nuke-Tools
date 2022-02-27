@@ -1,20 +1,13 @@
 import * as vscode from "vscode";
-import * as path from "path";
+import * as utils from "./utils";
 
 /**
- * Get the stubs path inside the rootDir.
+ * Get the stubs path included with the extension.
  *
- * @returns the stubs path or undefined if couldn't resolve the path.
+ * @returns the stubs path
  */
 export function getStubsPath(): string {
-    const currentPath = vscode.extensions.getExtension("virgilsisoe.nuke-tools")?.extensionPath;
-
-    if (currentPath) {
-        return path.join(currentPath, "Nuke-Python-Stubs", "nuke_stubs");
-    }
-    const msg = "Could not resolve stubs path.";
-    vscode.window.showErrorMessage(msg);
-    throw new Error(msg);
+    return utils.getIncludedPath("nuke_stubs");
 }
 
 /**
@@ -98,13 +91,13 @@ export function updateAnalysisPath(extraPaths: string[], stubsPath: string): voi
 
 /**
  * Correct extraPath analysis entry.
- * 
+ *
  * When updating the extension, workspace `python.analysis.extraPath` would point
  * to the old path, thus breaking the stubs path. This functions aims to update the
- * path each time vscode would reload. 
- * 
+ * path each time vscode would reload.
+ *
  * XXX: Should find a more stable way, like having the stubs path in a different path.
- * 
+ *
  * TODO: testing
  */
 export function correctAnalysisPath(): void {
