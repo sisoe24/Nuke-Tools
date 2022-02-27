@@ -2,6 +2,12 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
+## [0.5.0] 02/27/2022
+
+### Added
+
+- New command that adds NukeServerSocket plugin inside Nuke's directory (`.nuke`) & `menu.py`.
+
 ## [0.4.5] 02/18/2022
 
 ### Fixed
