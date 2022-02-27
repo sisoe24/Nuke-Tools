@@ -118,7 +118,7 @@
                     "nukeTools.network.debug": {
                         "type": "boolean",
                         "default": false,
-                        "markdownDescription": "Create an output window to debug network connections."
+                        "markdownDescription": "Show debugging information the in output window."
                     }
                 }
             }
