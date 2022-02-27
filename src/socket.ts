@@ -15,7 +15,7 @@ const outputWindow = vscode.window.createOutputChannel("Nuke Tools");
  * @returns - path like string.
  */
 export function getNukeIni(): string {
-    return path.join(os.homedir(), ".nuke/NukeServerSocket.ini");
+    return path.join(utils.nukeDir, "NukeServerSocket.ini");
 }
 
 /**
