@@ -5,7 +5,7 @@ import * as socket from "./socket";
 import * as newUpdate from "./update_message";
 
 import { addNss } from "./nuke_server_socket";
-import { addStubsPath, correctAnalysisPath } from "./stubs";
+import { addStubsPath, correctAnalysisPath, isPythonInstalled } from "./stubs";
 
 import { BlinkSnippets } from "./blinkscript/blink_snippet";
 import { BlinkScriptFormat } from "./blinkscript/blink_format";
@@ -14,7 +14,9 @@ import { BlinkScriptCompletionProvider } from "./blinkscript/blink_completion";
 export function activate(context: vscode.ExtensionContext): void {
     newUpdate.showUpdateMessage(context);
 
-    correctAnalysisPath();
+    if (isPythonInstalled()) {
+        correctAnalysisPath();
+    }
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.addPythonStubs", () => {
