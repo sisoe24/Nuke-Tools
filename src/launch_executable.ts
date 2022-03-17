@@ -109,8 +109,7 @@ export function restartInstance(name: string): void {
  * Execute the command in the terminal. Before executing the command, if restartInstance
  * is enabled, will dispose of the previous terminal instance.
  *
- * @param cmd - the command to execute.
- * @param suffix - a suffix name to add to the terminal instance name.
+ * @param execPath - ExecutablePath object path.
  */
 export function execCommand(execPath: ExecutablePath): void {
     const terminalName = execPath.terminalName();
