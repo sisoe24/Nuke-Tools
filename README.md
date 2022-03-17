@@ -12,19 +12,11 @@
 
 A bunch of Nuke related tools that will help the development process in Visual Studio Code.
 
-> This is primarily a companion extension for: [NukeServerSocket](#16-nukeserversocket). Code Execution will only work when the server inside Nuke is active.
-
-| Code execution from NukeServerSocket                                                                | Included Stubs                                                                                       |
-| --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| ![CodeExecution](https://raw.githubusercontent.com/sisoe24/Nuke-Tools/main/images/execute_code.gif) | ![CodeExecution](https://raw.githubusercontent.com/sisoe24/Nuke-Tools/main/images/auto_complete.gif) |
-
 - [1. Nuke Tools README](#1-nuke-tools-readme)
   - [1.1. Features](#11-features)
-  - [1.2. NukeServerSocket](#12-nukeserversocket)
-  - [1.3. Nuke Python Stubs](#13-nuke-python-stubs)
+  - [1.2. Requirements](#12-requirements)
+  - [1.3. Usage](#13-usage)
   - [1.4. BlinkScript](#14-blinkscript)
-    - [1.4.1. Features](#141-features)
-    - [1.4.2. Execute BlinkScript](#142-execute-blinkscript)
   - [1.5. Available Commands](#15-available-commands)
   - [1.6. Extension Settings](#16-extension-settings)
 
@@ -34,50 +26,57 @@ A bunch of Nuke related tools that will help the development process in Visual S
   - Get output of Nuke execution inside Visual Studio Code.
   - When used locally (same machine) no configuration is required, just running the server inside Nuke.
   - Specify a custom address when connection is from/to another computer.
-  - Multiple computer can connect to the same Nuke instance.
   - BlinkScript support.
 - Included Nuke Python Stubs to be added to `python.analysis.extraPaths` for a simple auto complete feature.
-- Easy commands for launching Nuke instances via the terminal with default or optional arguments.
-- Easy NukeServerSocket install command.
+- Convenient commands for launching Nuke instances via the terminal with default or optional arguments.
 
-## 1.2. NukeServerSocket
+## 1.2. Requirements
 
-Download companion plugin:
+This extension is primarily a companion for *NukeServerSocket*. Executing code will only work when the plugin is up and running inside Nuke.
 
-- Via the Command Palette: `Nuke: Add NukeServerSocket` (more info on [Available Commands](#15-available-commands)).
-- [Github](https://github.com/sisoe24/NukeServerSocket/releases)
-- [Nukepedia](http://www.nukepedia.com/python/misc/nukeserversocket)
+## 1.3. Usage
 
-## 1.3. Nuke Python Stubs
+To execute code:
 
-For the most part, stubs files will have the type annotation declared. This will allow vscode to infer the type of the variable, but that some of them are wrong or missing (more info in the [github repo](https://github.com/sisoe24/Nuke-Python-Stubs#13-type-guess)).
+1. Download and install the companion plugin NukeServerSocket:
+   - Via the Command Palette: `Nuke: Add NukeServerSocket` (more info on [Available Commands](#15-available-commands)).
+   - [Github](https://github.com/sisoe24/NukeServerSocket/releases)
+   - [Nukepedia](http://www.nukepedia.com/python/misc/nukeserversocket)
+2. Connect NukeServerSocket inside Nuke.
+3. With an active Python/BlinkScript file, use the command `Nuke: Run Inside Nuke` from the Command Palette or use the dedicated button in the editor top right corner.
 
-1. The command `Nuke: Add Python Stubs` will add the stubs path to your workspace `python.analysis.extraPaths` settings.
-2. Then is simple as: `import nuke` in your script.
+![CodeExecution](/images/execute_code.gif)
 
-> If you have a package named `nuke` in your workspace root, it will not work, as python will import that one first.
+To use the Python stubs
+
+1. Use the command `Nuke: Add Python Stubs` to add the stubs to your `python.analysis.extraPaths` setting.
+2. Write `import nuke` into your script.
+
+![PythonStubs](/images/auto_complete.gif)
+
+> NOTE: Having a package named `nuke` in your workspace root, might cause problems for the suggestions.
 
 ## 1.4. BlinkScript
 
 > NOTE: BlinkScript features are available in a basic form. If you would like to see something more, feel free to make a request or open a PR. Also check out [Material Icon Theme](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme) that adds a Nuke icon for the .blink file.
 
-### 1.4.1. Features
+- Features
+  - Code execution.
+  - Syntax highlighting.
+  - Code formatting.
+  - Simple code suggestion.
+  - Startup saturation snippet.
 
-- Code execution.
-- Syntax highlighting.
-- Code formatting.
-- Simple code suggestion.
-- Startup saturation snippet.
+- Execute BlinkScript
 
-### 1.4.2. Execute BlinkScript
+  The extension will create a blinkscript node named after the current active file.
+  If the node already exists, then it will only modified the code and recompile it.
 
-The extension will take the name of the current active file and create a blinkscript node inside Nuke with the name as the current filename. If the node already exists then will only modified its source code. Once done, will recompile the kernel.
-
-The accepted file extension to execute BlinkScript code are `.cpp` or `.blink`.
+  The accepted file extension code are `.cpp` or `.blink`.
 
 ## 1.5. Available Commands
 
-All commands are available by opening the Command Palette (`Command+Shift+P` on macOS and `Ctrl+Shift+P` on Windows/Linux) and typing in one of the following Command Name:
+- All commands are available by opening the Command Palette (`Command+Shift+P` on macOS and `Ctrl+Shift+P` on Windows/Linux) and typing in one of the following Command Name:
 
 | Command Name                               | Command ID                        | Description                                              |
 | ------------------------------------------ | --------------------------------- | -------------------------------------------------------- |
@@ -90,27 +89,26 @@ All commands are available by opening the Command Palette (`Command+Shift+P` on 
 | `Nuke: Show Network Addresses`             | `nuke-tools.showNetworkAddresses` | Show network addresses                                   |
 | `Nuke: Debug Message`                      | `nuke-tools.testRunInsideNuke`    | Quick test connection                                    |
 
-By default the extension does not provide any shortcut, but every command can be assigned to one. (see [Key Bindings for Visual Studio Code](https://code.visualstudio.com/docs/getstarted/keybindings) for more information)
-
-Example `keybindings.json`
-
-```json
-[
-    {
-        "key":"alt+shift+n",
-        "command":"nuke-tools.launchNuke",
-    },
-    {
-        "key":"alt+shift+r",
-        "command":"nuke-tools.runCodeInsideNuke",
-        "when": "editorTextFocus"
-    }
-]
-```
-
 - `Nuke: Run Code Inside Nuke` can be access also via a button in the Editor Toolbar.
 - `Nuke: Add NukeServerSocket` will copy the plugin folder inside `$HOME/.nuke` and append
-an import statement inside the `menu.py` file: `import NukeServerSocket`
+an import statement inside the `menu.py` file: `import NukeServerSocket`. If `menu.py` does not exists, it will be created.
+- By default the extension does not provide any shortcut, but every command can be assigned to one. (see [Key Bindings for Visual Studio Code](https://code.visualstudio.com/docs/getstarted/keybindings) for more information).
+
+  Example `keybindings.json`:
+
+  ```json
+  [
+      {
+          "key":"alt+shift+n",
+          "command":"nuke-tools.launchNuke",
+      },
+      {
+          "key":"alt+shift+r",
+          "command":"nuke-tools.runCodeInsideNuke",
+          "when": "editorTextFocus"
+      }
+  ]
+  ```
 
 ## 1.6. Extension Settings
 
@@ -118,8 +116,8 @@ an import statement inside the `menu.py` file: `import NukeServerSocket`
 
   Primary path for the Nuke executable.
 
-  - On MacOS you can find the file with: _Show Package Contents -> Contents/MacOS/Nuke..._
-  - On Windows WSL the path should be the Unix style: _/mnt/c/Program Files/..._
+  - On MacOS you can find the file with: *Show Package Contents -> Contents/MacOS/Nuke...*
+  - On Windows WSL the path should be the Unix style: */mnt/c/Program Files/...*
 
 - `nukeTools.nukeExecutable.secondaryExecutablePath`: `string`
 
