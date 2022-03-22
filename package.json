@@ -107,6 +107,11 @@
                         "default": false,
                         "description": "Clear previous console output before next execution."
                     },
+                    "nukeTools.other.showToolbarButton": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Show the launch icon on the editor toolbar."
+                    },
                     "nukeTools.network.enableManualConnection": {
                         "type": "boolean",
                         "default": false,
@@ -131,9 +136,9 @@
         "menus": {
             "editor/title": [
                 {
-                    "when": "resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled",
+                    "group": "navigation",
                     "command": "nuke-tools.runCodeInsideNuke",
-                    "group": "navigation"
+                    "when": "config.nukeTools.other.showToolbarButton && resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled"
                 }
             ]
         },
