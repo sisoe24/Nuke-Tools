@@ -2,6 +2,12 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
+## [0.6.0] 03/22/2022
+
+### Added
+
+- New settings to enable/disable the button in the toolbar.
+
 ## [0.5.0] 02/27/2022
 
 ### Added
