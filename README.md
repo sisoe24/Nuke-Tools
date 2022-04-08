@@ -10,7 +10,7 @@
 [![Ratings](https://img.shields.io/visual-studio-marketplace/r/virgilsisoe.nuke-tools)](https://marketplace.visualstudio.com/items?itemName=virgilsisoe.nuke-tools&ssr=false#review-details)
 [![vscode](https://img.shields.io/visual-studio-marketplace/last-updated/virgilsisoe.nuke-tools)](https://marketplace.visualstudio.com/items?itemName=virgilsisoe.nuke-tools)
 
-A bunch of Nuke related tools that will help the development process in Visual Studio Code.
+Nuke tools to help the development process inside Visual Studio Code.
 
 - [1. Nuke Tools README](#1-nuke-tools-readme)
   - [1.1. Features](#11-features)
@@ -23,12 +23,12 @@ A bunch of Nuke related tools that will help the development process in Visual S
 ## 1.1. Features
 
 - Execute code inside Nuke from a machine in your local network.
-  - Get output of Nuke execution inside Visual Studio Code.
-  - When used locally (same machine) no configuration is required, just running the server inside Nuke.
-  - Specify a custom address when connection is from/to another computer.
+  - Get the output of Nuke execution inside Visual Studio Code.
+  - When used locally (same machine), the extension requires no configuration, just a running server inside Nuke.
+  - Specify a custom address when the connection is from/to another computer.
   - BlinkScript support.
-- Included Nuke Python Stubs to be added to `python.analysis.extraPaths` for a simple auto complete feature.
-- Convenient commands for launching Nuke instances via the terminal with default or optional arguments.
+- Nuke Python Stubs for an auto-complete feature.
+- Commands for executing Nuke instances via the terminal with default or optional arguments.
 
 ## 1.2. Requirements
 
@@ -43,7 +43,7 @@ To execute code:
    - [Github](https://github.com/sisoe24/NukeServerSocket/releases)
    - [Nukepedia](http://www.nukepedia.com/python/misc/nukeserversocket)
 2. Connect NukeServerSocket inside Nuke.
-3. With an active Python/BlinkScript file, use the command `Nuke: Run Inside Nuke` from the Command Palette or use the dedicated button in the editor top right corner.
+3. With an active Python/BlinkScript file, use the command `Nuke: Run Inside Nuke` from the Command Palette or use the dedicated button in the editor's top right corner.
 
 ![CodeExecution](/images/execute_code.gif)
 
@@ -54,11 +54,11 @@ To use the Python stubs
 
 ![PythonStubs](/images/auto_complete.gif)
 
-> NOTE: Having a package named `nuke` in your workspace root, might cause problems for the suggestions.
+> NOTE: Having a folder named `nuke` in your Workspace root-directory can cause problems for the suggestions.
 
 ## 1.4. BlinkScript
 
-> NOTE: BlinkScript features are available in a basic form. If you would like to see something more, feel free to make a request or open a PR. Also check out [Material Icon Theme](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme) that adds a Nuke icon for the .blink file.
+> NOTE: BlinkScript features are available in a basic form. If you would like to see something more, feel free to make a request or open a PR. Also, check out [Material Icon Theme](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme) that adds a Nuke icon for the .blink file.
 
 - Features
   - Code execution.
@@ -69,8 +69,8 @@ To use the Python stubs
 
 - Execute BlinkScript
 
-  The extension will create a blinkscript node named after the current active file.
-  If the node already exists, then it will only modified the code and recompile it.
+  The extension will create a blinkscript node named after the currently active file.
+  If the node already exists, it will only modify the code and recompile it.
 
   The accepted file extension code are `.cpp` or `.blink`.
 
@@ -89,10 +89,11 @@ To use the Python stubs
 | `Nuke: Show Network Addresses`             | `nuke-tools.showNetworkAddresses` | Show network addresses                                   |
 | `Nuke: Debug Message`                      | `nuke-tools.testRunInsideNuke`    | Quick test connection                                    |
 
-- `Nuke: Run Code Inside Nuke` can be access also via a button in the Editor Toolbar.
+- `Nuke: Run Code Inside Nuke` command can get executed through a button in the Editor Toolbar.
+  - The button can be disabled in the settings.
 - `Nuke: Add NukeServerSocket` will copy the plugin folder inside `$HOME/.nuke` and append
-an import statement inside the `menu.py` file: `import NukeServerSocket`. If `menu.py` does not exists, it will be created.
-- By default the extension does not provide any shortcut, but every command can be assigned to one. (see [Key Bindings for Visual Studio Code](https://code.visualstudio.com/docs/getstarted/keybindings) for more information).
+an import statement inside the `menu.py` file: `import NukeServerSocket`. If `menu.py` does not exist, it will get created.
+- By default, the extension does not provide any shortcut. But you can assign each command to one. (see [Key Bindings for Visual Studio Code](https://code.visualstudio.com/docs/getstarted/keybindings) for more information).
 
   Example `keybindings.json`:
 
@@ -114,26 +115,26 @@ an import statement inside the `menu.py` file: `import NukeServerSocket`. If `me
 
 - `nukeTools.nukeExecutable.primaryExecutablePath`: `string`
 
-  Primary path for the Nuke executable.
+  A path for an executable.
 
-  - On MacOS you can find the file with: *Show Package Contents -> Contents/MacOS/Nuke...*
-  - On Windows WSL the path should be the Unix style: */mnt/c/Program Files/...*
+  - On macOS, you can find the file in *Show Package Contents -> Contents/MacOS/Nuke...*
+  - On Windows WSL, the path should be in Unix style: */mnt/c/Program Files/...*
 
 - `nukeTools.nukeExecutable.secondaryExecutablePath`: `string`
 
-  Same as primary executable. Could be a different Nuke version.
+  Same as primary executable. It could be a different Nuke version.
 
 - `nukeTools.nukeExecutable.options.defaultCommandLineArguments`: `string`
 
-  Command line arguments to be added at each "Nuke launch" 🚀.
+  Command-line arguments to be added at each "Nuke launch" 🚀.
 
 - `nukeTools.nukeExecutable.options.restartInstance`: `boolean`
 
-  Restart the terminal instance instead of creating new ones. **Use with caution** as this option will terminate every Nuke process created by the extension. Useful when rapid testing GUI plugins that don't need saving the composition.
+  Restart the terminal instance instead of creating new ones. **Use with caution**. This option will terminate every Nuke process spawned by the extension. Useful when rapid testing GUI plugins that don't need saving the composition.
 
 - `nukeTools.other.clearPreviousOutput`: `boolean`
 
-  Clear previous console output before next code execution.
+  Clear the previous console output text.
 
 - `nukeTools.other.showToolbarButton`: `boolean`
 
@@ -141,16 +142,16 @@ an import statement inside the `menu.py` file: `import NukeServerSocket`. If `me
 
 - `nukeTools.network.enableManualConnection`: `boolean`
 
-  If enabled, `nukeTools.network.port` and `nukeTools.network.host` will take over the default settings. Needed when connecting to another computer.
+  If enabled, `nukeTools.network.port` and `nukeTools.network.host` will take over the default settings. This option is needed when connecting to another computer.
 
   - `nukeTools.network.port`: `string`
 
-    Specify a different port for the connection. This will only work if `nukeTools.network.enableManualConnection` is enabled. Server address should be taken from the Nuke plugin.
+    Specify a different port for the connection. This option will only work if `nukeTools.network.enableManualConnection` is enabled. The server address should be the same as in the Nuke plugin.
 
   - `nukeTools.network.host`: `string`
 
-    Same as the port. Host could be the localhost or the local ip.
+    Same as the port. The host could be the local host or the local IP.
 
 - `nukeTools.network.debug`: `boolean`
 
-  Show network debug information in the output window. Enabling this option, will prevent the console from being cleared after code execution.
+  Show network debug information in the output window. Enabling this option will prevent the console from being cleared after code execution.
