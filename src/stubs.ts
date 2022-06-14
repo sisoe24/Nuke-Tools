@@ -90,6 +90,25 @@ export function updateAnalysisPath(extraPaths: string[], stubsPath: string): voi
 }
 
 /**
+ * Get the setting parent for the extraPaths based on the current python server.
+ * 
+ *  - Pylance:  `python.analysis`
+ *  - Jedi:  `python.autoComplete`
+ * 
+ * @returns the settings name for the extra paths
+ */
+export function getAutoCompleteSetting(): string {
+    const pythonServer = vscode.workspace.getConfiguration("python").get("languageServer");
+
+    // XXX: are there more servers besides Pylance and Jedi?
+    if (pythonServer === "Pylance") {
+        return "python.analysis";
+    }
+
+    return "python.autoComplete";
+}
+
+/**
  * Correct extraPath analysis entry.
  *
  * When updating the extension, workspace `python.analysis.extraPath` would point
@@ -99,7 +118,7 @@ export function updateAnalysisPath(extraPaths: string[], stubsPath: string): voi
  * TODO: testing
  */
 export function correctAnalysisPath(): void {
-    const config = vscode.workspace.getConfiguration("python.analysis");
+    const config = vscode.workspace.getConfiguration(getAutoCompleteSetting());
     const extraPaths = config.get("extraPaths") as Array<string>;
 
     for (let index = 0; index < extraPaths.length; index++) {
@@ -123,7 +142,7 @@ export function addStubsPath(): boolean {
         return false;
     }
 
-    const config = vscode.workspace.getConfiguration("python.analysis");
+    const config = vscode.workspace.getConfiguration(getAutoCompleteSetting());
     const extraPaths = config.get("extraPaths") as Array<string>;
 
     updateAnalysisPath(extraPaths, getStubsPath());
