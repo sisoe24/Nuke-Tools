@@ -89,7 +89,7 @@ To use the Python stubs
 | `Nuke: Show Network Addresses`             | `nuke-tools.showNetworkAddresses` | Show network addresses                                   |
 | `Nuke: Debug Message`                      | `nuke-tools.testRunInsideNuke`    | Quick test connection                                    |
 
-- `Nuke: Run Code Inside Nuke` command can get executed through a button in the Editor Toolbar.
+- `Nuke: Run Code Inside Nuke` command can be executed via a button in the Editor Toolbar.
   - The button can be disabled in the settings.
 - `Nuke: Add NukeServerSocket` will copy the plugin folder inside `$HOME/.nuke` and append
 an import statement inside the `menu.py` file: `import NukeServerSocket`. If `menu.py` does not exist, it will get created.
