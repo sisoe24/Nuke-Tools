@@ -108,7 +108,7 @@ export async function createDemoContent(filename: string, content: string): Prom
     file.write(content);
     file.close();
 
-    await sleep(100);
+    await sleep(200);
 }
 
 /**
