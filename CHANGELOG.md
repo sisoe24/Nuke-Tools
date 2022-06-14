@@ -2,6 +2,12 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
+## [0.6.2] 06/14/2022
+
+### Added
+
+- Support the Jedi Language Server for Python when adding the stubs files.
+
 ## [0.6.0] 03/22/2022
 
 ### Added
