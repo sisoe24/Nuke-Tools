@@ -102,7 +102,7 @@
                         "default": false,
                         "markdownDescription": "**Use with caution**. Restart the terminal instance instead of creating new ones."
                     },
-                    "nukeTools.other.environmentVariables": {
+                    "nukeTools.other.nukePaths": {
                         "type": "array",
                         "description": "A set of environment variables to be added to NUKE_PATH before launching Nuke from NukeTools."
                     },

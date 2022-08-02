@@ -108,26 +108,24 @@ export function restartInstance(name: string): void {
 /**
  * Get the command line text to use when launching a nuke executable.
  *
- * If user has added some environment variables, those will be added at the
+ * If user has added some paths to NUKE_PATH, those will be added at the
  * beginning of the command line text:
  *  `NUKE_PATH='/path/to/folder:other/path' /path/to/nuke/executable`
- *
- *
  *
  * @param execPath - ExecutablePath object.
  * @returns the command line text as a string.
  */
 export function getCliCmd(execPath: ExecutablePath): string {
-    const envs = utils.nukeToolsConfig("other.environmentVariables") as Array<string>;
+    const paths = utils.nukeToolsConfig("other.nukePaths") as Array<string>;
     const cliCmd = execPath.cliCmd();
 
     // TODO: add windows support.
 
-    if (envs.length === 0 || os.type() === "Windows_NT") {
+    if (paths.length === 0 || os.type() === "Windows_NT") {
         return cliCmd;
     }
 
-    return `NUKE_PATH="${envs.join(":")}" ` + cliCmd;
+    return `NUKE_PATH="${paths.join(":")}" ` + cliCmd;
 }
 
 /**

@@ -161,7 +161,7 @@ an import statement inside the `menu.py` file: `import NukeServerSocket`. If `me
 
   Show network debug information in the output window. Enabling this option will prevent the console from being cleared after code execution.
 
-- `nukeTools.other.environmentVariables`: `array<string>`
+- `nukeTools.other.nukePaths`: `array<string>`
 
   **NOTE**: Currently not working on Windows.
 

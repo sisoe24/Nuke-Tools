@@ -116,16 +116,16 @@ suite("Launch executable", () => {
     });
 });
 
-suite("Environment Variables", () => {
+suite("Nuke Paths", () => {
     const execPath = new executables.ExecutablePath("path/to/bin.app", "suffix");
     const cliCmd = executables.getCliCmd(execPath);
 
     test("No Variables", () => {
-        assert.strictEqual(cliCmd, "\"path/to/bin.app\"");
+        assert.strictEqual(cliCmd, '"path/to/bin.app"');
     });
 
     test("Adding variables", async () => {
-        await utils.updateConfig("other.environmentVariables", ["foo", "bar"]);
+        await utils.updateConfig("other.nukePaths", ["foo", "bar"]);
 
         const cliCmd = executables.getCliCmd(execPath);
         assert.strictEqual(cliCmd, 'NUKE_PATH="foo:bar" "path/to/bin.app"');
