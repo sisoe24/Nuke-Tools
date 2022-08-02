@@ -102,6 +102,9 @@
                         "default": false,
                         "markdownDescription": "**Use with caution**. Restart the terminal instance instead of creating new ones."
                     },
+                    "nukeTools.other.environmentVariables": {
+                        "type": "array",
+                    },
                     "nukeTools.other.clearPreviousOutput": {
                         "type": "boolean",
                         "default": false,
