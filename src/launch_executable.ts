@@ -106,10 +106,35 @@ export function restartInstance(name: string): void {
 }
 
 /**
+ * Get the command line text to use when launching a nuke executable.
+ *
+ * If user has added some environment variables, those will be added at the
+ * beginning of the command line text:
+ *  `NUKE_PATH='/path/to/folder:other/path' /path/to/nuke/executable`
+ * 
+ * 
+ *
+ * @param execPath - ExecutablePath object.
+ * @returns the command line text as a string.
+ */
+export function getCliCmd(execPath: ExecutablePath): string {
+    const envs = utils.nukeToolsConfig("other.environmentVariables") as Array<string>;
+    let cliCmd = execPath.cliCmd();
+    
+    // TODO: * on Windows use `set PYTHONPATH=%PYTHONPATH%;%1`.
+    if (envs.length !== 0) {
+        cliCmd = `NUKE_PATH="${envs.join(":")}" ` + cliCmd;
+    }
+    console.log(cliCmd);
+
+    return cliCmd;
+}
+
+/**
  * Execute the command in the terminal. Before executing the command, if restartInstance
  * is enabled, will dispose of the previous terminal instance.
  *
- * @param execPath - ExecutablePath object path.
+ * @param execPath - ExecutablePath object.
  */
 export function execCommand(execPath: ExecutablePath): void {
     const terminalName = execPath.terminalName();
@@ -120,7 +145,8 @@ export function execCommand(execPath: ExecutablePath): void {
     }
 
     const terminal = vscode.window.createTerminal(terminalName);
-    terminal.sendText(execPath.cliCmd());
+
+    terminal.sendText(getCliCmd(execPath));
     terminal.show(true);
 }
 
