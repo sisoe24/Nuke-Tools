@@ -160,3 +160,10 @@ an import statement inside the `menu.py` file: `import NukeServerSocket`. If `me
 - `nukeTools.network.debug`: `boolean`
 
   Show network debug information in the output window. Enabling this option will prevent the console from being cleared after code execution.
+
+- `nukeTools.other.environmentVariables`: `array<string>`
+
+  **NOTE**: Currently not working on Windows.
+
+  Add new paths to your `NUKE_PATH` for the current Nuke session. The paths will be available only when launching Nuke with the extension command.
+  > TIP: You can add new paths only for the current workspace.
