@@ -3,11 +3,16 @@ import * as utils from "./test_utils";
 import * as assert from "assert";
 import { join } from "path";
 import * as executables from "../../launch_executable";
+import * as testUtils from "./test_utils";
 
 /**
  * Path to an executable bash file named: myapp.
  */
 const samplePath = join(utils.demoPath, "path with space", "nuke");
+
+teardown("Clean Demo files", () => {
+    testUtils.cleanSettings();
+});
 
 suite("ExecutablePath()", () => {
     test("quotePath()", () => {
@@ -108,6 +113,22 @@ suite("Launch executable", () => {
 
         const pattern = new RegExp(`&?\\s?"${samplePath}" ok`);
         assert.match(execPath.cliCmd(), pattern);
+    });
+});
+
+suite("Environment Variables", () => {
+    const execPath = new executables.ExecutablePath("path/to/bin.app", "suffix");
+    const cliCmd = executables.getCliCmd(execPath);
+
+    test("No Variables", () => {
+        assert.strictEqual(cliCmd, "\"path/to/bin.app\"");
+    });
+
+    test("Adding variables", async () => {
+        await utils.updateConfig("other.environmentVariables", ["foo", "bar"]);
+
+        const cliCmd = executables.getCliCmd(execPath);
+        assert.strictEqual(cliCmd, 'NUKE_PATH="foo:bar" "path/to/bin.app"');
     });
 });
 
