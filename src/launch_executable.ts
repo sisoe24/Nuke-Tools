@@ -111,23 +111,23 @@ export function restartInstance(name: string): void {
  * If user has added some environment variables, those will be added at the
  * beginning of the command line text:
  *  `NUKE_PATH='/path/to/folder:other/path' /path/to/nuke/executable`
- * 
- * 
+ *
+ *
  *
  * @param execPath - ExecutablePath object.
  * @returns the command line text as a string.
  */
 export function getCliCmd(execPath: ExecutablePath): string {
     const envs = utils.nukeToolsConfig("other.environmentVariables") as Array<string>;
-    let cliCmd = execPath.cliCmd();
-    
-    // TODO: * on Windows use `set PYTHONPATH=%PYTHONPATH%;%1`.
-    if (envs.length !== 0) {
-        cliCmd = `NUKE_PATH="${envs.join(":")}" ` + cliCmd;
-    }
-    console.log(cliCmd);
+    const cliCmd = execPath.cliCmd();
 
-    return cliCmd;
+    // TODO: add windows support.
+
+    if (envs.length === 0 || os.type() === "Windows_NT") {
+        return cliCmd;
+    }
+
+    return `NUKE_PATH="${envs.join(":")}" ` + cliCmd;
 }
 
 /**
