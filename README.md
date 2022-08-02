@@ -34,6 +34,7 @@ Nuke tools to help the development process inside Visual Studio Code.
   - BlinkScript support.
 - Nuke Python Stubs for an auto-complete feature.
 - Commands for executing Nuke instances via the terminal with default or optional arguments.
+  - Inject paths to `NUKE_PATH` only for current Nuke session.
 
 ## 1.2. Requirements
 

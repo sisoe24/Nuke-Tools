@@ -104,7 +104,7 @@
                     },
                     "nukeTools.other.nukePaths": {
                         "type": "array",
-                        "description": "A set of environment variables to be added to NUKE_PATH before launching Nuke from NukeTools."
+                        "description": "A list of paths to be added to NUKE_PATH before launching Nuke from NukeTools."
                     },
                     "nukeTools.other.clearPreviousOutput": {
                         "type": "boolean",
