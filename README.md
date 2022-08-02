@@ -167,3 +167,11 @@ an import statement inside the `menu.py` file: `import NukeServerSocket`. If `me
 
   Add new paths to your `NUKE_PATH` for the current Nuke session. The paths will be available only when launching Nuke with the extension command.
   > TIP: You can add new paths only for the current workspace.
+
+  ```json
+  {
+    "nukeTools.other.nukePaths": [
+      "/Users/virgil/Developer/Nuke/plugins"
+    ]
+  }
+  ```
