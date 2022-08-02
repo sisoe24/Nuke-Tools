@@ -2,6 +2,12 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
+## [0.7.0] 08/02/2022
+
+### Added
+
+- New settings for adding environment variables to the Nuke executable.
+
 ## [0.6.2] 06/14/2022
 
 ### Added
