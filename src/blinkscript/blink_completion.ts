@@ -8,7 +8,7 @@ import * as vscode from "vscode";
  */
 export const completionFile = JSON.parse(
     readFileSync(
-        path.join(path.resolve(__dirname, "../.."), "language", "blinkscript_completion.json"),
+        path.join(path.resolve(__dirname, "../.."), "syntax", "blinkscript_completion.json"),
         "utf-8"
     )
 );
