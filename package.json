@@ -28,7 +28,8 @@
         "foundry",
         "blinkscript",
         "blink",
-        "stubs"
+        "stubs",
+        "gizmo"
     ],
     "contributes": {
         "commands": [
