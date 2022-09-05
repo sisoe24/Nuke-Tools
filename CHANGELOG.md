@@ -2,6 +2,12 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
+## [0.7.2] 09/04/2022
+
+### Added
+
+- Syntax color for `.nk` and `.gizmo` files.
+
 ## [0.7.0] 08/02/2022
 
 ### Added
