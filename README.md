@@ -33,6 +33,7 @@ Nuke tools to help the development process inside Visual Studio Code.
   - Specify a custom address when the connection is from/to another computer.
   - BlinkScript support.
 - Nuke Python Stubs for an auto-complete feature.
+- Syntax color for `.nk` and `.gizmo` files.
 - Commands for executing Nuke instances via the terminal with default or optional arguments.
   - Inject paths to `NUKE_PATH` only for current Nuke session.
 
