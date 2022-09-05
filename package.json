@@ -157,6 +157,16 @@
                     ".blink"
                 ],
                 "configuration": "./language/language-configuration.json"
+            },
+            {
+                "id": "nuke",
+                "aliases": [
+                    "nuke"
+                ],
+                "extensions": [
+                    ".nk",
+                    ".gizmo"
+                ]
             }
         ],
         "grammars": [
@@ -164,6 +174,11 @@
                 "language": "blinkscript",
                 "scopeName": "source.blink",
                 "path": "./language/blinkscript.tmLanguage.json"
+            },
+            {
+                "language": "nuke",
+                "scopeName": "source.nk",
+                "path": "./language/nuke.tmLanguage.json"
             }
         ]
     },

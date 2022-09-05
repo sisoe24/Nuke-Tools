@@ -1,0 +1,128 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "nuke",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#strings"
+        },
+        {
+            "include": "#operators"
+        },
+        {
+            "include": "#variables"
+        }
+    ],
+    "repository": {
+        "variables": {
+            "patterns": [
+                {
+                    "name": "constant.numeric.hex.nk",
+                    "match": "0[xX][0-9a-fA-F]+"
+                },
+                {
+                    "name": "constant.numeric.dec.nk",
+                    "match": "\\b\\d+\\b"
+                },
+                {
+                    "name": "entity.name.tag.nk",
+                    "match": "(?<=<)\\w+|\\w+(?=>)"
+                },
+                {
+                    "name": "entity.other.attribute-name.nk",
+                    "match": "\\w+(?==)"
+                },
+                {
+                    "name": "variable.other.nk",
+                    "match": "(?<=^\\s+)\\b\\w+"
+                },
+                {
+                    "name": "entity.name.class.nk",
+                    "match": "\\b[A-Z]\\w+"
+                },
+                {
+                    "name": "entity.name.function.nk",
+                    "match": "\\b(cut_paste_input|end_group|stack)\\b"
+                },
+                {
+                    "name": "entity.name.type.nk",
+                    "match": "[A-Za-z]+(?=\\})"
+                },
+                {
+                    "name": "storage.type.builtin.primitive.nk",
+                    "match": "\\b(true|false|set|push|\\$)\\b"
+                },
+                {
+                    "name": "keyword.other.unit.suffix.floating-point.nk",
+                    "match": "(?<=\\d\\.\\d*)f"
+                }
+            ]
+        },
+        "operators": {
+            "patterns": [
+                {
+                    "name": "keyword.operator.arithmetic.nk",
+                    "match": "(\\+|\\*|/|-|=|%)"
+                },
+                {
+                    "name": "keyword.operator.ternary.nk",
+                    "match": "\\?"
+                },
+                {
+                    "name": "keyword.operator.comparison.nk",
+                    "match": "(<=|>=|<|>|==|!=|\\$)"
+                }
+            ]
+        },
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line.double-slash.nk",
+                    "match": "//.*$"
+                },
+                {
+                    "name": "comment.line.nk",
+                    "match": "(\/.+\/.+(\/|$))+"
+                },
+                {
+                    "name": "comment.line.nk",
+                    "match": "#!.+"
+                },
+                {
+                    "name": "comment.block.nk",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                }
+            ]
+        },
+        "strings": {
+            "patterns": [
+                {
+                    "name": "string.quoted.double.nk",
+                    "begin": "\"",
+                    "end": "\"",
+                    "patterns": [
+                        {
+                            "name": "constant.character.escape.nk",
+                            "match": "\\\\."
+                        }
+                    ]
+                },
+                {
+                    "name": "string.quoted.single.nk",
+                    "begin": "'",
+                    "end": "'",
+                    "patterns": [
+                        {
+                            "name": "constant.character.escape.nk",
+                            "match": "\\\\."
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "scopeName": "source.nk"
+}
