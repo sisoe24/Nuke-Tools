@@ -105,7 +105,12 @@
                     },
                     "nukeTools.other.nukePaths": {
                         "type": "array",
+                        "deprecationMessage": "This setting is deprecated. Use envVars instead.",
                         "description": "A list of paths to be added to NUKE_PATH before launching Nuke from NukeTools."
+                    },
+                    "nukeTools.other.envVars": {
+                        "type": "object",
+                        "description": "A list of environment variable to be added before launching Nuke from NukeTools."
                     },
                     "nukeTools.other.clearPreviousOutput": {
                         "type": "boolean",
