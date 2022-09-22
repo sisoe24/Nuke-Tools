@@ -35,7 +35,7 @@ Nuke tools to help the development process inside Visual Studio Code.
 - Nuke Python Stubs for an auto-complete feature.
 - Syntax color for `.nk` and `.gizmo` files.
 - Commands for executing Nuke instances via the terminal with default or optional arguments.
-  - Inject paths to `NUKE_PATH` only for current Nuke session.
+  - Add environment variables to the running Nuke.
 
 ## 1.2. Requirements
 
@@ -163,17 +163,17 @@ an import statement inside the `menu.py` file: `import NukeServerSocket`. If `me
 
   Show network debug information in the output window. Enabling this option will prevent the console from being cleared after code execution.
 
-- `nukeTools.other.nukePaths`: `array<string>`
+- `nukeTools.other.envVars`: `{key: string: value: string}`
 
   **NOTE**: Currently not working on Windows.
 
-  Add new paths to your `NUKE_PATH` for the current Nuke session. The paths will be available only when launching Nuke with the extension command.
-  > TIP: You can add new paths only for the current workspace.
+  Add environment variables the current running Nuke instance.
 
   ```json
   {
-    "nukeTools.other.nukePaths": [
-      "/Users/virgil/Developer/Nuke/plugins"
-    ]
+    "nukeTools.other.envVars": {
+      "NUKE_PATH":"/path/nuke/plugins:/path/nuke/ui",
+      "API_KEY": "0a9f0381-aebb-4e40-a77a-2c381b08e0ea",
+    }
   }
   ```
