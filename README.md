@@ -23,8 +23,8 @@ Nuke tools to help the development process inside Visual Studio Code.
   - [1.3. Usage](#13-usage)
   - [1.4. BlinkScript](#14-blinkscript)
   - [1.5. PySide2 Template Project](#15-pyside2-template-project)
-  - [1.5. Available Commands](#15-available-commands)
-  - [1.6. Extension Settings](#16-extension-settings)
+  - [1.6. Available Commands](#16-available-commands)
+  - [1.7. Extension Settings](#17-extension-settings)
 
 ## 1.1. Features
 
@@ -85,7 +85,9 @@ The accepted file extension code are `.cpp` or `.blink`.
 
 You can create a quick pyside2 template project via the `Nuke: Create a PySide2 plugin` command. Once done, you can find the plugin inside `~/.nuke/NukeTools` and ready to be used inside Nuke.
 
-## 1.5. Available Commands
+More info on [README](https://github.com/sisoe24/pyside2-template#readme)
+
+## 1.6. Available Commands
 
 - All commands are available by opening the Command Palette (`Command+Shift+P` on macOS and `Ctrl+Shift+P` on Windows/Linux) and typing in one of the following Command Name:
 
@@ -124,7 +126,7 @@ an import statement inside the `menu.py` file: `import NukeServerSocket`. If `me
   ]
   ```
 
-## 1.6. Extension Settings
+## 1.7. Extension Settings
 
 - `nukeTools.nukeExecutable.primaryExecutablePath`: `string`
 
