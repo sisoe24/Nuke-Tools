@@ -10,9 +10,9 @@ import * as utils from "./utils";
  * If file does not exists will create one and write to it, otherwise will append
  * at the end of it the statement: `import NukeServerSocket`
  */
-function menuPyImport(): void {
+export function nukeMenuImport(module: string): void {
     const menuPy = path.join(utils.nukeDir, "menu.py");
-    const statement = "import NukeServerSocket";
+    const statement = `import ${module}`;
 
     if (fs.existsSync(menuPy)) {
         if (!fs.readFileSync(menuPy, "utf-8").match(statement)) {
@@ -32,5 +32,5 @@ export function addNss(): void {
     fsExtra.copySync(nssPath, path.join(utils.nukeDir, filename), {
         overwrite: true,
     });
-    menuPyImport();
+    nukeMenuImport(filename);
 }
