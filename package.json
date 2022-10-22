@@ -29,7 +29,8 @@
         "blinkscript",
         "blink",
         "stubs",
-        "gizmo"
+        "gizmo",
+        "pyside"
     ],
     "contributes": {
         "commands": [
