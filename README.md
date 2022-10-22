@@ -85,8 +85,6 @@ The accepted file extension code are `.cpp` or `.blink`.
 
 You can create a quick pyside2 template project via the `Nuke: Create a PySide2 plugin` command. Once done, you can find the plugin inside `~/.nuke/NukeTools` and ready to be used inside Nuke.
 
-> The plugin also allows for local testing (i.e., outside the Nuke application), and you can read more about this [here]().
-
 ## 1.5. Available Commands
 
 - All commands are available by opening the Command Palette (`Command+Shift+P` on macOS and `Ctrl+Shift+P` on Windows/Linux) and typing in one of the following Command Name:
