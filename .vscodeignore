@@ -18,5 +18,6 @@ vsc-extension-quickstart.md
 # pyside2-template
 include/pyside2-template/.pytest_cache
 include/pyside2-template/.venv
+include/pyside2-template/.github
 include/pyside2-template/other
 include/pyside2-template/*lock
