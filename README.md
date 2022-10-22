@@ -34,8 +34,9 @@ Nuke tools to help the development process inside Visual Studio Code.
   - BlinkScript support.
 - Nuke Python Stubs for an auto-complete feature.
 - Syntax color for `.nk` and `.gizmo` files.
+- Ready to use PySide2 project template.
 - Commands for executing Nuke instances via the terminal with default or optional arguments.
-  - Add environment variables to the running Nuke.
+  - Add environment variables to the running Nuke instance.
 
 ## 1.2. Requirements
 
