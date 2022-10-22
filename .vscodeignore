@@ -13,3 +13,10 @@ vsc-extension-quickstart.md
 **/.eslintrc.json
 **/*.map
 **/*.ts
+
+
+# pyside2-template
+include/pyside2-template/.pytest_cache
+include/pyside2-template/.venv
+include/pyside2-template/other
+include/pyside2-template/*lock
