@@ -3,12 +3,18 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
+import * as cp from "child_process";
 
 import * as utils from "./utils";
 
 export type PlaceHolders = {
     [key: string]: string;
 };
+
+function getGithubUser(): string {
+    // TODO: [NUK-14] this value might be wrong since git != github
+    return cp.execSync("git config user.name").toString().trim();
+}
 
 /**
  * Ask user to fill some value that are going to be used to replace some
@@ -57,7 +63,7 @@ export async function askUser(): Promise<PlaceHolders> {
     placeholders.__author__ = projectAuthor;
     placeholders.__projectSlug__ = slug(placeholders.__projectName__);
     placeholders.__authorSlug__ = slug(placeholders.__author__);
-    placeholders.__githubUser__ = placeholders.__author__ + "@email";
+    placeholders.__githubUser__ = getGithubUser();
     placeholders.__email__ = placeholders.__author__ + "@email";
 
     return placeholders;
