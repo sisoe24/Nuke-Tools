@@ -4,8 +4,7 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 
-import { nukeMenuImport } from "./nuke_server_socket";
-import { getIncludedPath, nukeToolsConfig } from "./utils";
+import * as utils from "./utils";
 
 export type PlaceHolders = {
     [key: string]: string;
@@ -28,16 +27,16 @@ export async function askUser(): Promise<PlaceHolders> {
         value: "Project Description",
     })) as string;
 
-    // const config = nukeToolsConfig("pysideTemplate") as { [key: string]: string };
     const projectPython = (await vscode.window.showInputBox({
         title: "Python version",
-        value: (nukeToolsConfig("pysideTemplate.pythonVersion") as string) || ">=3.6, <=3.7.7",
+        value:
+            (utils.nukeToolsConfig("pysideTemplate.pythonVersion") as string) || ">=3.6, <=3.7.7",
     })) as string;
 
     const projectPySide = (await vscode.window.showInputBox({
         title: "PySide2 Version",
         placeHolder: "Version of PySide2",
-        value: (nukeToolsConfig("pysideTemplate.pysideVersion") as string) || "5.12.2",
+        value: (utils.nukeToolsConfig("pysideTemplate.pysideVersion") as string) || "5.12.2",
     })) as string;
 
     const projectAuthor = (await vscode.window.showInputBox({
@@ -113,7 +112,7 @@ async function importStatementMenu(module: string) {
     })) as string;
 
     if (loadNukeInit === "Yes") {
-        nukeMenuImport(module);
+        utils.nukeMenuImport(`from NukeTools import ${module}`);
     }
 }
 
@@ -128,7 +127,7 @@ export async function createTemplate(): Promise<void> {
         return;
     }
 
-    const source = vscode.Uri.file(getIncludedPath("pyside2-template"));
+    const source = vscode.Uri.file(utils.getIncludedPath("pyside2-template"));
     await vscode.workspace.fs.copy(source, destination);
 
     const pythonFiles = osWalk(destination.fsPath);
