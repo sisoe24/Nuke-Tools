@@ -34,6 +34,12 @@
     "contributes": {
         "commands": [
             {
+                "command": "nuke-tools.createPySide2Project",
+                "title": "Create a PySide2 plugin",
+                "shortTitle": "Nuke",
+                "category": "Nuke"
+            },
+            {
                 "command": "nuke-tools.launchNuke",
                 "title": "Launch main executable",
                 "shortTitle": "Nuke",
@@ -139,6 +145,16 @@
                         "type": "boolean",
                         "default": false,
                         "markdownDescription": "Show debugging information the in output window."
+                    },
+                    "nukeTools.pysideTemplate.pythonVersion": {
+                        "type": "string",
+                        "default": ">=3.6, <=3.7.7",
+                        "markdownDescription": "Python version to be used in pyproject.toml."
+                    },
+                    "nukeTools.pysideTemplate.pysideVersion": {
+                        "type": "string",
+                        "default": "5.12.2",
+                        "markdownDescription": "PySide2 version to be used in pyproject.toml and requirements.txt"
                     }
                 }
             }
