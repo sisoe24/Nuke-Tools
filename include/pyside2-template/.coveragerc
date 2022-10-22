@@ -1,0 +1,12 @@
+[run]
+omit = tests/*
+
+[report]
+skip_covered = true
+skip_empty = true
+
+[paths]
+source = src/
+
+[html]
+directory = coverage

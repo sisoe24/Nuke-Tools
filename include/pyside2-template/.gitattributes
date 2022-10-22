@@ -1,0 +1,30 @@
+# Files
+.gitignore          export-ignore
+.gitattributes      export-ignore
+
+.pylintrc           export-ignore
+.python-version     export-ignore
+.deepsource.toml    export-ignore
+
+*.lock              export-ignore
+
+Pipfile             export-ignore
+requirements.txt    export-ignore
+
+pytest.ini          export-ignore
+
+.coverage*          export-ignore
+coverage*           export-ignore
+
+CHANGELOG.md        export-ignore
+
+
+# Directories
+.github             export-ignore
+.githooks           export-ignore
+.vscode             export-ignore
+tests               export-ignore
+
+# Source files
+*                   text=auto
+*.py                text diff=python
