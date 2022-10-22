@@ -8,5 +8,3 @@ node_modules
 .vscode-test/
 .vscode
 *.vsix
-
-Nuke-Python-Stubs
