@@ -8,7 +8,7 @@ from PySide2.QtWidgets import (
     QMainWindow
 )
 
-from src.main import MainWindow
+from ..main import MainWindow
 
 
 def user_geometry():

@@ -14,9 +14,9 @@ from PySide2.QtWidgets import (
 )
 
 
-from src.utils import color_widget
-from src.widgets import ErrorDialog, ToolBar
-from src import nuke
+from .utils import color_widget
+from .widgets import ErrorDialog, ToolBar
+from . import nuke
 
 LOGGER = logging.getLogger('projectname.main')
 LOGGER.debug('-*- START APPLICATION -*-')
