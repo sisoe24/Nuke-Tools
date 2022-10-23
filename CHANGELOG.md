@@ -2,6 +2,16 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
+## [0.8.0] 10/23/2022
+
+### Added
+
+- New command to create a pyside2 plugin from included template.
+
+### Changed
+
+- Can now add multiple values as environmental variables before launching Nuke, instead of only to NUKE_PATH.
+
 ## [0.7.2] 09/04/2022
 
 ### Added
@@ -12,7 +22,7 @@ All notable changes to the "nuke-tools" extension will be documented in this fil
 
 ### Added
 
-- New settings for adding environment variables to the Nuke executable.
+- New settings for adding paths to NUKE_PATH.
 
 ## [0.6.2] 06/14/2022
 
