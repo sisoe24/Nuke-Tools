@@ -29,10 +29,17 @@
         "blinkscript",
         "blink",
         "stubs",
-        "gizmo"
+        "gizmo",
+        "pyside"
     ],
     "contributes": {
         "commands": [
+            {
+                "command": "nuke-tools.createPySide2Project",
+                "title": "Create a PySide2 plugin",
+                "shortTitle": "Nuke",
+                "category": "Nuke"
+            },
             {
                 "command": "nuke-tools.launchNuke",
                 "title": "Launch main executable",
@@ -105,17 +112,17 @@
                     },
                     "nukeTools.other.nukePaths": {
                         "type": "array",
+                        "deprecationMessage": "This setting is deprecated. Use envVars instead.",
                         "description": "A list of paths to be added to NUKE_PATH before launching Nuke from NukeTools."
+                    },
+                    "nukeTools.other.envVars": {
+                        "type": "object",
+                        "description": "A list of environment variable to be added before launching Nuke from NukeTools."
                     },
                     "nukeTools.other.clearPreviousOutput": {
                         "type": "boolean",
                         "default": false,
                         "description": "Clear previous console output before next execution."
-                    },
-                    "nukeTools.other.showToolbarButton": {
-                        "type": "boolean",
-                        "default": true,
-                        "description": "Show the launch icon on the editor toolbar."
                     },
                     "nukeTools.network.enableManualConnection": {
                         "type": "boolean",
@@ -134,6 +141,16 @@
                         "type": "boolean",
                         "default": false,
                         "markdownDescription": "Show debugging information the in output window."
+                    },
+                    "nukeTools.pysideTemplate.pythonVersion": {
+                        "type": "string",
+                        "default": ">=3.6, <=3.7.7",
+                        "markdownDescription": "Python version to be used in pyproject.toml."
+                    },
+                    "nukeTools.pysideTemplate.pysideVersion": {
+                        "type": "string",
+                        "default": "5.12.2",
+                        "markdownDescription": "PySide2 version to be used in pyproject.toml and requirements.txt"
                     }
                 }
             }
@@ -143,7 +160,7 @@
                 {
                     "group": "navigation",
                     "command": "nuke-tools.runCodeInsideNuke",
-                    "when": "config.nukeTools.other.showToolbarButton && resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled"
+                    "when": "resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled"
                 }
             ]
         },

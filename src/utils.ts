@@ -1,9 +1,27 @@
 import * as vscode from "vscode";
+import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 
 export const nukeDir = path.join(os.homedir(), ".nuke");
 
+/**
+ * Import NukeServerSocket inside the menu.py
+ *
+ * If file does not exists will create one and write to it, otherwise will append
+ * the statement at the end.
+ */
+export function nukeMenuImport(statement: string): void {
+    const menuPy = path.join(nukeDir, "menu.py");
+
+    if (fs.existsSync(menuPy)) {
+        if (!fs.readFileSync(menuPy, "utf-8").match(statement)) {
+            fs.appendFileSync(menuPy, `\n${statement}\n`);
+        }
+    } else {
+        fs.writeFileSync(menuPy, statement);
+    }
+}
 /**
  * Get a path from the included directory.
  *

@@ -6,6 +6,7 @@ import * as newUpdate from "./update_message";
 
 import { addNss } from "./nuke_server_socket";
 import { addStubsPath, correctAnalysisPath, isPythonInstalled } from "./stubs";
+import { createTemplate } from "./create_project";
 
 import { BlinkSnippets } from "./blinkscript/blink_snippet";
 import { BlinkScriptFormat } from "./blinkscript/blink_format";
@@ -17,6 +18,12 @@ export function activate(context: vscode.ExtensionContext): void {
     if (isPythonInstalled()) {
         correctAnalysisPath();
     }
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.createPySide2Project", () => {
+            createTemplate();
+        })
+    );
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.addPythonStubs", () => {
