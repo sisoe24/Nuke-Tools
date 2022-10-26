@@ -151,10 +151,6 @@ an import statement inside the `menu.py` file: `import NukeServerSocket`. If `me
 
   Clear the previous console output text.
 
-- `nukeTools.other.showToolbarButton`: `boolean`
-
-  Show the execute code button in the editor toolbar.
-
 - `nukeTools.network.enableManualConnection`: `boolean`
 
   If enabled, `nukeTools.network.port` and `nukeTools.network.host` will take over the default settings. This option is needed when connecting to another computer.
