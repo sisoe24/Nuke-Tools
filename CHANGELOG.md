@@ -2,6 +2,12 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
+## [0.8.2] 11/20/2022
+
+### Fixed
+
+- Update Hiero stubs with proper `__init__.py` file.
+
 ## [0.8.1] 11/20/2022
 
 ### Added
