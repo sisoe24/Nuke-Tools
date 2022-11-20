@@ -2,6 +2,12 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
+## [0.8.1] 11/20/2022
+
+### Added
+
+- Hiero stubs
+
 ## [0.8.0] 10/23/2022
 
 ### Added
