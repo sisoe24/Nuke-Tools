@@ -7,6 +7,11 @@ import * as cp from "child_process";
 
 import * as utils from "./utils";
 
+/**
+ * The placeholders data.
+ *
+ * All placeholders should start and end with double underscore: __value__
+ */
 export type PlaceHolders = {
     [key: string]: string;
 };
@@ -17,8 +22,8 @@ function getGithubUser(): string {
 }
 
 /**
- * Ask user to fill some value that are going to be used to replace some
- * placeholders when creating the Spoon template.
+ * Ask user to fill the data that we are going to use to replace the placeholders
+ * inside the pyside2 template project.
  *
  * @returns a placeholders object.
  */
@@ -64,12 +69,18 @@ export async function askUser(): Promise<PlaceHolders> {
     placeholders.__projectSlug__ = slug(placeholders.__projectName__);
     placeholders.__authorSlug__ = slug(placeholders.__author__);
     placeholders.__githubUser__ = getGithubUser();
-    placeholders.__email__ = placeholders.__author__ + "@email";
+    placeholders.__email__ = placeholders.__author__ + "@email.com";
 
     return placeholders;
 }
 
-const osWalk = function (dir: string) {
+/**
+ * Walk recursively a directory to get all of its files.
+ *
+ * @param dir Path for the directory to parse.
+ * @returns A list of files
+ */
+const osWalk = function (dir: string): string[] {
     let results: string[] = [];
 
     fs.readdirSync(dir).forEach(function (file) {
@@ -86,7 +97,7 @@ const osWalk = function (dir: string) {
 };
 
 /**
- * Create the `init.lua` template file.
+ * Substitute placeholders values.
  *
  * @param files a list of files to apply substitution
  * @param placeholders placeholders object to replace
@@ -102,7 +113,12 @@ export function substitutePlaceholders(files: string[], placeholders: PlaceHolde
     }
 }
 
-async function openProjectFolder(destination: vscode.Uri) {
+/**
+ * Ask user to open the newly created pyside2 template in vscode.
+ *
+ * @param destination Path of the folder to open in vscode.
+ */
+async function openProjectFolder(destination: vscode.Uri): Promise<void> {
     const openProjectFolder = (await vscode.window.showQuickPick(["Yes", "No"], {
         title: "Open Project Folder?",
     })) as string;
@@ -112,7 +128,12 @@ async function openProjectFolder(destination: vscode.Uri) {
     }
 }
 
-async function importStatementMenu(module: string) {
+/**
+ * Ask user confirmation before importing the pyside2 template package inside the menu.py
+ *
+ * @param module The name of the module to import inside the menu.py
+ */
+async function importStatementMenu(module: string): Promise<void> {
     const loadNukeInit = (await vscode.window.showQuickPick(["Yes", "No"], {
         title: "Import into Nuke's menu.py?",
     })) as string;
@@ -122,6 +143,11 @@ async function importStatementMenu(module: string) {
     }
 }
 
+/**
+ * Create a PySide2 template Nuke plugin.
+ *
+ * @returns Promise<void>
+ */
 export async function createTemplate(): Promise<void> {
     const userData = await askUser();
 
@@ -137,7 +163,6 @@ export async function createTemplate(): Promise<void> {
     await vscode.workspace.fs.copy(source, destination);
 
     const pythonFiles = osWalk(destination.fsPath);
-
     substitutePlaceholders(pythonFiles, userData);
 
     await importStatementMenu(userData.__projectSlug__);
