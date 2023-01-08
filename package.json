@@ -174,7 +174,7 @@
                 "extensions": [
                     ".blink"
                 ],
-                "configuration": "./syntax/language-configuration.json"
+                "configuration": "./language/language-configuration.json"
             },
             {
                 "id": "nuke",
@@ -191,12 +191,12 @@
             {
                 "language": "blinkscript",
                 "scopeName": "source.blink",
-                "path": "./syntax/blinkscript.tmLanguage.json"
+                "path": "./language/blinkscript.tmLanguage.json"
             },
             {
                 "language": "nuke",
                 "scopeName": "source.nk",
-                "path": "./syntax/nuke.tmLanguage.json"
+                "path": "./language/nuke.tmLanguage.json"
             }
         ]
     },

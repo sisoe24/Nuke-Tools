@@ -6,7 +6,7 @@ import * as vscode from "vscode";
  * Sample blinkscript file. same as Nuke default blinkscript node.
  */
 export const saturationTemplate = readFileSync(
-    path.join(path.resolve(__dirname, "../.."), "syntax/saturation_sample.blink"),
+    path.join(path.resolve(__dirname, "../.."), "language/saturation_sample.blink"),
     "utf-8"
 );
 
