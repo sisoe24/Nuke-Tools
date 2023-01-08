@@ -2,8 +2,15 @@
 .vscode-test/**
 out/test/**
 
-other
-.pytest_cache
+other/
+.pytest_cache/
+.nyc_output/
+coverage/
+demo/
+images/
+tmp/
+
+.deepsource.toml
 
 src/**
 .gitignore
