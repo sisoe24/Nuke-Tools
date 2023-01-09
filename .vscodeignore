@@ -7,10 +7,10 @@ other/
 .nyc_output/
 coverage/
 demo/
-images/
 tmp/
 
 .deepsource.toml
+.pre-commit-config.yaml
 
 src/**
 .gitignore
