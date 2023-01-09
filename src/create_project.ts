@@ -40,8 +40,7 @@ export async function askUser(): Promise<PlaceHolders> {
 
     const projectPython = (await vscode.window.showInputBox({
         title: "Python version",
-        value:
-            (utils.nukeToolsConfig("pysideTemplate.pythonVersion") as string) || "~3.7.7",
+        value: (utils.nukeToolsConfig("pysideTemplate.pythonVersion") as string) || "~3.7.7",
     })) as string;
 
     const projectPySide = (await vscode.window.showInputBox({
