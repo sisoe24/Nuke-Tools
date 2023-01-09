@@ -56,7 +56,7 @@ export async function askUser(): Promise<PlaceHolders> {
     })) as string;
 
     const slug = (name: string) => {
-        return name.replace(" ", "").toLowerCase();
+        return name.replace(/\s/g, "").toLowerCase();
     };
 
     const placeholders: PlaceHolders = {};
