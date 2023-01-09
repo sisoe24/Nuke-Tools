@@ -151,8 +151,7 @@ async function importStatementMenu(module: string): Promise<void> {
 export async function createTemplate(): Promise<void> {
     const userData = await askUser();
 
-    const projectPath = path.join(os.homedir(), ".nuke", "NukeTools");
-    const destination = vscode.Uri.file(path.join(projectPath, userData.__projectSlug__));
+    const destination = vscode.Uri.file(path.join(utils.nukeToolsDir, userData.__projectSlug__));
 
     if (fs.existsSync(destination.fsPath)) {
         await vscode.window.showErrorMessage("Directory exists already.");
