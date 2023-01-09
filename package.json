@@ -3,12 +3,12 @@
     "displayName": "Nuke Tools",
     "publisher": "virgilsisoe",
     "description": "A bunch of Nuke related tools that will facilitate writing code for it.",
-    "version": "0.9.0",
+    "version": "0.8.3",
     "repository": {
         "type": "git",
         "url": "https://github.com/sisoe24/Nuke-Tools"
     },
-    "icon": "images/nuke_icon.png",
+    "icon": "icons/nuke_icon.png",
     "engines": {
         "vscode": "^1.58.0"
     },
@@ -45,7 +45,7 @@
                 "title": "Launch main executable",
                 "shortTitle": "Nuke",
                 "category": "Nuke",
-                "icon": "images/wordWrap.svg"
+                "icon": "icons/wordWrap.svg"
             },
             {
                 "command": "nuke-tools.launchNukeAlt",
@@ -63,8 +63,8 @@
                 "title": "Run Code Inside Nuke",
                 "category": "Nuke",
                 "icon": {
-                    "dark": "images/play-dark.svg",
-                    "light": "images/play-light.svg"
+                    "dark": "icons/play-dark.svg",
+                    "light": "icons/play-light.svg"
                 },
                 "enablement": "resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled"
             },
@@ -219,7 +219,7 @@
         "esbuild": "^0.12.20",
         "eslint": "^7.32.0",
         "glob": "^7.1.7",
-        "mocha": "^8.4.0",
+        "mocha": "^10.2.0",
         "nyc": "^15.1.0",
         "source-map-support": "^0.5.20",
         "ts-node": "^10.4.0",

@@ -7,10 +7,10 @@ other/
 .nyc_output/
 coverage/
 demo/
-images/
 tmp/
 
 .deepsource.toml
+.pre-commit-config.yaml
 
 src/**
 .gitignore
@@ -20,12 +20,3 @@ vsc-extension-quickstart.md
 **/.eslintrc.json
 **/*.map
 **/*.ts
-
-
-# pyside2-template
-include/pyside2-template/.pytest_cache
-include/pyside2-template/.venv
-include/pyside2-template/.coverage
-include/pyside2-template/.github
-include/pyside2-template/other
-include/pyside2-template/*lock
