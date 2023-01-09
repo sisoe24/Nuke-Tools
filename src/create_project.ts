@@ -165,4 +165,9 @@ export async function createTemplate(): Promise<void> {
 
     await importStatementMenu(userData.__projectSlug__);
     await openProjectFolder(destination);
+
+    const msg = `Project creation completed. For more information, please
+    read the official [README](https://github.com/sisoe24/pyside2-template#readme).
+    `;
+    vscode.window.showInformationMessage(msg);
 }
