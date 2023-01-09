@@ -4,6 +4,7 @@ import * as os from "os";
 import * as path from "path";
 
 export const nukeDir = path.join(os.homedir(), ".nuke");
+export const nukeToolsDir = path.join(nukeDir, "NukeTools");
 
 /**
  * Import NukeServerSocket inside the menu.py

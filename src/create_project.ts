@@ -40,8 +40,7 @@ export async function askUser(): Promise<PlaceHolders> {
 
     const projectPython = (await vscode.window.showInputBox({
         title: "Python version",
-        value:
-            (utils.nukeToolsConfig("pysideTemplate.pythonVersion") as string) || "~3.7.7",
+        value: (utils.nukeToolsConfig("pysideTemplate.pythonVersion") as string) || "~3.7.7",
     })) as string;
 
     const projectPySide = (await vscode.window.showInputBox({
@@ -151,8 +150,7 @@ async function importStatementMenu(module: string): Promise<void> {
 export async function createTemplate(): Promise<void> {
     const userData = await askUser();
 
-    const projectPath = path.join(os.homedir(), ".nuke", "NukeTools");
-    const destination = vscode.Uri.file(path.join(projectPath, userData.__projectSlug__));
+    const destination = vscode.Uri.file(path.join(utils.nukeToolsDir, userData.__projectSlug__));
 
     if (fs.existsSync(destination.fsPath)) {
         await vscode.window.showErrorMessage("Directory exists already.");
@@ -167,4 +165,9 @@ export async function createTemplate(): Promise<void> {
 
     await importStatementMenu(userData.__projectSlug__);
     await openProjectFolder(destination);
+
+    const msg = `Project creation completed. For more information, please
+    read the official [README](https://github.com/sisoe24/pyside2-template#readme).
+    `;
+    vscode.window.showInformationMessage(msg);
 }
