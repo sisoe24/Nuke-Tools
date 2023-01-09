@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "__projectSlug__"
+version = "0.1.0"
+description = "__projectDescription__"
+authors = ["__authorSlug__ <__email__>"]
+
+[tool.coverage.run]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+skip_covered = true
+skip_empty = true
+
+[tool.coverage.paths]
+source = ["src/*"]
+
+[tool.coverage.html]
+directory = "coverage"
+
+[tool.pytest.ini_options]
+testpaths = "tests"
+addopts = "-x -l --tb=short --strict-markers --cov=src"
+qt_api = "pyside2"
+
+[tool.poetry.dependencies]
+python = "__projectPython__"
+PySide2 = "__projectPySide__"
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
+pytest-qt = "*"
+pytest-cov = "*"
+pytest-repeat = "*"
+pytest-randomly = "*"
+requests = "*"
+
+[build-system]
+requires = ["poetry-core>=1.2.0"]
+build-backend = "poetry.core.masonry.api"
