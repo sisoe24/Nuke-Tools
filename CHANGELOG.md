@@ -2,6 +2,17 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
+## [0.8.4] 09/01/2023
+
+## Changed
+
+- Changed Python version for the pyside2 plugin to `~3.7.7`
+
+### Fixed
+
+- Fixed placeholder substitution for pyside2 template name with spaces.
+- Remove uncesseary socket connection timeout.
+
 ## [0.8.2] 11/20/2022
 
 ### Fixed
