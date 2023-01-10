@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/sisoe24/Nuke-Tools"
     },
-    "icon": "resources/icons/nuke_icon.png",
+    "icon": "resources/images/nuke_icon.png",
     "engines": {
         "vscode": "^1.58.0"
     },
