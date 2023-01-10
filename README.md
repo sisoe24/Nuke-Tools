@@ -48,20 +48,20 @@ This extension is primarily a companion for *NukeServerSocket*. Executing code w
 To execute code:
 
 1. Download and install the companion plugin NukeServerSocket:
-   - Via the Command Palette: `Nuke: Add NukeServerSocket` (more info on [Available Commands](#15-available-commands)).
+   - Via the Command Palette: `Nuke: Add NukeServerSocket` (more info on [Available Commands](#16-available-commands)).
    - [Github](https://github.com/sisoe24/NukeServerSocket/releases)
    - [Nukepedia](http://www.nukepedia.com/python/misc/nukeserversocket)
 2. Connect NukeServerSocket inside Nuke.
 3. With an active Python/BlinkScript file, use the command `Nuke: Run Inside Nuke` from the Command Palette or use the dedicated button in the editor's top right corner.
 
-![CodeExecution](/images/execute_code.gif)
+![CodeExecution](/resources/images/execute_code.gif)
 
 To use the Python stubs
 
 1. Use the command `Nuke: Add Python Stubs` to add the stubs to your `python.analysis.extraPaths` setting.
 2. Write `import nuke` into your script.
 
-![PythonStubs](/images/auto_complete.gif)
+![PythonStubs](/resources/images/auto_complete.gif)
 
 > NOTE: Having a folder named `nuke` in your Workspace root-directory can cause problems for the suggestions.
 
