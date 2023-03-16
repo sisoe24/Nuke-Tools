@@ -1,6 +1,5 @@
 """Timer class that deals with the connection timeouts."""
 # coding: utf-8
-from __future__ import print_function
 
 from PySide2.QtCore import QTimer, Signal, QObject
 
@@ -50,7 +49,7 @@ class Timer(QObject):
         self.time.emit('')
 
     def _ui_countdown(self):
-        """Initiate the countdown for the timeout UI label."""
+        """Start the countdown for the timeout UI label."""
         self._timeout -= 1
 
         if self._timeout == 0:

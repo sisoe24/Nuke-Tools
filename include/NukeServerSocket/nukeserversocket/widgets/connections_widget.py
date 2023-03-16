@@ -1,28 +1,16 @@
 """Module that deals with the ui connection logic."""
 # coding: utf-8
-from __future__ import print_function
 
-import logging
+from PySide2.QtCore import Qt, QObject
+from PySide2.QtWidgets import (QLabel, QWidget, QSpinBox, QLineEdit,
+                               QFormLayout, QGridLayout, QHBoxLayout,
+                               QPushButton, QToolButton, QVBoxLayout,
+                               QRadioButton)
 
-from PySide2.QtCore import QObject, Qt
+from ..util import get_ip
+from ..settings import AppSettings
 
-from PySide2.QtWidgets import (
-    QFormLayout,
-    QGridLayout,
-    QHBoxLayout,
-    QLabel,
-    QLineEdit,
-    QPushButton,
-    QRadioButton,
-    QVBoxLayout,
-    QWidget,
-    QSpinBox,
-    QToolButton,
-)
-
-from ..utils import AppSettings, get_ip
-
-LOGGER = logging.getLogger('NukeServerSocket.connections_widget')
+# TODO: refactor
 
 
 class ConnectionButtons(QObject):

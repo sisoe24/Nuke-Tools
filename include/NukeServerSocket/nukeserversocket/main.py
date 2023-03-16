@@ -1,39 +1,30 @@
 """Main application logic. This is where main window and widget are created."""
 # coding: utf-8
-from __future__ import print_function
 
 import os
 import logging
 
-from PySide2.QtWidgets import (
-    QMainWindow,
-    QStatusBar,
-    QVBoxLayout,
-    QWidget
-)
+from PySide2.QtWidgets import (QWidget, QStatusBar, QMainWindow, QPushButton,
+                               QVBoxLayout)
 
-from .utils import AppSettings
-from .connection import QServer, SendTestClient, SendNodesClient
-from .widgets import (
-    LogWidgets,
-    ConnectionsWidget,
-    ErrorDialog,
-    ToolBar
-)
+from .network import QServer, SendTestClient, SendNodesClient
+from .widgets import ToolBar, LogWidgets, ErrorDialog, ConnectionsWidget
+from .settings import AppSettings
+from .local.mock import nuke
 
-LOGGER = logging.getLogger('NukeServerSocket.main')
-LOGGER.debug(' -*- START APPLICATION -*-')
+LOGGER = logging.getLogger('nukeserversocket')
+
+# TODO: Refactor
 
 
-def init_settings():
-    """Set up some settings in the config file.
+def _init_settings():
+    """Set up initial settings for the application.
 
-    Function will create the tmp folder if doesn't exists already, and write
-    the path to the application settings file. Function will also validate the
-    port configuration.
+    When called, will:
+      1. Create the src/.tmp folder if doesn't exists.
+      2. Set the transfer_nodes.tmp file path in the configuration file.
+      3. Validate the server port value in the configuration file.
     """
-    # ! TODO: need to re think this
-
     tmp_folder = os.path.join(
         os.path.abspath(os.path.dirname(__file__)), '.tmp'
     )
@@ -42,12 +33,16 @@ def init_settings():
         os.mkdir(tmp_folder)
 
     settings = AppSettings()
-    LOGGER.debug('Main :: settings file : %s', settings.fileName())
     settings.validate_port_settings()
+
+    if nuke.env.get('NukeVersionMajor') == 14:
+        settings.setValue('connection_type/tcp', True)
+        settings.setValue('connection_type/websocket', False)
+
     settings.setValue('path/transfer_file',
                       os.path.join(tmp_folder, 'transfer_nodes.tmp'))
 
-    settings.setValue('dialog/dont_show', False)
+    LOGGER.debug('Settings file: %s', settings.fileName())
 
 
 class MainWindowWidget(QWidget):
@@ -61,9 +56,7 @@ class MainWindowWidget(QWidget):
         """Init method for MainWindowWidget."""
         QWidget.__init__(self)
         LOGGER.debug('Main :: init')
-        # ! TODO: Refactor needed
-
-        init_settings()
+        _init_settings()
 
         self.connections = ConnectionsWidget(parent=self)
 
@@ -87,7 +80,7 @@ class MainWindowWidget(QWidget):
         self._server = None
         self._client = None
 
-    def _enable_connection_mod(self, state):  # type: (bool) -> None
+    def _toggle_widget_modification(self, state):  # type: (bool) -> None
         """Enable/disable connection widgets modification.
 
         When connected the port and the sender mode will be disabled.
@@ -99,7 +92,12 @@ class MainWindowWidget(QWidget):
         self.connections.sender_mode.setEnabled(state)
 
     def _disconnect(self):
-        """If server connection gets timeout then close it and reset UI."""
+        """Disconnect server.
+
+        Set the connection button state to `False`, which will trigger a signal
+        that toggles the connection with a falsy value.
+        """
+        # Review: why not calling directly toggle_connection(False)?
         self.connect_btn.setChecked(False)
 
     def setup_server(self):
@@ -141,7 +139,7 @@ class MainWindowWidget(QWidget):
                 return False
             else:
                 LOGGER.debug('server is connected: %s', status)
-                self._enable_connection_mod(False)
+                self._toggle_widget_modification(False)
 
             return bool(status)
 
@@ -155,7 +153,7 @@ class MainWindowWidget(QWidget):
             # hasn't been declared yet
             pass
 
-        self._enable_connection_mod(True)
+        self._toggle_widget_modification(True)
 
     def send_nodes(self):
         """Send the selected Nuke Nodes using the internal client.
@@ -176,12 +174,12 @@ class MainWindowWidget(QWidget):
             SendTestClient: SendTestClient object.
         """
         self._client = SendTestClient()
+        self._connect_client(self.test_btn)
         self._client.client_timeout.connect(
             self.connections._timeout._client_timeout.setText)
-        self._connect_client(self.test_btn)
         return self._client
 
-    def _connect_client(self, client_btn):
+    def _connect_client(self, client_btn):  # type: (QPushButton) -> None
         """Connect the client to host and update status log.
 
         Args:
@@ -197,17 +195,14 @@ class MainWindowWidget(QWidget):
 class MainWindow(QMainWindow):
     """Custom QMainWindow class.
 
-    A toolbar and a status bar will be added in the main app together with the
-    main widgets.
-
-    If app has an exception loading the main widget, will spawn an ErrorDialog
-    class.
+    The class comes with a statusbar and a toolbar. When an exception happens,
+    it will spawn an ErrorDialog widget.
     """
 
     def __init__(self, main_widget=MainWindowWidget):
         """Init method for main window widget."""
         QMainWindow.__init__(self)
-        self.setWindowTitle("NukeServerSocket")
+        self.setWindowTitle('NukeServerSocket')
 
         toolbar = ToolBar()
         self.addToolBar(toolbar)
@@ -219,7 +214,7 @@ class MainWindow(QMainWindow):
             main_widgets = main_widget()
         except Exception as err:  # skipcq: PYL-W0703
             ErrorDialog(err, self).show()
-            LOGGER.critical(err, exc_info=True)
+            LOGGER.exception(err)
         else:
             self.setCentralWidget(main_widgets)
 
@@ -230,5 +225,5 @@ except ImportError:
     pass
 else:
     nukescripts.panels.registerWidgetAsPanel(
-        'NukeServerSocket.src.main.MainWindow', 'NukeServerSocket',
+        'NukeServerSocket.nukeserversocket.main.MainWindow', 'NukeServerSocket',
         'NukeServerSocket.MainWindow')

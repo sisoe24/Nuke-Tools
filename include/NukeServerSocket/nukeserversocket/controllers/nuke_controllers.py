@@ -1,33 +1,34 @@
 """Module for the nuke script editor controller classes."""
 # coding: utf-8
-from __future__ import print_function
 
-import re
 import os
+import re
 import sys
 import json
 import logging
 import contextlib
 from textwrap import dedent
 
-from PySide2.QtCore import QObject, Signal
+from PySide2.QtCore import Signal, QObject
 
-from .. import nuke
-from ..utils import AppSettings, insert_time
+from ..util import insert_time
+from ..settings import AppSettings
+from ..local.mock import nuke
 from .nuke_script_editor import ScriptEditorController
+from ..network.data_to_code import DataCode
 
 if sys.version_info > (3, 0):
     import io as stringIO
 else:
     import StringIO as stringIO
 
-LOGGER = logging.getLogger('NukeServerSocket.controllers')
+LOGGER = logging.getLogger('nukeserversocket')
+
+# TODO: Create abstract code controller class
 
 
-class _ExecuteInMainThread(QObject):
+class _ExecuteCodeController(QObject):
     """Execute code inside Nuke.
-
-    Execute code inside nuke with the method `executeInMainThreadWithResult`.
 
     Signal:
         (str) execution_error: emits wen there is an execution error; more
@@ -64,20 +65,20 @@ class _ExecuteInMainThread(QObject):
         """Execute a string as a callable command."""
         try:
             with self.stdoutIO() as s:
-                exec(data)  # skipcq: PYL-W0122
+                exec(data, {})  # skipcq: PYL-W0122
             return s.getvalue()
         except Exception as err:  # skipcq: PYL-W0703
-            return "An exception occurred running Nuke Internal engine: `%s`" % str(err)
+            return 'An exception occurred running Nuke Internal engine: `%s`' % str(err)
 
     def set_input(self, text):  # type: (str) -> None
-        """Set input from the nuke command."""
+        """Set input for the nuke execution call."""
         self._input = text
 
     def execute(self):
         """Execute code in the main thread.
 
-        If for some reason execution fails, method will fallback on the script
-        editor execution mechanism.
+        If for some reason execution fails, fallback on the script editor
+        mechanism.
         """
         if AppSettings().get_bool('code_execution_engine/nuke_internal', True):
             try:
@@ -85,7 +86,7 @@ class _ExecuteInMainThread(QObject):
                     self._exec, self._input)
                 LOGGER.debug('Execute engine :: Nuke Internal')
             except Exception:  # skipcq: PYL-W0703
-                err = "executeInMainThread Error. Fallback on ScriptEditor for now."
+                err = 'executeInMainThread Error. Fallback on ScriptEditor for now.'
                 self.execution_error.emit(err)
                 LOGGER.error(err)
                 self._execute_script_editor()
@@ -101,15 +102,15 @@ class _ExecuteInMainThread(QObject):
         self.script_editor.restore_state()
 
     def output(self):  # type: () -> str
-        """Get output from the nuke command."""
+        """Get the output from the nuke execution call."""
         return self._output
 
     def input(self):  # type: () -> str
-        """Get output from the nuke command."""
+        """Get the input from the nuke execution call."""
         return self._input
 
 
-class _PyController(_ExecuteInMainThread, object):
+class _PyController(_ExecuteCodeController, object):
     """Controller class that deals with python code execution."""
 
     history = []
@@ -120,7 +121,7 @@ class _PyController(_ExecuteInMainThread, object):
         Args:
             file (str): file path of the file that is being executed.
         """
-        _ExecuteInMainThread.__init__(self)
+        _ExecuteCodeController.__init__(self)
         self.settings = AppSettings()
         self._file = file
 
@@ -149,10 +150,8 @@ class _PyController(_ExecuteInMainThread, object):
     def _show_file(self):  # type: () -> str
         """Show the file that is being executed.
 
-        File could be empty string, in that case will do nothing
-
         Returns:
-            (str) file - file path of the file that is being executed.
+            (str) file - path of the file that is being executed or an empty string.
         """
         return self._file if self.settings.get_bool(
             'options/show_file_path') else os.path.basename(self._file)
@@ -174,21 +173,21 @@ class _PyController(_ExecuteInMainThread, object):
             return text
 
     def _format_output(self, text):  # type: (str) -> str
-        """Format output to send to nuke internal console."""
+        """Format the output text to send to nuke internal console."""
         text = self._clean_output(text)
         file = self._show_file()
 
-        output = "[Nuke Tools] %s \n%s" % (file, text)
+        output = '[Nuke Tools] %s \n%s' % (file, text)
 
         if self.settings.get_bool('options/show_unicode', True):
             # Arrow sign going down
             unicode = u'\u21B4'
-            output = "[Nuke Tools] %s %s\n%s" % (file, unicode, text)
+            output = '[Nuke Tools] %s %s\n%s' % (file, unicode, text)
 
         return insert_time(output)
 
     def output(self):  # type: () -> str
-        """Get a clean version of the output editor."""
+        """Get a clean version of the output editor text."""
         return self._clean_output(super(_PyController, self).output())
 
     def to_console(self):
@@ -199,17 +198,15 @@ class _PyController(_ExecuteInMainThread, object):
             self._output_to_console()
 
     def _output_to_console(self):
-        """Output data to Nuke internal script editor console.
+        """Output text to Nuke internal script editor console.
 
-        This function is called only when Output To Console settings is True.
-        Output style is decided based on other settings like Format Text and
+        The function is called only when `Output To Console` settings is True.
+        It will format the text based on settings like Format Text and
         Clear Output settings.
         """
         if self.settings.get_bool('options/format_text', True):
 
-            output_text = self._format_output(
-                super(_PyController, self).output()
-            )
+            output_text = self._format_output(super(_PyController, self).output())
 
             if self.settings.get_bool('options/clear_output', True):
                 self.script_editor.set_output(output_text)
@@ -223,16 +220,16 @@ class _PyController(_ExecuteInMainThread, object):
         self._clear_history()
 
 
-class _BlinkController(_ExecuteInMainThread, object):
+class _BlinkController(_ExecuteCodeController, object):
     """Controller that deals with blink script execution code."""
 
     def __init__(self, file):
         """Init method for the _BlinkController class.
 
         Args:
-            file (str):  file path of the file that is being executed.
+            file (str): file path of the file that is being executed.
         """
-        _ExecuteInMainThread.__init__(self)
+        _ExecuteCodeController.__init__(self)
         self._file = file
 
     def output(self):  # type: () -> str
@@ -246,16 +243,16 @@ class _BlinkController(_ExecuteInMainThread, object):
     def set_input(self, text):  # type: (str) -> str
         """Override parent method `set_input`.
 
-        Wrap the code and insert it to the input widget to be executed.
+        Get the blinkscript command and insert it to the input widget.
         """
-        text = self._blink_wrapper(text)
+        text = self._blink_command(text)
         super(_BlinkController, self).set_input(text)
 
-    def _blink_wrapper(self, code):  # type: (str) -> str
-        """Wrap the code from the client data into some nuke commands.
+    def _blink_command(self, code):  # type: (str) -> str
+        """Create the blinkscript command.
 
-        The commands will check for a blinkscript and create one if needed,
-        then will execute the code from the blinkscript recompile button.
+        The command checks for a blinkscript node and create one if needed.
+        Then will execute the code using the blinkscript recompile button.
 
         Returns:
             str: wrapped text code.
@@ -280,17 +277,15 @@ class _BlinkController(_ExecuteInMainThread, object):
         """).format(**kwargs).strip()
 
 
-class _CopyNodesController(_ExecuteInMainThread, object):
+class _CopyNodesController(_ExecuteCodeController, object):
     """Controller that deals with copy nodes execution code."""
 
     def __init__(self):
         """Init method for the _CopyNodesController class."""
-        _ExecuteInMainThread.__init__(self)
+        _ExecuteCodeController.__init__(self)
 
     def output(self):  # type: () -> str
         """Override parent method.
-
-        Method will returning a simple string when pasting nodes.
 
         Returns:
             (str): string literal: 'Nodes received'.
@@ -300,8 +295,8 @@ class _CopyNodesController(_ExecuteInMainThread, object):
     def set_input(self, text):  # type: (str) -> str
         """Override parent method by executing the `nuke.nodePaste()` command.
 
-        Method will create a file with the text data received to be used as an
-        argument for the `nuke.nodePaste('file')` method.
+        The method creates a file and writes the text argument received. Then
+        it passes the file path to `nuke.nodePaste`.
 
         Args:
             text (str): the text to be set as input in the widget.
@@ -312,12 +307,12 @@ class _CopyNodesController(_ExecuteInMainThread, object):
         with open(transfer_file, 'w') as file:
             file.write(text)
 
-        text = self._paste_nodes_wrapper(transfer_file)
+        text = self._paste_nodes_command(transfer_file)
         super(_CopyNodesController, self).set_input(text)
 
     @staticmethod
-    def _paste_nodes_wrapper(transfer_file):
-        """Wrap the file with a nuke nodePaste command.
+    def _paste_nodes_command(transfer_file):
+        """Create the `nuke.nodePaste` command.
 
         Args:
             transfer_file (str): the transfer_nodes.tmp file path.
@@ -326,7 +321,7 @@ class _CopyNodesController(_ExecuteInMainThread, object):
 
 
 class CodeEditor(QObject):
-    """Abstract facade for the script editor controller."""
+    """Factory class for the script editor controllers."""
 
     def __init__(self, data):  # type: (DataCode) -> None
         """Init method for the CodeEditor class.
@@ -342,26 +337,26 @@ class CodeEditor(QObject):
         _, file_ext = os.path.splitext(file)
 
         if file_ext in {'.cpp', '.blink'}:
-            self._controller = _BlinkController(file)
+            self.controller = _BlinkController(file)
 
         elif file_ext == '.tmp':
-            self._controller = _CopyNodesController()
+            self.controller = _CopyNodesController()
 
         else:
-            self._controller = _PyController(file)
+            self.controller = _PyController(file)
 
-    def execute(self):
-        """Higher level facade of the execute code function.
+    def execute(self):  # type: () -> str
+        """Execute controller function.
 
-        Set the input, execute the code, return the output and restore the
-        editor state.
+        The function sets the controller input text and execute it. Once
+        done, it will return the output and restore the script editor state.
         """
-        self._controller.set_input(self.data.text)
-        self._controller.execute()
+        self.controller.set_input(self.data.text)
+        self.controller.execute()
 
         send_to_console = AppSettings().get_bool('options/mirror_to_script_editor')
 
-        if isinstance(self._controller, _PyController) and send_to_console:
-            self._controller.to_console()
+        if isinstance(self.controller, _PyController) and send_to_console:
+            self.controller.to_console()
 
-        return self._controller.output()
+        return self.controller.output()

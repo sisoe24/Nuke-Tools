@@ -1,23 +1,12 @@
 """About widget with various app information and links."""
 # coding: utf-8
-from __future__ import print_function
 
-import logging
-from PySide2.QtCore import Qt
 from PySide2.QtGui import QDesktopServices
-
-from PySide2.QtWidgets import (
-    QFormLayout,
-    QGridLayout,
-    QLabel,
-    QPushButton,
-    QVBoxLayout,
-    QWidget
-)
+from PySide2.QtCore import Qt
+from PySide2.QtWidgets import (QLabel, QWidget, QFormLayout, QGridLayout,
+                               QPushButton, QVBoxLayout)
 
 from ..about import about, about_links
-
-LOGGER = logging.getLogger('NukeServerSocket.about_widget')
 
 
 class AboutWidget(QWidget):
@@ -45,7 +34,7 @@ class AboutWidget(QWidget):
         self._form_layout.setFormAlignment(Qt.AlignHCenter | Qt.AlignTop)
 
         for key, value in about():
-            self._form_layout.addRow(QLabel(key), QLabel(value))
+            self._form_layout.addRow(QLabel(key + ':'), QLabel(value))
 
     def _fill_grid_buttons(self, columns=2):
         """Fill the grid layout with the buttons.
@@ -66,7 +55,7 @@ class AboutWidget(QWidget):
                 column = 0
 
     @staticmethod
-    def _create_btn(name, link):
+    def _create_btn(name, link):  # type: (str, str) -> QPushButton
         """Create buttons with some default values.
 
         Create a QPushButton adding the tooltip, the property and setting up

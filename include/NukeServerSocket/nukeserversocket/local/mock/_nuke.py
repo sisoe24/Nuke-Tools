@@ -7,7 +7,11 @@ from textwrap import dedent
 
 from PySide2.QtGui import QClipboard
 
-from src.utils import pyDecoder
+from ...util import pyDecoder
+
+env = {
+    'NukeVersionMajor': 13
+}
 
 
 def nodeCopy(string):

@@ -9,24 +9,15 @@ import sys
 import logging
 import subprocess
 
+from PySide2.QtGui import QKeyEvent, QKeySequence
 from PySide2.QtCore import Qt
-from PySide2.QtGui import QKeySequence, QKeyEvent
+from PySide2.QtWidgets import (QLabel, QWidget, QSplitter, QTextEdit,
+                               QMainWindow, QPushButton, QVBoxLayout,
+                               QApplication, QPlainTextEdit)
 
-from PySide2.QtWidgets import (
-    QVBoxLayout,
-    QWidget,
-    QPlainTextEdit,
-    QSplitter,
-    QTextEdit,
-    QPushButton,
-    QApplication, QMainWindow
-)
+from ..util import pyDecoder
 
-from ..utils import pyDecoder
-
-LOGGER = logging.getLogger('NukeServerSocket.fakescripteditor')
-
-# TODO: should search alternative to subprocess
+LOGGER = logging.getLogger('nukeserversocket')
 
 
 class OutputEditor(QTextEdit):
@@ -68,11 +59,12 @@ class FakeScriptEditor(QWidget):
     def __init__(self, object_name='uk.co.thefoundry.scripteditor.1'):
         """Init method of the the FakeScriptEditor class."""
         QWidget.__init__(self)
+        self.setMaximumHeight(300)
         LOGGER.debug('FakeScriptEditor :: init')
         self.setObjectName(object_name)
 
         self.run_btn = QPushButton('Run')
-        self.run_btn.setToolTip('Run the current')
+        self.run_btn.setToolTip('Run the current script')
         self.run_btn.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_Return))
         self.run_btn.clicked.connect(self.run_code)
 
@@ -86,6 +78,7 @@ class FakeScriptEditor(QWidget):
         self.splitter.addWidget(self.input_console)
 
         _layout = QVBoxLayout()
+        _layout.addWidget(QLabel('Script Editor emulation'))
         _layout.addWidget(self.run_btn)
         _layout.addWidget(self.splitter)
         self.setLayout(_layout)
