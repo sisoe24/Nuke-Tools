@@ -159,13 +159,6 @@ export function execCommand(execPath: ExecutablePath): void {
  */
 export function launchExecutable(execObj: ExecutablePath): ExecutablePath {
     if (execObj.isValid()) {
-        const defaultArgs = utils.nukeToolsConfig(
-            "nukeExecutable.options.defaultCommandLineArguments"
-        ) as string;
-
-        if (defaultArgs) {
-            execObj.args = defaultArgs;
-        }
         execCommand(execObj);
     }
     return execObj;
@@ -195,6 +188,13 @@ export function launchSecondaryExecutable(): ExecutablePath {
         utils.nukeToolsConfig("nukeExecutable.secondaryExecutablePath") as string,
         "Alt."
     );
+    const defaultArgs = utils.nukeToolsConfig(
+        "nukeExecutable.options.defaultCommandLineArguments"
+    ) as string;
+
+    if (defaultArgs) {
+        execObj.args = defaultArgs;
+    }
     launchExecutable(execObj);
     return execObj;
 }

@@ -141,7 +141,7 @@ an import statement inside the `menu.py` file. If `menu.py` does not exist, it w
 
 - `nukeTools.nukeExecutable.options.defaultCommandLineArguments`: `string`
 
-  Command-line arguments you can add at each "Nuke launch" 🚀.
+  Command-line arguments you can add at when running the secondary executable.
 
 - `nukeTools.nukeExecutable.options.restartInstance`: `boolean`
 

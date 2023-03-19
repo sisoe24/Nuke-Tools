@@ -102,7 +102,7 @@
                     },
                     "nukeTools.nukeExecutable.options.defaultCommandLineArguments": {
                         "type": "string",
-                        "markdownDescription": "Command line arguments to be added at each execution. [docs](https://learn.foundry.com/nuke/content/comp_environment/configuring_nuke/command_line_operations.html)"
+                        "markdownDescription": "Command line arguments to be added when launching `#nukeTools.nukeExecutable.secondaryExecutablePath#`. [Nuke documentation](https://learn.foundry.com/nuke/content/comp_environment/configuring_nuke/command_line_operations.html)"
                     },
                     "nukeTools.nukeExecutable.options.restartInstance": {
                         "type": "boolean",
