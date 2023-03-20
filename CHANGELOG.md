@@ -2,6 +2,18 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
+## [0.8.12] 03/19/2023
+
+## Added
+
+- New and improved nuke stubs files.
+
+## Changed
+
+- Fallback on Pylance Python Server if Default.
+- Include stubs inside zip file.
+- Default command line argument command now only works for the second executable.
+
 ## [0.8.4] 09/01/2023
 
 ## Changed
@@ -11,7 +23,7 @@ All notable changes to the "nuke-tools" extension will be documented in this fil
 ### Fixed
 
 - Fixed placeholder substitution for pyside2 template name with spaces.
-- Remove uncesseary socket connection timeout.
+- Remove unnecessary socket connection timeout.
 
 ## [0.8.2] 11/20/2022
 
