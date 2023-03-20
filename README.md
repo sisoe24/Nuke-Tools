@@ -21,6 +21,7 @@ Nuke tools to help the development process inside Visual Studio Code.
   - [1.1. Features](#11-features)
   - [1.2. Requirements](#12-requirements)
   - [1.3. Usage](#13-usage)
+    - [1.3.1. Stubs not working correctly](#131-stubs-not-working-correctly)
   - [1.4. BlinkScript](#14-blinkscript)
   - [1.5. PySide2 Template Project](#15-pyside2-template-project)
   - [1.6. Available Commands](#16-available-commands)
@@ -33,7 +34,7 @@ Nuke tools to help the development process inside Visual Studio Code.
   - When used locally (same machine), the extension requires no configuration, but running NukeServerSocket inside Nuke.
   - Connect to a Nuke instance on a different computer in the same network.
   - BlinkScript support.
-- Nuke Python Stubs for an auto-complete feature.
+- Nuke/Hiero python stubs for auto-complete suggestions.
 - Syntax color for `.nk` and `.gizmo` files.
 - PySide2 plugin template.
 - Commands for executing Nuke instances via the terminal with default or optional arguments.
@@ -63,7 +64,25 @@ To use the Python stubs
 
 ![PythonStubs](/resources/images/auto_complete.gif)
 
-> NOTE: Having a folder named `nuke` in your Workspace root-directory can cause problems for the suggestions.
+### 1.3.1. Stubs not working correctly
+
+If you have problem visualizing the auto-complete suggestions, be sure to reload the window
+and update the `python.analysis.packageIndexDepths` setting to something like this:
+
+```json
+"python.analysis.packageIndexDepths": [
+     {
+         "depth": 5,
+         "includeAllSymbols": true,
+         "name": "nuke"
+     },
+     {
+         "depth": 5,
+         "includeAllSymbols": true,
+         "name": "hiero"
+     },
+]
+```
 
 ## 1.4. BlinkScript
 
