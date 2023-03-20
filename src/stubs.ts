@@ -100,12 +100,12 @@ export function updateAnalysisPath(extraPaths: string[], stubsPath: string): voi
 export function getAutoCompleteSetting(): string {
     const pythonServer = vscode.workspace.getConfiguration("python").get("languageServer");
 
-    // XXX: are there more servers besides Pylance and Jedi?
-    if (pythonServer === "Pylance") {
-        return "python.analysis";
+    // XXX: pythonServer could be Default, which could be both Pylance or Jedi if Pylance is missing
+    if (pythonServer === "Jedi") {
+        return "python.autoComplete";
     }
 
-    return "python.autoComplete";
+    return "python.analysis";
 }
 
 /**
