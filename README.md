@@ -21,7 +21,7 @@ Nuke tools to help the development process inside Visual Studio Code.
   - [1.1. Features](#11-features)
   - [1.2. Requirements](#12-requirements)
   - [1.3. Usage](#13-usage)
-    - [1.3.1. Stubs not working correctly](#131-stubs-not-working-correctly)
+    - [1.3.1. Stubs are not working](#131-stubs-are-not-working)
   - [1.4. BlinkScript](#14-blinkscript)
   - [1.5. PySide2 Template Project](#15-pyside2-template-project)
   - [1.6. Available Commands](#16-available-commands)
@@ -64,10 +64,13 @@ To use the Python stubs
 
 ![PythonStubs](/resources/images/auto_complete.gif)
 
-### 1.3.1. Stubs not working correctly
+### 1.3.1. Stubs are not working
 
-If you have problem visualizing the auto-complete suggestions, be sure to reload the window
-and update the `python.analysis.packageIndexDepths` setting to something like this:
+Because I've changed the path of the stubs and how they are included, you might need
+to use the command to add them back. Once done, reload the window.
+
+If you still have problem visualizing the auto-complete suggestions, try to update
+the `python.analysis.packageIndexDepths` setting to something like this:
 
 ```json
 "python.analysis.packageIndexDepths": [
