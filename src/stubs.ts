@@ -1,13 +1,14 @@
 import * as vscode from "vscode";
 import * as utils from "./utils";
-
+import path = require("path");
+import extract = require("extract-zip");
 /**
  * Get the stubs path included with the extension.
  *
  * @returns the stubs path
  */
 export function getStubsPath(): string {
-    return utils.getIncludedPath("nuke_stubs");
+    return path.join(utils.extensionPath(), "stubs");
 }
 
 /**
@@ -91,10 +92,10 @@ export function updateAnalysisPath(extraPaths: string[], stubsPath: string): voi
 
 /**
  * Get the setting parent for the extraPaths based on the current python server.
- * 
+ *
  *  - Pylance:  `python.analysis`
  *  - Jedi:  `python.autoComplete`
- * 
+ *
  * @returns the settings name for the extra paths
  */
 export function getAutoCompleteSetting(): string {
@@ -134,13 +135,26 @@ export function correctAnalysisPath(): void {
  * Add stubs folder path to workspace settings `python.analysis.extraPaths`.
  * If path is already present, do nothing.
  */
-export function addStubsPath(): boolean {
+export async function addStubsPath(): Promise<boolean> {
     if (!isPythonInstalled()) {
         vscode.window.showErrorMessage(
             "Python extension is not installed. Could not add stubs path."
         );
         return false;
     }
+    const path = utils.getIncludedPath("stubs_0.2.0.zip");
+
+    try {
+        await extract(path, { dir: utils.extensionPath() });
+    } catch (err) {
+        vscode.window.showErrorMessage(err as string);
+        return false;
+    }
+
+    vscode.window.showInformationMessage(`
+    Python stubs added. You might need to reload the window for the stubs to work. 
+    If you feel that stubs are still not working correctly, you need to update the
+    "python.analysis.packageIndexDepths" setting—more on the extension [README](https://github.com/sisoe24/Nuke-Tools#13-usage).`);
 
     const config = vscode.workspace.getConfiguration(getAutoCompleteSetting());
     const extraPaths = config.get("extraPaths") as Array<string>;
