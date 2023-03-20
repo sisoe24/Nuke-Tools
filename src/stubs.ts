@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import * as utils from "./utils";
 import path = require("path");
 import extract = require("extract-zip");
+import { existsSync } from "fs";
 /**
  * Get the stubs path included with the extension.
  *
@@ -144,11 +145,15 @@ export async function addStubsPath(): Promise<boolean> {
     }
     const path = utils.getIncludedPath("stubs_0.2.0.zip");
 
-    try {
-        await extract(path, { dir: utils.extensionPath() });
-    } catch (err) {
-        vscode.window.showErrorMessage(err as string);
-        return false;
+    // TODO: when updating the stubs with a new version, this code will never get executed
+    // since the stubs exists already
+    if (!existsSync(getStubsPath())) {
+        try {
+            await extract(path, { dir: utils.extensionPath() });
+        } catch (err) {
+            vscode.window.showErrorMessage(err as string);
+            return false;
+        }
     }
 
     vscode.window.showInformationMessage(`
