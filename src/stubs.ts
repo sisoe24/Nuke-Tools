@@ -154,7 +154,7 @@ export async function addStubsPath(): Promise<boolean> {
     vscode.window.showInformationMessage(`
     Python stubs added. You might need to reload the window for the stubs to work. 
     If you feel that stubs are still not working correctly, you need to update the
-    "python.analysis.packageIndexDepths" setting—more on the extension [README](https://github.com/sisoe24/Nuke-Tools#13-usage).`);
+    "python.analysis.packageIndexDepths" setting—more on the extension [README](https://github.com/sisoe24/Nuke-Tools#131-stubs-not-working-correctly).`);
 
     const config = vscode.workspace.getConfiguration(getAutoCompleteSetting());
     const extraPaths = config.get("extraPaths") as Array<string>;
