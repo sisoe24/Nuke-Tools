@@ -15,7 +15,7 @@ export function checkUpdate(context: vscode.ExtensionContext) {
  */
 export function addNukeServerSocket(): void {
     const destination = path.join(utils.nukeToolsDir, "NukeServerSocket");
-    fsExtra.copySync(utils.getIncludedPath("assets", "NukeServerSocket"), destination, {
+    fsExtra.copySync(utils.getAssetsPath("NukeServerSocket"), destination, {
         overwrite: true,
     });
 

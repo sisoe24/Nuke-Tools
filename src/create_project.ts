@@ -158,7 +158,7 @@ export async function createTemplate(): Promise<void> {
         return;
     }
 
-    const source = vscode.Uri.file(utils.getIncludedPath("assets", "pyside2-template"));
+    const source = vscode.Uri.file(utils.getAssetsPath("pyside2-template"));
     await vscode.workspace.fs.copy(source, destination);
 
     const pythonFiles = osWalk(destination.fsPath);

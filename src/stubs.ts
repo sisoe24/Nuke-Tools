@@ -10,7 +10,7 @@ import { updatePackage } from "./download_package";
  * @returns the stubs path
  */
 export function getStubsPath(): string {
-    return path.join(utils.extensionPath(), "stubs");
+    return utils.getAssetsPath("nuke-python-stubs");
 }
 
 /**

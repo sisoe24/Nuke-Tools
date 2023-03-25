@@ -43,6 +43,14 @@ export function getIncludedPath(directory: string, name: string): string {
     throw new Error(msg);
 }
 
+export function getIncludePath(name: string) {
+    return getIncludedPath("include", name);
+}
+
+export function getAssetsPath(name: string) {
+    return getIncludedPath("assets", name);
+}
+
 /**
  * Get configuration property value.
  *
