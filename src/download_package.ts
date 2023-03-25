@@ -22,10 +22,10 @@ function downloadPackage(repo: string, destination: string) {
             console.log(`Package updated: ${repo}`);
         })
         .catch(async function (err: { message: any }) {
+            vscode.window.showWarningMessage(
+                `Failed to download package from GitHub: ${err}. Fallback on local zip.`
+            );
             try {
-                vscode.window.showWarningMessage(
-                    `Failed to download package  ${err}. Fallback on local zip.`
-                );
                 await extract(utils.getIncludePath(`${repo}.zip`), {
                     dir: path.join(utils.extensionPath(), "assets", repo),
                 });
@@ -52,7 +52,7 @@ export function updatePackage(
 
     // just be sure I dont ship the code since I need to reset the version for testing purposes
     if (os.userInfo()["username"] === "virgilsisoe") {
-        // context.globalState.update(pkgVersionId, "0.0.0");
+        context.globalState.update(pkgVersionId, "0.0.0");
     }
 
     const previousPkgVersion = (context.globalState.get(pkgVersionId) as string) ?? "0.0.0";
