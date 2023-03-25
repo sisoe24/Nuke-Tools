@@ -6,7 +6,7 @@ import * as fs from "fs";
 import * as utils from "./utils";
 import { updatePackage } from "./download_package";
 
-export function updateNukeServerSocket(context: vscode.ExtensionContext) {
+export function checkUpdate(context: vscode.ExtensionContext) {
     updatePackage(context, "NukeServerSocket", "0.6.0");
 }
 

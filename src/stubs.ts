@@ -140,7 +140,7 @@ export function correctAnalysisPath(): void {
  *
  * @param context vscode.ExtensionContext
  */
-export function updateStubs(context: vscode.ExtensionContext) {
+export function checkUpdate(context: vscode.ExtensionContext) {
     if (isPythonInstalled()) {
         correctAnalysisPath();
     }

@@ -15,8 +15,8 @@ import { BlinkScriptCompletionProvider } from "./blinkscript/blink_completion";
 export function activate(context: vscode.ExtensionContext): void {
     newUpdate.showUpdateMessage(context);
 
-    stubs.updateStubs(context);
-    nuke.updateNukeServerSocket(context);
+    stubs.checkUpdate(context);
+    nuke.checkUpdate(context);
     nukeTemplate.checkUpdate(context);
 
     context.subscriptions.push(
