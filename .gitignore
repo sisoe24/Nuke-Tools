@@ -1,6 +1,5 @@
 out
-dist
-stubs
+assets
 
 coverage
 .nyc_output
