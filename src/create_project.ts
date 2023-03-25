@@ -172,7 +172,3 @@ export async function createTemplate(): Promise<void> {
     `;
     vscode.window.showInformationMessage(msg);
 }
-
-export function checkUpdate(context: vscode.ExtensionContext) {
-    updatePackage(context, "pyside2-template", "0.2.0");
-}
