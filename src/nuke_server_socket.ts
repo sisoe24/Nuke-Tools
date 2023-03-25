@@ -4,11 +4,6 @@ import * as fsExtra from "fs-extra";
 import * as fs from "fs";
 
 import * as utils from "./utils";
-import { updatePackage } from "./download_package";
-
-export function checkUpdate(context: vscode.ExtensionContext) {
-    updatePackage(context, "NukeServerSocket", "0.6.0");
-}
 
 /**
  * Add NukeServerSocket to the .nuke folder and import it inside the menu.py
