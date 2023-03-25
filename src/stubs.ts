@@ -2,6 +2,10 @@ import * as vscode from "vscode";
 import * as utils from "./utils";
 import path = require("path");
 import extract = require("extract-zip");
+import { GithubRelease } from "@terascope/fetch-github-release/dist/src/interfaces";
+
+const currentStubsVersion = "0.2.2";
+
 /**
  * Get the stubs path included with the extension.
  *
@@ -131,6 +135,53 @@ export function correctAnalysisPath(): void {
     }
 }
 
+function downloadStubs() {
+    const { downloadRelease } = require("@terascope/fetch-github-release");
+
+    const user = "sisoe24";
+    const repo = "nuke-python-stubs";
+    // const outputDir = path.join(utils.extensionPath(), "stubs");
+    const outputDir =utils.extensionPath();
+    const leaveZipped = false;
+    const disableLogging = false;
+
+    // Define a function to filter releases.
+    function filterRelease(release: GithubRelease) {
+        return release.prerelease === false;
+    }
+
+    downloadRelease(user, repo, outputDir, filterRelease)
+        .then(function () {
+            console.log("All done!");
+        })
+        .catch(async function (err: { message: any }) {
+            try {
+                await extract(utils.getIncludedPath("stubs_0.2.0.zip"), {
+                    dir: utils.extensionPath(),
+                });
+            } catch (err) {
+                vscode.window.showErrorMessage(err as string);
+                return false;
+            }
+        });
+}
+
+export function refreshAnalysisPath() {
+    if (isPythonInstalled()) {
+        correctAnalysisPath();
+    }
+}
+
+export function checkStubsVersion(context: vscode.ExtensionContext) {
+    const previousStubsVersion =
+        (context.globalState.get("virgilsisoe.nuke-tools.stubsVersion") as string) ?? "0.0.0";
+
+    if (currentStubsVersion > previousStubsVersion) {
+        downloadStubs();
+        context.globalState.update(previousStubsVersion, currentStubsVersion);
+    }
+}
+
 /**
  * Add stubs folder path to workspace settings `python.analysis.extraPaths`.
  * If path is already present, do nothing.
@@ -140,14 +191,6 @@ export async function addStubsPath(): Promise<boolean> {
         vscode.window.showErrorMessage(
             "Python extension is not installed. Could not add stubs path."
         );
-        return false;
-    }
-    const path = utils.getIncludedPath("stubs_0.2.0.zip");
-
-    try {
-        await extract(path, { dir: utils.extensionPath() });
-    } catch (err) {
-        vscode.window.showErrorMessage(err as string);
         return false;
     }
 
