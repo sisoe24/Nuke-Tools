@@ -2,12 +2,7 @@ import * as vscode from "vscode";
 import * as utils from "./utils";
 
 import path = require("path");
-import extract = require("extract-zip");
-
-import { GithubRelease } from "@terascope/fetch-github-release/dist/src/interfaces";
-import { downloadRelease } from "@terascope/fetch-github-release";
-
-const currentStubsVersion = "0.2.2";
+import { updatePackage } from "./download_package";
 
 /**
  * Get the stubs path included with the extension.
@@ -139,61 +134,17 @@ export function correctAnalysisPath(): void {
 }
 
 /**
- * Download the stubs from the github release page.
- */
-function downloadStubs() {
-    const user = "sisoe24";
-    const repo = "nuke-python-stubs";
-    const outputDir = utils.extensionPath();
-    const leaveZipped = false;
-
-    // Define a function to filter releases.
-    function filterRelease(release: GithubRelease) {
-        return release.prerelease === false;
-    }
-
-    downloadRelease(user, repo, outputDir, filterRelease)
-        .then(function () {
-            console.log(`Package updated: ${repo}`);
-        })
-        .catch(async function (err: { message: any }) {
-            try {
-                await extract(utils.getIncludedPath("stubs_0.2.0.zip"), {
-                    dir: utils.extensionPath(),
-                });
-            } catch (err) {
-                vscode.window.showErrorMessage(err as string);
-                return false;
-            }
-        });
-}
-
-/**
- * Each vscode reload, refresh the python.analysis path.
+ * Update the stubs file if a newer version is released and update the python settings value.
  *
  * Beucase the path includes the version of the extension, newer updates will break the stubs path.
- */
-export function refreshAnalysisPath() {
-    if (isPythonInstalled()) {
-        correctAnalysisPath();
-    }
-}
-
-/**
- * Update the stubs file if a newer version is released.
  *
  * @param context vscode.ExtensionContext
  */
 export function updateStubs(context: vscode.ExtensionContext) {
-    refreshAnalysisPath();
-
-    const stubsVersionId = "virgilsisoe.nuke-tools.stubsVersion";
-    const previousStubsVersion = (context.globalState.get(stubsVersionId) as string) ?? "0.0.0";
-
-    if (currentStubsVersion > previousStubsVersion) {
-        downloadStubs();
-        context.globalState.update(stubsVersionId, currentStubsVersion);
+    if (isPythonInstalled()) {
+        correctAnalysisPath();
     }
+    updatePackage(context, "nuke-python-stubs", "0.2.2");
 }
 
 /**
