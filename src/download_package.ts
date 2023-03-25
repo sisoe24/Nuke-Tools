@@ -64,7 +64,6 @@ export function updatePackage(
     const previousPkgVersion = (context.globalState.get(pkgVersionId) as string) ?? "0.0.0";
 
     if (currentVersion > previousPkgVersion) {
-        console.log("should update");
         if (downloadPackage(packageId, path.join(utils.extensionPath(), "assets", packageId))) {
             context.globalState.update(pkgVersionId, currentVersion);
         }
