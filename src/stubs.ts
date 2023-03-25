@@ -134,20 +134,6 @@ export function correctAnalysisPath(): void {
 }
 
 /**
- * Update the stubs file if a newer version is released and update the python settings value.
- *
- * Beucase the path includes the version of the extension, newer updates will break the stubs path.
- *
- * @param context vscode.ExtensionContext
- */
-export function checkUpdate(context: vscode.ExtensionContext) {
-    if (isPythonInstalled()) {
-        correctAnalysisPath();
-    }
-    updatePackage(context, "nuke-python-stubs", "0.2.2");
-}
-
-/**
  * Add stubs folder path to workspace settings `python.analysis.extraPaths`.
  * If path is already present, do nothing.
  */
@@ -170,4 +156,17 @@ export async function addStubsPath(): Promise<boolean> {
     updateAnalysisPath(extraPaths, getStubsPath());
     config.update("extraPaths", extraPaths);
     return true;
+}
+
+/**
+ * Each vscode reload, refresh the python.analysis path. 
+ * 
+ * Beucase the path includes the version of the extension, newer updates will break the stubs path.
+ *
+ * @param context vscode.ExtensionContext
+ */
+export function fixAnalysisPath() {
+    if (isPythonInstalled()) {
+        correctAnalysisPath();
+    }
 }
