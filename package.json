@@ -86,6 +86,11 @@
                 "command": "nuke-tools.addNukeServerSocket",
                 "title": "Add NukeServerSocket",
                 "category": "Nuke"
+            },
+            {
+                "command": "nuke-tools.forceUpdatePackages",
+                "title": "Force Update packages",
+                "category": "Nuke"
             }
         ],
         "configuration": [
