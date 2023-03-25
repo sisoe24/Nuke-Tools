@@ -6,6 +6,7 @@ import * as path from "path";
 import * as cp from "child_process";
 
 import * as utils from "./utils";
+import { updatePackage } from "./download_package";
 
 /**
  * The placeholders data.
@@ -157,7 +158,7 @@ export async function createTemplate(): Promise<void> {
         return;
     }
 
-    const source = vscode.Uri.file(utils.getIncludedPath("pyside2-template"));
+    const source = vscode.Uri.file(utils.getIncludedPath("assets", "pyside2-template"));
     await vscode.workspace.fs.copy(source, destination);
 
     const pythonFiles = osWalk(destination.fsPath);
@@ -166,8 +167,12 @@ export async function createTemplate(): Promise<void> {
     await importStatementMenu(userData.__projectSlug__);
     await openProjectFolder(destination);
 
-    const msg = `Project creation completed. For more information, please
-    read the official [README](https://github.com/sisoe24/pyside2-template#readme).
+    const msg = `Project creation completed. For more information, check 
+    the official [README](https://github.com/sisoe24/pyside2-template#readme).
     `;
     vscode.window.showInformationMessage(msg);
+}
+
+export function checkUpdate(context: vscode.ExtensionContext) {
+    updatePackage(context, "pyside2-template", "0.2.0");
 }
