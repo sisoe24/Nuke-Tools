@@ -9,6 +9,12 @@ import { downloadRelease } from "@terascope/fetch-github-release";
 
 import extract = require("extract-zip");
 
+const PACKAGES = {
+    NukeServerSocket: "0.6.0",
+    "nuke-python-stubs": "0.2.2",
+    "pyside2-template": "0.2.0",
+};
+
 /**
  * Download a package from the github release page.
  */
@@ -52,14 +58,24 @@ export function updatePackage(
 
     // just be sure I dont ship the code since I need to reset the version for testing purposes
     if (os.userInfo()["username"] === "virgilsisoe") {
-        context.globalState.update(pkgVersionId, "0.0.0");
+        // context.globalState.update(pkgVersionId, "0.0.0");
     }
 
     const previousPkgVersion = (context.globalState.get(pkgVersionId) as string) ?? "0.0.0";
 
     if (currentVersion > previousPkgVersion) {
+        console.log("should update");
         if (downloadPackage(packageId, path.join(utils.extensionPath(), "assets", packageId))) {
             context.globalState.update(pkgVersionId, currentVersion);
         }
+    }
+}
+
+export function checkPackageUpdates(context: vscode.ExtensionContext, forceUpdate = false) {
+    for (const [pkg, version] of Object.entries(PACKAGES)) {
+        if (forceUpdate) {
+            context.globalState.update(`virgilsisoe.nuke-tools.${pkg}`, "0.0.0");
+        }
+        updatePackage(context, pkg, version);
     }
 }
