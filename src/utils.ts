@@ -33,9 +33,9 @@ export function extensionPath(): string {
  *
  * @returns the path or undefined if couldn't resolve the path.
  */
-export function getIncludedPath(name: string): string {
+export function getIncludedPath(directory: string, name: string): string {
     if (extensionPath()) {
-        return path.join(extensionPath(), "include", name);
+        return path.join(extensionPath(), directory, name);
     }
 
     const msg = `Could not resolve ${name} path.`;
