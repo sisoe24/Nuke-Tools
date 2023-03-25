@@ -4,13 +4,18 @@ import * as fsExtra from "fs-extra";
 import * as fs from "fs";
 
 import * as utils from "./utils";
+import { updatePackage } from "./download_package";
+
+export function updateNukeServerSocket(context: vscode.ExtensionContext) {
+    updatePackage(context, "NukeServerSocket", "0.6.0");
+}
 
 /**
  * Add NukeServerSocket to the .nuke folder and import it inside the menu.py
  */
-export function addNss(): void {
+export function addNukeServerSocket(): void {
     const destination = path.join(utils.nukeToolsDir, "NukeServerSocket");
-    fsExtra.copySync(utils.getIncludedPath("NukeServerSocket"), destination, {
+    fsExtra.copySync(utils.getIncludedPath("assets", "NukeServerSocket"), destination, {
         overwrite: true,
     });
 
