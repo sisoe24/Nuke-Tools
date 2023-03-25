@@ -11,13 +11,19 @@ import * as nukeTemplate from "./create_project";
 import { BlinkSnippets } from "./blinkscript/blink_snippet";
 import { BlinkScriptFormat } from "./blinkscript/blink_format";
 import { BlinkScriptCompletionProvider } from "./blinkscript/blink_completion";
+import { forceUpdate, checkPackageUpdates } from "./download_package";
 
 export function activate(context: vscode.ExtensionContext): void {
     newUpdate.showUpdateMessage(context);
+    stubs.fixAnalysisPath();
 
-    stubs.checkUpdate(context);
-    nuke.checkUpdate(context);
-    nukeTemplate.checkUpdate(context);
+    checkPackageUpdates(context);
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.forceUpdatePackages", () => {
+            forceUpdate(context);
+        })
+    );
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.createPySide2Project", () => {
