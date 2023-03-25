@@ -169,21 +169,6 @@ function downloadStubs() {
 }
 
 /**
- * Update the stubs file if a newer version is released.
- *
- * @param context vscode.ExtensionContext
- */
-export function updateStubs(context: vscode.ExtensionContext) {
-    const stubsVersionId = "virgilsisoe.nuke-tools.stubsVersion";
-    const previousStubsVersion = (context.globalState.get(stubsVersionId) as string) ?? "0.0.0";
-
-    if (currentStubsVersion > previousStubsVersion) {
-        downloadStubs();
-        context.globalState.update(stubsVersionId, currentStubsVersion);
-    }
-}
-
-/**
  * Each vscode reload, refresh the python.analysis path.
  *
  * Beucase the path includes the version of the extension, newer updates will break the stubs path.
@@ -191,6 +176,23 @@ export function updateStubs(context: vscode.ExtensionContext) {
 export function refreshAnalysisPath() {
     if (isPythonInstalled()) {
         correctAnalysisPath();
+    }
+}
+
+/**
+ * Update the stubs file if a newer version is released.
+ *
+ * @param context vscode.ExtensionContext
+ */
+export function updateStubs(context: vscode.ExtensionContext) {
+    refreshAnalysisPath();
+
+    const stubsVersionId = "virgilsisoe.nuke-tools.stubsVersion";
+    const previousStubsVersion = (context.globalState.get(stubsVersionId) as string) ?? "0.0.0";
+
+    if (currentStubsVersion > previousStubsVersion) {
+        downloadStubs();
+        context.globalState.update(stubsVersionId, currentStubsVersion);
     }
 }
 
