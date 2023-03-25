@@ -1,8 +1,11 @@
 import * as vscode from "vscode";
 import * as utils from "./utils";
+
 import path = require("path");
 import extract = require("extract-zip");
+
 import { GithubRelease } from "@terascope/fetch-github-release/dist/src/interfaces";
+import { downloadRelease } from "@terascope/fetch-github-release";
 
 const currentStubsVersion = "0.2.2";
 
@@ -135,15 +138,14 @@ export function correctAnalysisPath(): void {
     }
 }
 
+/**
+ * Download the stubs from the github release page.
+ */
 function downloadStubs() {
-    const { downloadRelease } = require("@terascope/fetch-github-release");
-
     const user = "sisoe24";
     const repo = "nuke-python-stubs";
-    // const outputDir = path.join(utils.extensionPath(), "stubs");
-    const outputDir =utils.extensionPath();
+    const outputDir = utils.extensionPath();
     const leaveZipped = false;
-    const disableLogging = false;
 
     // Define a function to filter releases.
     function filterRelease(release: GithubRelease) {
@@ -152,7 +154,7 @@ function downloadStubs() {
 
     downloadRelease(user, repo, outputDir, filterRelease)
         .then(function () {
-            console.log("All done!");
+            console.log(`Package updated: ${repo}`);
         })
         .catch(async function (err: { message: any }) {
             try {
@@ -166,19 +168,29 @@ function downloadStubs() {
         });
 }
 
-export function refreshAnalysisPath() {
-    if (isPythonInstalled()) {
-        correctAnalysisPath();
-    }
-}
-
-export function checkStubsVersion(context: vscode.ExtensionContext) {
-    const previousStubsVersion =
-        (context.globalState.get("virgilsisoe.nuke-tools.stubsVersion") as string) ?? "0.0.0";
+/**
+ * Update the stubs file if a newer version is released.
+ *
+ * @param context vscode.ExtensionContext
+ */
+export function updateStubs(context: vscode.ExtensionContext) {
+    const stubsVersionId = "virgilsisoe.nuke-tools.stubsVersion";
+    const previousStubsVersion = (context.globalState.get(stubsVersionId) as string) ?? "0.0.0";
 
     if (currentStubsVersion > previousStubsVersion) {
         downloadStubs();
-        context.globalState.update(previousStubsVersion, currentStubsVersion);
+        context.globalState.update(stubsVersionId, currentStubsVersion);
+    }
+}
+
+/**
+ * Each vscode reload, refresh the python.analysis path.
+ *
+ * Beucase the path includes the version of the extension, newer updates will break the stubs path.
+ */
+export function refreshAnalysisPath() {
+    if (isPythonInstalled()) {
+        correctAnalysisPath();
     }
 }
 
