@@ -6,8 +6,7 @@ import * as newUpdate from "./update_message";
 
 import * as nuke from "./nuke_server_socket";
 import * as stubs from "./stubs";
-
-import { createTemplate } from "./create_project";
+import * as nukeTemplate from "./create_project";
 
 import { BlinkSnippets } from "./blinkscript/blink_snippet";
 import { BlinkScriptFormat } from "./blinkscript/blink_format";
@@ -18,10 +17,11 @@ export function activate(context: vscode.ExtensionContext): void {
 
     stubs.updateStubs(context);
     nuke.updateNukeServerSocket(context);
+    nukeTemplate.checkUpdate(context);
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.createPySide2Project", () => {
-            createTemplate();
+            nukeTemplate.createTemplate();
         })
     );
 
