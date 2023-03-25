@@ -11,7 +11,7 @@ import * as nukeTemplate from "./create_project";
 import { BlinkSnippets } from "./blinkscript/blink_snippet";
 import { BlinkScriptFormat } from "./blinkscript/blink_format";
 import { BlinkScriptCompletionProvider } from "./blinkscript/blink_completion";
-import { forceUpdate, checkPackageUpdates } from "./download_package";
+import { checkPackageUpdates } from "./download_package";
 
 export function activate(context: vscode.ExtensionContext): void {
     newUpdate.showUpdateMessage(context);
@@ -21,7 +21,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.forceUpdatePackages", () => {
-            forceUpdate(context);
+            checkPackageUpdates(context, true);
         })
     );
 
