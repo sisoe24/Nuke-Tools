@@ -15,12 +15,18 @@
 [![openvsx-downloads](https://img.shields.io/open-vsx/dt/virgilsisoe/nuke-tools)](https://open-vsx.org/extension/virgilsisoe/nuke-tools)
 [![openvsx-rating](https://img.shields.io/open-vsx/rating/virgilsisoe/nuke-tools)](https://open-vsx.org/extension/virgilsisoe/nuke-tools/reviews)
 
+[![Main Build](https://img.shields.io/github/v/release/sisoe24/NukeServerSocket?label=NukeServerSocket)](https://github.com/sisoe24/NukeServerSocket/releases)
+[![Main Build](https://img.shields.io/github/v/release/sisoe24/nuke-python-stubs?label=nuke-python-stubs)](https://github.com/sisoe24/nuke-python-stubs/releases)
+[![Main Build](https://img.shields.io/github/v/release/sisoe24/pyside2-template?label=pyside2-template)](https://github.com/sisoe24/pyside2-template/releases)
+
 Nuke tools to help the development process inside Visual Studio Code.
 
 - [1. Nuke Tools README](#1-nuke-tools-readme)
   - [1.1. Features](#11-features)
   - [1.2. Requirements](#12-requirements)
   - [1.3. Usage](#13-usage)
+  - [Execute code](#execute-code)
+  - [Python stubs](#python-stubs)
     - [1.3.1. Stubs are not working](#131-stubs-are-not-working)
   - [1.4. BlinkScript](#14-blinkscript)
   - [1.5. PySide2 Template Project](#15-pyside2-template-project)
@@ -32,7 +38,6 @@ Nuke tools to help the development process inside Visual Studio Code.
 - Execute code inside Nuke from a machine in your local network.
   - Get the output of Nuke execution inside Visual Studio Code.
   - When used locally (same machine), the extension requires no configuration, but running NukeServerSocket inside Nuke.
-  - Connect to a Nuke instance on a different computer in the same network.
   - BlinkScript support.
 - Nuke/Hiero python stubs for auto-complete suggestions.
 - Syntax color for `.nk` and `.gizmo` files.
@@ -42,11 +47,12 @@ Nuke tools to help the development process inside Visual Studio Code.
 
 ## 1.2. Requirements
 
-This extension is primarily a companion for *NukeServerSocket*. Executing code will only work when NukeServerSocket is up and running.
+Executing code will only work when NukeServerSocket is up and running.
 
 ## 1.3. Usage
 
-To execute code:
+Execute code
+------------
 
 1. Download and install the companion plugin NukeServerSocket:
    - Via the Command Palette: `Nuke: Add NukeServerSocket` (more info on [Available Commands](#16-available-commands)).
@@ -57,7 +63,8 @@ To execute code:
 
 ![CodeExecution](/resources/images/execute_code.gif)
 
-To use the Python stubs
+Python stubs
+------------
 
 1. Use the command `Nuke: Add Python Stubs` to add the stubs to your `python.analysis.extraPaths` setting.
 2. Write `import nuke` into your script.
@@ -66,11 +73,7 @@ To use the Python stubs
 
 ### 1.3.1. Stubs are not working
 
-Because I've changed the path of the stubs and how they are included, you might need
-to use the command to add them back. Once done, reload the window.
-
-If you still have problem visualizing the auto-complete suggestions, try to update
-the `python.analysis.packageIndexDepths` setting to something like this:
+I have experienced some problems with the stubs in the most recent versions of vscode. One thing that helped me was to set the `python.analysis.packageIndexDepths` setting to something like this:
 
 ```json
 "python.analysis.packageIndexDepths": [
@@ -113,22 +116,22 @@ You can read more on the GitHub [README](https://github.com/sisoe24/pyside2-temp
 
 - All commands are available by opening the Command Palette (`Command+Shift+P` on macOS and `Ctrl+Shift+P` on Windows/Linux) and typing in one of the following Command Name:
 
-| Command Name                               | Command ID                        | Description                                              |
-| ------------------------------------------ | --------------------------------- | -------------------------------------------------------- |
-| `Nuke: Launch main executable`             | `nuke-tools.launchNuke`           | Launch main executable                                   |
-| `Nuke: Launch alternative executable`      | `nuke-tools.launchNukeAlt`        | Launch alternative executable                            |
-| `Nuke: Launch main executable with prompt` | `nuke-tools.launchNukeOptArgs`    | Launch main exec. with prompt for optional args          |
-| `Nuke: Run Inside Nuke`                    | `nuke-tools.runCodeInsideNuke`    | Execute code inside Nuke                                 |
-| `Nuke: Add Stubs to Workspace`             | `nuke-tools.addPythonStubs`       | Add stubs path to workspace settings                     |
-| `Nuke: Add NukeServerSocket`               | `nuke-tools.addNukeServerSocket`  | Add NukeServerSocket plugin to `.nuke` dir and `menu.py` |
-| `Nuke: Create a PySide2 plugin`            | `nuke-tools.createPySide2Project` | Create a PySide2 plugin from template                    |
-| `Nuke: Show Network Addresses`             | `nuke-tools.showNetworkAddresses` | Show network addresses                                   |
-| `Nuke: Debug Message`                      | `nuke-tools.testRunInsideNuke`    | Quick test connection                                    |
+| Command Name                                      | Command ID                        | Description                                                                     |
+| ------------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------- |
+| `Nuke: Launch main executable`                    | `nuke-tools.launchNuke`           | Launch main executable                                                          |
+| `Nuke: Launch alternative executable`             | `nuke-tools.launchNukeAlt`        | Launch alternative executable                                                   |
+| `Nuke: Launch alternative executable with prompt` | `nuke-tools.launchNukeOptArgs`    | Launch alternative exec. with prompt for optional args                          |
+| `Nuke: Run Inside Nuke`                           | `nuke-tools.runCodeInsideNuke`    | Execute code inside Nuke                                                        |
+| `Nuke: Add Stubs to Workspace`                    | `nuke-tools.addPythonStubs`       | Add stubs path to workspace settings                                            |
+| `Nuke: Add NukeServerSocket`                      | `nuke-tools.addNukeServerSocket`  | Add NukeServerSocket plugin to `.nuke` dir and `menu.py`                        |
+| `Nuke: Create a PySide2 plugin`                   | `nuke-tools.createPySide2Project` | Create a PySide2 plugin from template                                           |
+| `Nuke: Show Network Addresses`                    | `nuke-tools.showNetworkAddresses` | Show network addresses                                                          |
+| `Nuke: Force Update packages`                     | `nuke-tools.forceUpdatePackages`  | Update the included packages (NukeServerSocket, Python stubs, pyside2-template) |
 
 NOTES:
 
 - `Nuke: Run Code Inside Nuke` command can be executed via a button in the Editor Toolbar.
-- `Nuke: Add NukeServerSocket` will copy the plugin folder inside `$HOME/.nuke/NukeTools` and create
+- `Nuke: Add NukeServerSocket` or `Nuke: Create a Pyside2 plugin` will add the plugin inside `$HOME/.nuke/NukeTools` and create
 an import statement inside the `menu.py` file. If `menu.py` does not exist, it will get created.
 - By default, the extension does not provide any shortcut. But you can assign each command to one. (see [Key Bindings for Visual Studio Code](https://code.visualstudio.com/docs/getstarted/keybindings) for more information).
 
