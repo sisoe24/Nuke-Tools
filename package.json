@@ -160,6 +160,12 @@
             }
         ],
         "menus": {
+            "commandPalette": [
+                {
+                    "command": "nuke-tools.testRunInsideNuke",
+                    "when": "false"
+                }
+            ],
             "editor/title": [
                 {
                     "group": "navigation",
