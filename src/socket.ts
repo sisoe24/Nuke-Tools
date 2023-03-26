@@ -398,3 +398,7 @@ export async function sendMessage(): Promise<
 
     return await sendData(getHost(), getPort(), JSON.stringify(prepareMessage(editor)));
 }
+
+export async function sendCommand(command: string) {
+    return await sendData(getHost(), getPort(), command);
+}
