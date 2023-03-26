@@ -2,6 +2,12 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
+## [0.9.0] 03/25/2023
+
+## Changed
+
+- Fetch the latests release of the included packages via the GitHub release page.
+
 ## [0.8.12] 03/19/2023
 
 ## Added
