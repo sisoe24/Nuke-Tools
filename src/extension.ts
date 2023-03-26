@@ -13,11 +13,19 @@ import { BlinkScriptFormat } from "./blinkscript/blink_format";
 import { BlinkScriptCompletionProvider } from "./blinkscript/blink_completion";
 import { checkPackageUpdates } from "./download_package";
 
+import { NodeDependenciesProvider, NukeNodesInspectorProvider } from "./nuke_interface";
+
 export function activate(context: vscode.ExtensionContext): void {
     newUpdate.showUpdateMessage(context);
     stubs.fixAnalysisPath();
 
     checkPackageUpdates(context);
+
+    const rootPath = "/Users/virgilsisoe/Developer/vscode/work/Nuke-Tools";
+    const nukeProvider = new NukeNodesInspectorProvider();
+
+    vscode.window.registerTreeDataProvider("nuke-tools", nukeProvider);
+    vscode.commands.registerCommand("nuke-tools.refreshEntry", () => nukeProvider.refresh());
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.forceUpdatePackages", () => {
