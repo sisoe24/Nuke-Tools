@@ -17,7 +17,8 @@
         "Programming Languages"
     ],
     "activationEvents": [
-        "onStartupFinished"
+        "onStartupFinished",
+        "onView:nuke-tools"
     ],
     "license": "MIT",
     "main": "./out/extension.js",
@@ -33,7 +34,46 @@
         "pyside"
     ],
     "contributes": {
+        "viewsWelcome": [
+            {
+                "view": "nuke-tools",
+                "contents": "No node dependencies found [learn more](https://www.npmjs.com/).\n[Add Dependency](command:nodeDependencies.addEntry)"
+            }
+        ],
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "nodes-inspector",
+                    "title": "Nodes Inspector",
+                    "icon": "resources/icons/dep.svg"
+                }
+            ]
+        },
         "commands": [
+            {
+                "command": "nuke-tools.refreshEntry",
+                "title": "Refresh",
+                "icon": {
+                    "light": "resources/icons/light/refresh.svg",
+                    "dark": "resources/icons/dark/refresh.svg"
+                }
+            },
+            {
+                "command": "nuke-tools.addEntry",
+                "title": "Add"
+            },
+            {
+                "command": "nuke-tools.editEntry",
+                "title": "Edit",
+                "icon": {
+                    "light": "resources/icons/light/edit.svg",
+                    "dark": "resources/icons/dark/edit.svg"
+                }
+            },
+            {
+                "command": "nuke-tools.deleteEntry",
+                "title": "Delete"
+            },
             {
                 "command": "nuke-tools.createPySide2Project",
                 "title": "Create a PySide2 plugin",
@@ -62,8 +102,8 @@
                 "title": "Run Code Inside Nuke",
                 "category": "Nuke",
                 "icon": {
-                    "dark": "resources/icons/play-dark.svg",
-                    "light": "resources/icons/play-light.svg"
+                    "dark": "resources/icons/dark/play.svg",
+                    "light": "resources/icons/light/play.svg"
                 },
                 "enablement": "resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled"
             },
@@ -160,11 +200,33 @@
             }
         ],
         "menus": {
+            "view/title": [
+                {
+                    "command": "nuke-tools.refreshEntry",
+                    "when": "view == nuke-tools",
+                    "group": "navigation"
+                },
+                {
+                    "command": "nuke-tools.addEntry",
+                    "when": "view == nodeDependencies"
+                }
+            ],
             "editor/title": [
                 {
                     "group": "navigation",
                     "command": "nuke-tools.runCodeInsideNuke",
                     "when": "resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled"
+                }
+            ],
+            "view/item/context": [
+                {
+                    "command": "nuke-tools.editEntry",
+                    "when": "view == nuke-tools && viewItem == dependency",
+                    "group": "inline"
+                },
+                {
+                    "command": "nuke-tools.deleteEntry",
+                    "when": "view == nuke-tools && viewItem == dependency"
                 }
             ]
         },
@@ -202,7 +264,17 @@
                 "scopeName": "source.nk",
                 "path": "./language/nuke.tmLanguage.json"
             }
-        ]
+        ],
+        "views": {
+            "nodes-inspector": [
+                {
+                    "id": "nuke-tools",
+                    "name": "Nodes Inspector",
+                    "icon": "resources/icons/dep.svg",
+                    "contextualTitle": "Nuke Tools"
+                }
+            ]
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
