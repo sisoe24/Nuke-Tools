@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import * as path from "path";
-import * as os from "os";
 
 import * as utils from "./utils";
 
@@ -8,7 +7,18 @@ import { GithubRelease } from "@terascope/fetch-github-release/dist/src/interfac
 import { downloadRelease } from "@terascope/fetch-github-release";
 
 import extract = require("extract-zip");
+import { existsSync, mkdirSync } from "fs";
 
+const assetsPath = path.join(utils.extensionPath(), "assets");
+if (!existsSync(assetsPath)) {
+    mkdirSync(assetsPath);
+}
+
+/**
+ * nuke-python-stubs are only the stubs from the repo
+ * pyside2-template is the source code: git archive ...
+ * NukeServerSocket is the source code
+ */
 const PACKAGES = {
     NukeServerSocket: "0.6.0",
     "nuke-python-stubs": "0.2.2",
@@ -49,22 +59,16 @@ function downloadPackage(repo: string, destination: string) {
  *
  * @param context vscode.ExtensionContext
  */
-export function updatePackage(
+export async function updatePackage(
     context: vscode.ExtensionContext,
     packageId: string,
     currentVersion: string
 ) {
     const pkgVersionId = `virgilsisoe.nuke-tools.${packageId}`;
-
-    // just be sure I dont ship the code since I need to reset the version for testing purposes
-    if (os.userInfo()["username"] === "virgilsisoe") {
-        // context.globalState.update(pkgVersionId, "0.0.0");
-    }
-
     const previousPkgVersion = (context.globalState.get(pkgVersionId) as string) ?? "0.0.0";
 
     if (currentVersion > previousPkgVersion) {
-        if (downloadPackage(packageId, path.join(utils.extensionPath(), "assets", packageId))) {
+        if (downloadPackage(packageId, path.join(assetsPath, packageId))) {
             context.globalState.update(pkgVersionId, currentVersion);
         }
     }
