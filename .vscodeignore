@@ -8,7 +8,6 @@ other/
 coverage/
 demo/
 tmp/
-stubs/
 
 .deepsource.toml
 .pre-commit-config.yaml
