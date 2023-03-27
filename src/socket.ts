@@ -237,8 +237,8 @@ export async function sendData(
             const filePath = JSON.parse(text)["file"];
             writeToOutputWindow(textData, filePath, showDebug);
 
-            client.end();
             status.message = data.toString();
+            client.end();
         });
 
         /**
@@ -299,7 +299,9 @@ export async function sendData(
             writeDebugNetwork(showDebug, "Connection ended.");
         });
 
-        resolve(status);
+        setTimeout(() => {
+            resolve(status);
+        }, 1000);
     });
 }
 
