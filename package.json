@@ -51,12 +51,20 @@
         },
         "commands": [
             {
+                "command": "nuke-tools.item_clicked",
+                "title": "nuke tools view item"
+            },
+            {
                 "command": "nuke-tools.refreshEntry",
                 "title": "Refresh",
                 "icon": {
                     "light": "resources/icons/light/refresh.svg",
                     "dark": "resources/icons/dark/refresh.svg"
                 }
+            },
+            {
+                "command": "nuke-tools.syncKnob",
+                "title": "Sync"
             },
             {
                 "command": "nuke-tools.addEntry",
@@ -208,7 +216,8 @@
                 },
                 {
                     "command": "nuke-tools.addEntry",
-                    "when": "view == nodeDependencies"
+                    "when": "view == nuke-tool",
+                    "group": "navigation"
                 }
             ],
             "commandPalette": [
@@ -227,12 +236,16 @@
             "view/item/context": [
                 {
                     "command": "nuke-tools.editEntry",
-                    "when": "view == nuke-tools && viewItem == dependency",
+                    "when": "view == nuke-tools",
                     "group": "inline"
                 },
                 {
-                    "command": "nuke-tools.deleteEntry",
-                    "when": "view == nuke-tools && viewItem == dependency"
+                    "command": "nuke-tools.addEntry",
+                    "when": "view == nuke-tools"
+                },
+                {
+                    "command": "nuke-tools.syncKnob",
+                    "when": "view == nuke-tools"
                 }
             ]
         },
