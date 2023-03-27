@@ -21,11 +21,13 @@ export function activate(context: vscode.ExtensionContext): void {
 
     checkPackageUpdates(context);
 
-    const rootPath = "/Users/virgilsisoe/Developer/vscode/work/Nuke-Tools";
+    // const nukeProvider = new NodeDependenciesProvider();
     const nukeProvider = new NukeNodesInspectorProvider();
-
     vscode.window.registerTreeDataProvider("nuke-tools", nukeProvider);
     vscode.commands.registerCommand("nuke-tools.refreshEntry", () => nukeProvider.refresh());
+    vscode.commands.registerCommand("nuke-tools.addEntry", (item) => nukeProvider.addKnob(item));
+    vscode.commands.registerCommand("nuke-tools.syncKnob", (item) => nukeProvider.syncKnob(item));
+
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.forceUpdatePackages", () => {
