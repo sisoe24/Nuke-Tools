@@ -123,6 +123,7 @@ export function getCliCmd(execPath: ExecutablePath): string {
 
     const envVars = utils.nukeToolsConfig("other.envVars") as { key: string; value: string };
 
+    // TODO: get system key if exists
     let appendVars = "";
     for (const [k, v] of Object.entries(envVars)) {
         appendVars += `${k}="${v}" `;
