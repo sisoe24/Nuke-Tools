@@ -13,7 +13,7 @@ import { BlinkScriptFormat } from "./blinkscript/blink_format";
 import { BlinkScriptCompletionProvider } from "./blinkscript/blink_completion";
 import { checkPackageUpdates } from "./download_package";
 
-import { NodeDependenciesProvider, NukeNodesInspectorProvider } from "./nuke_interface";
+import { NukeNodesInspectorProvider } from "./nuke_interface";
 
 export function activate(context: vscode.ExtensionContext): void {
     newUpdate.showUpdateMessage(context);
