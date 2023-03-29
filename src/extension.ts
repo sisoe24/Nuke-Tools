@@ -21,13 +21,34 @@ export function activate(context: vscode.ExtensionContext): void {
 
     checkPackageUpdates(context);
 
+    // ------------------ NodeInspector ------------------ //
+
     // const nukeProvider = new NodeDependenciesProvider();
     const nukeProvider = new NukeNodesInspectorProvider();
-    vscode.window.registerTreeDataProvider("nuke-tools", nukeProvider);
-    vscode.commands.registerCommand("nuke-tools.refreshEntry", () => nukeProvider.refresh());
-    vscode.commands.registerCommand("nuke-tools.addEntry", (item) => nukeProvider.addKnob(item));
-    vscode.commands.registerCommand("nuke-tools.syncKnob", (item) => nukeProvider.syncKnob(item));
 
+    vscode.window.registerTreeDataProvider("nuke-tools", nukeProvider);
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.refreshKnobs", () => nukeProvider.refresh())
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.on_item_clicked", (item) =>
+            nukeProvider.itemClickde(item)
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.addKnob", (item) => nukeProvider.addKnob(item))
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.syncKnob", (item) =>
+            nukeProvider.syncKnob(item)
+        )
+    );
+
+    // ------------------ NodeInspector ------------------ //
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.forceUpdatePackages", () => {
@@ -88,6 +109,8 @@ export function activate(context: vscode.ExtensionContext): void {
             vscode.window.showInformationMessage(socket.getAddresses());
         })
     );
+
+    // ------------------ BlinkScript ------------------ //
 
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
