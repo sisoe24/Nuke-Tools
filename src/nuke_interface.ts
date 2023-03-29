@@ -64,7 +64,7 @@ function sendData(text: string) {
         text: text,
         file: "",
     };
-    sendCommand(JSON.stringify(data));
+    return sendCommand(JSON.stringify(data));
 }
 
 export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Dependency> {
@@ -121,43 +121,36 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         }
     }
 
-    private getNodes(): Dependency[] {
-        return [];
+    private async getNodes(): Promise<Dependency[]> {
+        const data = await sendData(
+            "import nuke;import json;json.dumps({n.name():n.Class() for n in nuke.allNodes()})"
+        );
+
+        const nodes: { string: string } = JSON.parse(data.message.replace(/'/g, ""));
+
+        const items: vscode.ProviderResult<Dependency[]> = [];
+        for (const [key, value] of Object.entries(nodes)) {
+            items.push(new Dependency(key, value, vscode.TreeItemCollapsibleState.Collapsed));
+        }
+        return items;
     }
 
-    async getChildren(
-        element?: Dependency | undefined
-    ): Promise<vscode.ProviderResult<Dependency[]>> {
-        if (element) {
-            const items: vscode.ProviderResult<Dependency[]> = [];
-            osWalk(PATH).forEach((file) => {
-                const filename = path.basename(file);
-                if (filename.startsWith(element.label)) {
-                    items.push(new Dependency(filename, "", vscode.TreeItemCollapsibleState.None));
-                }
-            });
-            return items;
-        } else {
-            const items: vscode.ProviderResult<Dependency[]> = [];
-            const data = JSON.stringify({
-                text: "import nuke;import json;json.dumps({n.name():n.Class() for n in nuke.allNodes()})",
-                file: "",
-            });
-
-            let result: { string: string };
-
-            const msg = await sendCommand(data).then((value) => {
-                result = JSON.parse(value.message.replace(/'/g, ""));
-            });
-
-            for (const [key, value] of Object.entries(result)) {
-                items.push(new Dependency(key, value, vscode.TreeItemCollapsibleState.Collapsed));
+    private getKnobs(element: Dependency) {
+        const items: vscode.ProviderResult<Dependency[]> = [];
+        osWalk(NUKETOOLS).forEach((file) => {
+            const filename = path.basename(file);
+            if (filename.startsWith(element.label)) {
+                items.push(new Dependency(filename, "", vscode.TreeItemCollapsibleState.None));
             }
+        });
+        return items;
+    }
 
-            console.log("🚀 items:", items);
-            return items;
+    getChildren(element?: Dependency): Thenable<Dependency[]> {
+        if (element) {
+            return Promise.resolve(this.getKnobs(element));
         }
-        return [];
+        return Promise.resolve(this.getNodes());
     }
 }
 
