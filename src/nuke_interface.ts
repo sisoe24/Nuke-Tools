@@ -3,6 +3,8 @@ import * as fs from "fs";
 import * as path from "path";
 import { sendCommand } from "./socket";
 import crypto = require("crypto");
+import uuid = require("uuid");
+import * as util from "./utils";
 
 class Dependency extends vscode.TreeItem {
     constructor(
@@ -21,7 +23,7 @@ class Dependency extends vscode.TreeItem {
     };
 }
 
-const setupCode = (knob: string, id: string, node: string) => `
+const setupCodeSnippet = (knob: string, id: string, node: string) => `
 import nuke
 import random
 
@@ -35,7 +37,7 @@ if not knob:
     knob = node.knob('test')
 `;
 
-const syncCode = (node: string, knob: string, content: string) => `
+const syncCodeSnippet = (node: string, knob: string, content: string) => `
 nuke.toNode('${node}').knob('${knob}').setValue('''${content}''')
 `;
 
@@ -55,54 +57,54 @@ const osWalk = function (dir: string): string[] {
     return results;
 };
 
-const PATH = "/Users/virgilsisoe/Developer/vscode/work/Nuke-Tools/.nuketools";
+const NUKETOOLS = path.join(util.extensionPath(), ".nuketools");
+
+function sendData(text: string) {
+    const data = {
+        text: text,
+        file: "",
+    };
+    sendCommand(JSON.stringify(data));
+}
 
 export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Dependency> {
     private _onDidChangeTreeData: vscode.EventEmitter<Dependency | undefined | null | void> =
         new vscode.EventEmitter<Dependency | undefined | null | void>();
-
-    constructor() {
-        vscode.commands.registerCommand("nuke-tools.on_item_clicked", (r) => this.item_clicked(r));
-    }
+    readonly onDidChangeTreeData: vscode.Event<Dependency | undefined | null | void> =
+        this._onDidChangeTreeData.event;
 
     refresh(): void {
         this._onDidChangeTreeData.fire();
     }
 
     async syncKnob(item: Dependency) {
-        if (item.label.endsWith(".py")) {
-            const filePath = path.join(PATH, item.label);
-            const file = fs.readFileSync(filePath, { encoding: "utf-8" });
-            const fileName = item.label.split("_");
-            console.log("🚀 ~ :", fileName)
-            const data = {
-                text: syncCode(fileName[0], `nuketools_${item.label}`, file),
-                file: "",
-            };
-            sendCommand(JSON.stringify(data));
+        if (!item.label.endsWith(".py")) {
+            return;
         }
+
+        sendData(
+            syncCodeSnippet(
+                item.label.split("_")[0],
+                `nuketools_${item.label}`,
+                fs.readFileSync(path.join(NUKETOOLS, item.label), { encoding: "utf-8" })
+            )
+        );
     }
 
     async addKnob(item: Dependency): Promise<void> {
-        let hash = crypto.createHash("md5").update(item.label).digest("hex");
-
         const knobName = await vscode.window.showInputBox();
-        const path = `${PATH}/${item.label}_${knobName}_${hash}.py`;
+        const filePath = path.join(NUKETOOLS, `${item.label}_${knobName}_${uuid.v4()}.py`);
 
-        fs.writeFileSync(path, "");
-        vscode.window.showTextDocument(vscode.Uri.file(path), { preview: false });
-        const data = {
-            text: setupCode(knobName as string, hash, item.label),
-            file: "",
-        };
-        sendCommand(JSON.stringify(data));
+        fs.writeFileSync(filePath, "");
+        vscode.window.showTextDocument(vscode.Uri.file(filePath), { preview: false });
+
+        const fileParts = path.basename(filePath).split("/");
+        sendData(setupCodeSnippet(fileParts[1], fileParts[2], item.label));
     }
 
     getTreeItem(element: Dependency): vscode.TreeItem | Thenable<vscode.TreeItem> {
-        // return element;
-        let title = element.label ? element.label.toString() : "";
-        let result = new vscode.TreeItem(title, element.collapsibleState);
-        // here we add our command which executes our memberfunction
+        const title = element.label ? element.label.toString() : "";
+        const result = new vscode.TreeItem(title, element.collapsibleState);
         result.command = {
             command: "nuke-tools.on_item_clicked",
             title: title,
@@ -111,24 +113,16 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         return result;
     }
 
-    item_clicked(item: Dependency) {
-        // this will be executed when we click an item
-        console.log("🚀 item clicked:", item);
+    itemClickde(item: Dependency) {
         if (item.label.endsWith(".py")) {
-            vscode.window.showTextDocument(vscode.Uri.file(path.join(PATH, item.label)), {
+            vscode.window.showTextDocument(vscode.Uri.file(path.join(NUKETOOLS, item.label)), {
                 preview: false,
             });
         }
     }
 
-    private async sendMessage() {
-        const results = sendCommand(
-            JSON.stringify({
-                text: "import nuke;import json;json.dumps({n.name():n.Class() for n in nuke.allNodes()})",
-                file: "",
-            })
-        );
-        return (await results).message.replace(/'/g, "");
+    private getNodes(): Dependency[] {
+        return [];
     }
 
     async getChildren(
