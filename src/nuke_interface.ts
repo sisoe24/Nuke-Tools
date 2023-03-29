@@ -18,23 +18,18 @@ class Dependency extends vscode.TreeItem {
     }
 
     iconPath = {
-        light: path.join(__filename, "..", "..", "resources", "light", "dependency.svg"),
-        dark: path.join(__filename, "..", "..", "resources", "dark", "dependency.svg"),
+        light: path.join(__filename, "..", "resources", "icons", "light", "dependency.svg"),
+        dark: path.join(__filename, "..", "resources", "icons", "dark", "dependency.svg"),
     };
 }
 
 const setupCodeSnippet = (knob: string, id: string, node: string) => `
-import nuke
-import random
-
-script_knob = nuke.PyScript_Knob('nuketools_${node}_${knob}_${id}.py')
+script_knob = nuke.PyScript_Knob('nuketools_${node}_${knob}_${id}')
 script_knob.setLabel('${knob}')
 
 node = nuke.toNode('${node}')
-knob = node.knob('${knob}')
-if not knob:
+if not node.knob('${knob}'):
     node.addKnob(script_knob)
-    knob = node.knob('test')
 `;
 
 const syncCodeSnippet = (node: string, knob: string, content: string) => `
@@ -98,7 +93,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         fs.writeFileSync(filePath, "");
         vscode.window.showTextDocument(vscode.Uri.file(filePath), { preview: false });
 
-        const fileParts = path.basename(filePath).split("/");
+        const fileParts = path.basename(filePath).split("_");
         sendData(setupCodeSnippet(fileParts[1], fileParts[2], item.label));
     }
 
