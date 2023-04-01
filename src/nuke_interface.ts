@@ -80,15 +80,16 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         this._onDidChangeTreeData.fire();
     }
 
-    async syncKnob(item: Dependency) {
+    async saveKnob(item: Dependency) {
         if (!item.label.endsWith(".py")) {
             return;
         }
 
+        const fileParts = path.basename(item.label).split("_");
         sendData(
             syncCodeSnippet(
-                item.label.split("_")[0],
-                `nuketools_${item.label}`,
+                fileParts[0],
+                `${fileParts[2]}_${fileParts[3].replace(".py", "")}`,
                 fs.readFileSync(path.join(NUKETOOLS, item.label), { encoding: "utf-8" })
             )
         );
@@ -165,7 +166,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         const items: vscode.ProviderResult<Dependency[]> = [];
         osWalk(NUKETOOLS).forEach((file) => {
             const filename = path.basename(file);
-            if (filename.startsWith(element.label)) {
+            if (filename.startsWith(`${element.label}_${element.description}`)) {
                 items.push(new Dependency(filename, "", vscode.TreeItemCollapsibleState.None));
             }
         });
