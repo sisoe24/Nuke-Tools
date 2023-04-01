@@ -44,8 +44,8 @@
             "activitybar": [
                 {
                     "id": "nodes-inspector",
-                    "title": "Nodes Inspector",
-                    "icon": "resources/icons/dep.svg"
+                    "title": "Nuke Nodes Inspector",
+                    "icon": "resources/icons/nuke.svg"
                 }
             ]
         },
@@ -56,19 +56,27 @@
             },
             {
                 "command": "nuke-tools.refreshKnobs",
-                "title": "Refresh",
+                "title": "Refresh Viewer",
                 "icon": {
                     "light": "resources/icons/light/refresh.svg",
                     "dark": "resources/icons/dark/refresh.svg"
                 }
             },
             {
-                "command": "nuke-tools.syncKnob",
-                "title": "Sync"
+                "command": "nuke-tools.syncKnobs",
+                "title": "Sync Nodes",
+                "icon": {
+                    "light": "resources/icons/light/sync.svg",
+                    "dark": "resources/icons/dark/sync.svg"
+                }
             },
             {
                 "command": "nuke-tools.addKnob",
-                "title": "Add"
+                "title": "Add Knob"
+            },
+            {
+                "command": "nuke-tools.saveKnob",
+                "title": "Save Knob code"
             },
             {
                 "command": "nuke-tools.editEntry",
@@ -215,6 +223,11 @@
                     "group": "navigation"
                 },
                 {
+                    "command": "nuke-tools.syncKnobs",
+                    "when": "view == nuke-tools",
+                    "group": "navigation"
+                },
+                {
                     "command": "nuke-tools.addKnob",
                     "when": "view == nuke-tool",
                     "group": "navigation"
@@ -244,7 +257,7 @@
                     "when": "view == nuke-tools"
                 },
                 {
-                    "command": "nuke-tools.syncKnob",
+                    "command": "nuke-tools.saveKnob",
                     "when": "view == nuke-tools"
                 }
             ]
