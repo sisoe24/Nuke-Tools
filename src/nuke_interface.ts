@@ -22,7 +22,6 @@ class Dependency extends vscode.TreeItem {
         this.tooltip = `${this.label}-${this.version}`;
         this.description = this.version;
     }
-
 }
 
 const setupCodeSnippet = (node: string, nodeClass: string, knob: string, id: string) => `
@@ -39,8 +38,18 @@ if not node.knob('${knob}'):
     node.addKnob(script_knob)
 `;
 
-const syncCodeSnippet = (node: string, knob: string, content: string) => `
+const saveCodeSnippet = (node: string, knob: string, content: string) => `
 nuke.toNode('${node}').knob('${knob}').setValue('''${content}''')
+`;
+
+const syncNodeSnippet = (node: string, nodeClass: string, knob: string, id: string) => `
+def getnodes():
+    for node in nuke.allNodes('${nodeClass}'):
+        for knob in node.allKnobs():
+            if knob.name() == '${knob}_${id}':
+                return node.name()
+    return False
+print(getnodes())
 `;
 
 /**
@@ -70,6 +79,17 @@ function sendData(text: string) {
     );
 }
 
+function renameFile(oldPath: string, newPath: string) {
+    return new Promise<void>((resolve, reject) => {
+        fs.rename(oldPath, newPath, (err) => {
+            if (err) {
+                reject(err);
+            }
+            resolve();
+        });
+    });
+}
+
 export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Dependency> {
     private _onDidChangeTreeData: vscode.EventEmitter<Dependency | undefined | null | void> =
         new vscode.EventEmitter<Dependency | undefined | null | void>();
@@ -80,14 +100,38 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         this._onDidChangeTreeData.fire();
     }
 
-    async saveKnob(item: Dependency) {
+    async syncNodes(): Promise<void> {
+        const files = osWalk(NUKETOOLS);
+        const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+
+            const fileParts = path.basename(file).replace(".py", "").split("_");
+            const result = await sendData(
+                syncNodeSnippet(fileParts[0], fileParts[1], fileParts[2], fileParts[3])
+            );
+            if (result.message === "False") {
+                continue;
+            }
+            const newName = `${result.message}_${fileParts[1]}_${fileParts[2]}_${fileParts[3]}.py`;
+            renameFile(file, path.join(NUKETOOLS, newName));
+
+            // Wait for a bit to make sure the sockets dont get flooded
+            sleep(1000);
+        }
+
+        this.refresh();
+    }
+
+    async saveKnob(item: Dependency): Promise<void> {
         if (!item.label.endsWith(".py")) {
             return;
         }
 
         const fileParts = path.basename(item.label).split("_");
         sendData(
-            syncCodeSnippet(
+            saveCodeSnippet(
                 fileParts[0],
                 `${fileParts[2]}_${fileParts[3].replace(".py", "")}`,
                 fs.readFileSync(path.join(NUKETOOLS, item.label), { encoding: "utf-8" })
