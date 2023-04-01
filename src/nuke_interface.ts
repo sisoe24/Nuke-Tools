@@ -23,11 +23,16 @@ class Dependency extends vscode.TreeItem {
     };
 }
 
-const setupCodeSnippet = (knob: string, id: string, node: string) => `
-script_knob = nuke.PyScript_Knob('nuketools_${node}_${knob}_${id}')
-script_knob.setLabel('${knob}')
+const setupCodeSnippet = (node: string, nodeClass: string, knob: string, id: string) => `
+nuketools_tab = nuke.Tab_Knob('nuketools', 'NukeTools')
 
 node = nuke.toNode('${node}')
+
+if not node.knob('nuketools'):
+    node.addKnob(nuketools_tab)
+
+script_knob = nuke.PyScript_Knob('${knob}_${id}', '${knob}')
+
 if not node.knob('${knob}'):
     node.addKnob(script_knob)
 `;
@@ -55,11 +60,12 @@ const osWalk = function (dir: string): string[] {
 const NUKETOOLS = path.join(util.extensionPath(), ".nuketools");
 
 function sendData(text: string) {
-    const data = {
-        text: text,
-        file: "",
-    };
-    return sendCommand(JSON.stringify(data));
+    return sendCommand(
+        JSON.stringify({
+            text: text,
+            file: "",
+        })
+    );
 }
 
 export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Dependency> {
@@ -87,14 +93,37 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
     }
 
     async addKnob(item: Dependency): Promise<void> {
-        const knobName = await vscode.window.showInputBox();
-        const filePath = path.join(NUKETOOLS, `${item.label}_${knobName}_${uuid.v4()}.py`);
+        let knobName = await vscode.window.showInputBox();
+        if (!knobName) {
+            return;
+        }
+
+        const fileHeader = `${item.label}_${item.description}_${knobName.replace(" ", "_")}`;
+        const filePath = path.join(NUKETOOLS, `${fileHeader}_${uuid.v4()}.py`);
+
+        const files = osWalk(NUKETOOLS);
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            // Check if the file already exists
+            if (path.basename(file).startsWith(fileHeader)) {
+                return;
+            }
+        }
 
         fs.writeFileSync(filePath, "");
         vscode.window.showTextDocument(vscode.Uri.file(filePath), { preview: false });
 
         const fileParts = path.basename(filePath).split("_");
-        sendData(setupCodeSnippet(fileParts[1], fileParts[2], item.label));
+        sendData(
+            setupCodeSnippet(
+                item.label,
+                fileParts[1],
+                fileParts[2],
+                fileParts[3].replace(".py", "")
+            )
+        );
+
+        this.refresh();
     }
 
     getTreeItem(element: Dependency): vscode.TreeItem | Thenable<vscode.TreeItem> {
@@ -108,7 +137,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         return result;
     }
 
-    itemClickde(item: Dependency) {
+    itemClicked(item: Dependency) {
         if (item.label.endsWith(".py")) {
             vscode.window.showTextDocument(vscode.Uri.file(path.join(NUKETOOLS, item.label)), {
                 preview: false,
@@ -142,6 +171,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
     }
 
     getChildren(element?: Dependency): Thenable<Dependency[]> {
+        // TODO: check if nukeserversocket is running
         if (element) {
             return Promise.resolve(this.getKnobs(element));
         }
