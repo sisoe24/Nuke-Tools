@@ -109,6 +109,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
             const file = files[i];
             // Check if the file already exists
             if (path.basename(file).startsWith(fileHeader)) {
+                vscode.window.showErrorMessage("Knob already exists");
                 return;
             }
         }
