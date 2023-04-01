@@ -43,8 +43,8 @@ export function activate(context: vscode.ExtensionContext): void {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.syncKnob", (item) =>
-            nukeProvider.syncKnob(item)
+        vscode.commands.registerCommand("nuke-tools.saveKnob", (item) =>
+            nukeProvider.saveKnob(item)
         )
     );
 
