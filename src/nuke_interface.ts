@@ -7,6 +7,12 @@ import uuid = require("uuid");
 import * as util from "./utils";
 
 class Dependency extends vscode.TreeItem {
+    iconPath = {
+        light: path.join(__filename, "..", "..", "resources", "icons", "light", "dependency.svg"),
+        dark: path.join(__filename, "..", "..", "resources", "icons", "dark", "dependency.svg"),
+    };
+    contextValue = "dependency";
+
     constructor(
         public readonly label: string,
         private version: string,
@@ -17,10 +23,6 @@ class Dependency extends vscode.TreeItem {
         this.description = this.version;
     }
 
-    iconPath = {
-        light: path.join(__filename, "..", "resources", "icons", "light", "dependency.svg"),
-        dark: path.join(__filename, "..", "resources", "icons", "dark", "dependency.svg"),
-    };
 }
 
 const setupCodeSnippet = (node: string, nodeClass: string, knob: string, id: string) => `
@@ -48,7 +50,7 @@ nuke.toNode('${node}').knob('${knob}').setValue('''${content}''')
  * @returns A list of files
  */
 const osWalk = function (dir: string): string[] {
-    let results: string[] = [];
+    const results: string[] = [];
 
     fs.readdirSync(dir).forEach(function (file) {
         file = dir + path.sep + file;
@@ -93,7 +95,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
     }
 
     async addKnob(item: Dependency): Promise<void> {
-        let knobName = await vscode.window.showInputBox();
+        const knobName = await vscode.window.showInputBox();
         if (!knobName) {
             return;
         }
