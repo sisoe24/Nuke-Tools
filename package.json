@@ -14,7 +14,7 @@
                 "title": "nuke tools view item"
             },
             {
-                "command": "nuke-tools.refreshKnobs",
+                "command": "nuke-tools.refreshNodes",
                 "icon": {
                     "dark": "resources/icons/dark/refresh.svg",
                     "light": "resources/icons/light/refresh.svg"
@@ -22,7 +22,7 @@
                 "title": "Refresh Viewer"
             },
             {
-                "command": "nuke-tools.syncKnobs",
+                "command": "nuke-tools.syncNodes",
                 "icon": {
                     "dark": "resources/icons/dark/sync.svg",
                     "light": "resources/icons/light/sync.svg"
@@ -240,17 +240,17 @@
                 },
                 {
                     "command": "nuke-tools.saveKnob",
-                    "when": "view == nuke-tools && viewItem == knob"
+                    "when": "view == nuke-tools"
                 }
             ],
             "view/title": [
                 {
-                    "command": "nuke-tools.refreshKnobs",
+                    "command": "nuke-tools.refreshNodes",
                     "group": "navigation",
                     "when": "view == nuke-tools"
                 },
                 {
-                    "command": "nuke-tools.syncKnobs",
+                    "command": "nuke-tools.syncNodes",
                     "group": "navigation",
                     "when": "view == nuke-tools"
                 }
@@ -277,7 +277,7 @@
         },
         "viewsWelcome": [
             {
-                "contents": "Please connect NukeServerSocket and refresh. [learn more](https://www.npmjs.com/).\n[Refresh](command:nuke-tools.refreshKnobs)",
+                "contents": "Please connect NukeServerSocket and refresh. [learn more](https://www.npmjs.com/).\n[Refresh](command:nuke-tools.refreshNodes)",
                 "view": "nuke-tools"
             }
         ]
