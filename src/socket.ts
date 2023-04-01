@@ -237,7 +237,7 @@ export async function sendData(
             const filePath = JSON.parse(text)["file"];
             writeToOutputWindow(textData, filePath, showDebug);
 
-            status.message = data.toString();
+            status.message = data.toString().trim();
             client.end();
         });
 
