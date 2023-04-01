@@ -1,10 +1,11 @@
 import * as vscode from "vscode";
+
 import * as fs from "fs";
 import * as path from "path";
-import { sendCommand } from "./socket";
-import crypto = require("crypto");
-import uuid = require("uuid");
+import * as uuid from "uuid";
+
 import * as util from "./utils";
+import { sendCommand } from "./socket";
 
 class Dependency extends vscode.TreeItem {
     iconPath = {
@@ -79,17 +80,6 @@ function sendData(text: string) {
     );
 }
 
-function renameFile(oldPath: string, newPath: string) {
-    return new Promise<void>((resolve, reject) => {
-        fs.rename(oldPath, newPath, (err) => {
-            if (err) {
-                reject(err);
-            }
-            resolve();
-        });
-    });
-}
-
 export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Dependency> {
     private _onDidChangeTreeData: vscode.EventEmitter<Dependency | undefined | null | void> =
         new vscode.EventEmitter<Dependency | undefined | null | void>();
@@ -115,9 +105,13 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
                 continue;
             }
             const newName = `${result.message}_${fileParts[1]}_${fileParts[2]}_${fileParts[3]}.py`;
-            renameFile(file, path.join(NUKETOOLS, newName));
 
-            // Wait for a bit to make sure the sockets dont get flooded
+            try {
+                fs.renameSync(file, path.join(NUKETOOLS, newName));
+            } catch (error) {
+                vscode.window.showErrorMessage(`Failed to rename ${file} to ${newName}: ${error}`);
+            }
+
             sleep(1000);
         }
 
@@ -178,14 +172,14 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         const title = element.label ? element.label.toString() : "";
         const result = new vscode.TreeItem(title, element.collapsibleState);
         result.command = {
-            command: "nuke-tools.on_item_clicked",
+            command: "nuke-tools.on_itemClicked",
             title: title,
             arguments: [element],
         };
         return result;
     }
 
-    itemClicked(item: Dependency) {
+    itemClicked(item: Dependency): void {
         if (item.label.endsWith(".py")) {
             vscode.window.showTextDocument(vscode.Uri.file(path.join(NUKETOOLS, item.label)), {
                 preview: false,
