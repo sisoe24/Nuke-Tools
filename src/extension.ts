@@ -29,7 +29,11 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.window.registerTreeDataProvider("nuke-tools", nukeProvider);
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.refreshKnobs", () => nukeProvider.refresh())
+        vscode.commands.registerCommand("nuke-tools.refreshNodes", () => nukeProvider.refresh())
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.syncNodes", () => nukeProvider.syncNodes())
     );
 
     context.subscriptions.push(
