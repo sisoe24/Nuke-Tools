@@ -37,7 +37,7 @@ export function activate(context: vscode.ExtensionContext): void {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.on_item_clicked", (item) =>
+        vscode.commands.registerCommand("nuke-tools.on_itemClicked", (item) =>
             nukeProvider.itemClicked(item)
         )
     );
