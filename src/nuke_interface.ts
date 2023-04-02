@@ -4,10 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as uuid from "uuid";
 
-import * as util from "./utils";
 import { sendCommand } from "./socket";
-
-// TODO: icons: add, sync, delete, save, refresh, file-code, node
 
 const setupCodeSnippet = (knobFile: KnobFile) => `
 nuketools_tab = nuke.Tab_Knob('nuketools', 'NukeTools')
