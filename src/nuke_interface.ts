@@ -9,65 +9,6 @@ import { sendCommand } from "./socket";
 
 // TODO: icons: add, sync, delete, save, refresh, file-code, node
 
-class Dependency extends vscode.TreeItem {
-    constructor(
-        public readonly label: string,
-        private version: string,
-        contextValue: string,
-        icon: string,
-        public readonly collapsibleState: vscode.TreeItemCollapsibleState
-    ) {
-        super(label, collapsibleState);
-        this.tooltip = `${this.label}-${this.version}`;
-        this.description = this.version;
-        this.contextValue = contextValue;
-        this.iconPath = {
-            light: path.join(__filename, "..", "..", "resources", "icons", "light", `${icon}.svg`),
-            dark: path.join(__filename, "..", "..", "resources", "icons", "dark", `${icon}.svg`),
-        };
-    }
-}
-
-class KnobFile {
-    knob: string;
-    node: string;
-    nodeClass: string;
-    id: string;
-    path: string;
-    filename: string;
-
-    constructor(knobFile: string) {
-        console.log("🚀 :", knobFile);
-        this.filename = path.basename(knobFile);
-        this.path = knobFile;
-
-        const split = this.filename.split("_");
-        this.node = split[0];
-        this.nodeClass = split[1];
-        this.knob = split[2];
-        this.id = split[3].replace(".py", "");
-    }
-
-    private static fileSignature(node: string, nodeClass: string, knob: string, id: string) {
-        return `${node}_${nodeClass}_${knob.replace(" ", "_")}_${id}`;
-    }
-
-    static create(item: { node: string; class: string }, knobName: string) {
-        const fileSignature = KnobFile.fileSignature(item.node, item.class, knobName, uuid.v4());
-
-        const filePath = path.join(NUKETOOLS, `${fileSignature}.py`);
-        return new KnobFile(filePath);
-    }
-
-    newName(name: string) {
-        return KnobFile.fileSignature(name, this.nodeClass, this.knob, this.id);
-    }
-
-    content() {
-        return fs.readFileSync(path.join(NUKETOOLS, this.path), { encoding: "utf-8" });
-    }
-}
-
 const setupCodeSnippet = (knobFile: KnobFile) => `
 nuketools_tab = nuke.Tab_Knob('nuketools', 'NukeTools')
 
@@ -113,6 +54,7 @@ const osWalk = function (dir: string): string[] {
     return results;
 };
 
+// TODO: path should be inside the workspace
 const NUKETOOLS = path.join(util.extensionPath(), ".nuketools");
 
 function sendData(text: string) {
@@ -124,6 +66,69 @@ function sendData(text: string) {
     );
 }
 
+class KnobFile {
+    knob: string;
+    node: string;
+    nodeClass: string;
+    id: string;
+    path: string;
+    filename: string;
+
+    constructor(knobFile: string) {
+        console.log("🚀 :", knobFile);
+        this.filename = path.basename(knobFile);
+        this.path = knobFile;
+
+        const split = this.filename.split("_");
+        this.node = split[0];
+        this.nodeClass = split[1];
+        this.knob = split[2];
+        this.id = split[3].replace(".py", "");
+    }
+
+    private static fileSignature(node: string, nodeClass: string, knob: string, id: string) {
+        return `${node}_${nodeClass}_${knob.replace(" ", "_")}_${id}`;
+    }
+
+    static create(item: { node: string; class: string }, knobName: string) {
+        const fileSignature = KnobFile.fileSignature(item.node, item.class, knobName, uuid.v4());
+
+        const filePath = path.join(NUKETOOLS, `${fileSignature}.py`);
+        return new KnobFile(filePath);
+    }
+
+    newName(name: string) {
+        return KnobFile.fileSignature(name, this.nodeClass, this.knob, this.id);
+    }
+
+    content() {
+        return fs.readFileSync(path.join(NUKETOOLS, this.path), { encoding: "utf-8" });
+    }
+}
+
+class Dependency extends vscode.TreeItem {
+    constructor(
+        public readonly label: string,
+        private version: string,
+        contextValue: string,
+        icon: string,
+        public readonly collapsibleState: vscode.TreeItemCollapsibleState
+    ) {
+        super(label, collapsibleState);
+        this.tooltip = `${this.label}-${this.version}`;
+        this.description = this.version;
+        this.contextValue = contextValue;
+        this.command = {
+            command: "nuke-tools.on_itemClicked",
+            title: label,
+            arguments: [this],
+        };
+        this.iconPath = {
+            light: path.join(__filename, "..", "..", "resources", "icons", "light", `${icon}.svg`),
+            dark: path.join(__filename, "..", "..", "resources", "icons", "dark", `${icon}.svg`),
+        };
+    }
+}
 export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Dependency> {
     private _onDidChangeTreeData: vscode.EventEmitter<Dependency | undefined | null | void> =
         new vscode.EventEmitter<Dependency | undefined | null | void>();
@@ -235,11 +240,6 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
     }
 
     getTreeItem(element: Dependency): vscode.TreeItem | Thenable<vscode.TreeItem> {
-        element.command = {
-            command: "nuke-tools.on_itemClicked",
-            title: element.label,
-            arguments: [element],
-        };
         return element;
     }
 
