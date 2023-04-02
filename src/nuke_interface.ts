@@ -138,8 +138,8 @@ class KnobFile {
 }
 
 const itemContext = {
-    node: { context: "node", icon: "dependency" },
-    knob: { context: "knob", icon: "file-code" },
+    node: { context: "node", icon: "symbol-misc" },
+    knob: { context: "knob", icon: "symbol-file" },
 };
 
 class Dependency extends vscode.TreeItem {
@@ -158,10 +158,7 @@ class Dependency extends vscode.TreeItem {
             title: label,
             arguments: [this],
         };
-        this.iconPath = {
-            light: path.join(util.getResourcesPath("icons"), "light", `${context.icon}.svg`),
-            dark: path.join(util.getResourcesPath("icons"), "dark", `${context.icon}.svg`),
-        };
+        this.iconPath = new vscode.ThemeIcon(context.icon);
     }
 }
 
