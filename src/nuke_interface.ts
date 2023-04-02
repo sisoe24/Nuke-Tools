@@ -74,8 +74,12 @@ class KnobFile {
     path: string;
     filename: string;
 
+    /**
+     * Constructor for the KnobFile class.
+     *
+     * @param knobFile name to the knob file
+     */
     constructor(knobFile: string) {
-        console.log("🚀 :", knobFile);
         this.filename = path.basename(knobFile);
         this.path = knobFile;
 
@@ -86,10 +90,26 @@ class KnobFile {
         this.id = split[3].replace(".py", "");
     }
 
+    /**
+     * The signature of the knob file.
+     *
+     * @param node node name
+     * @param nodeClass node class
+     * @param knob knob name
+     * @param id uuid of the knob
+     * @returns the signature of the knob file
+     */
     private static fileSignature(node: string, nodeClass: string, knob: string, id: string) {
         return `${node}_${nodeClass}_${knob.replace(" ", "_")}_${id}`;
     }
 
+    /**
+     * Create a new knob file.
+     *
+     * @param item A dictionary with the node name and class.
+     * @param knobName The name of the knob.
+     * @returns A new knob file.
+     */
     static create(item: { node: string; class: string }, knobName: string) {
         const fileSignature = KnobFile.fileSignature(item.node, item.class, knobName, uuid.v4());
 
@@ -97,10 +117,21 @@ class KnobFile {
         return new KnobFile(filePath);
     }
 
+    /**
+     * Set the new name of the node in the knob file.
+     *
+     * @param name New node name
+     * @returns New file name
+     */
     newName(name: string) {
         return KnobFile.fileSignature(name, this.nodeClass, this.knob, this.id);
     }
 
+    /**
+     * Get the content of the knob file.
+     *
+     * @returns The content of the knob file.
+     */
     content() {
         return fs.readFileSync(path.join(NUKETOOLS, this.path), { encoding: "utf-8" });
     }
