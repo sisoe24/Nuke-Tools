@@ -28,7 +28,7 @@
                 "icon": "$(add)"
             },
             {
-                "command": "nuke-tools.saveKnob",
+                "command": "nuke-tools.syncKnob",
                 "title": "Send code to Knob",
                 "icon": "$(sync)"
             },
@@ -222,7 +222,7 @@
                     "group": "inline"
                 },
                 {
-                    "command": "nuke-tools.saveKnob",
+                    "command": "nuke-tools.syncKnob",
                     "when": "view == nuke-tools && viewItem == knob",
                     "group": "inline"
                 }
