@@ -21,7 +21,7 @@ Includes the following packages:
 [![Main Build](https://img.shields.io/github/v/release/sisoe24/nuke-python-stubs?label=nuke-python-stubs)](https://github.com/sisoe24/nuke-python-stubs/releases)
 [![Main Build](https://img.shields.io/github/v/release/sisoe24/pyside2-template?label=pyside2-template)](https://github.com/sisoe24/pyside2-template/releases)
 
-Nuke tools to help the development process inside Visual Studio Code.
+This is a handy collection of tools that's I created to enhance the experience of coding for Nuke! Whether you're a pro or just starting out, these tools are meant to assist you and improve your coding workflows.
 
 - [1. Nuke Tools README](#1-nuke-tools-readme)
   - [1.1. Features](#11-features)
