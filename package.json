@@ -69,8 +69,8 @@
                 "command": "nuke-tools.runCodeInsideNuke",
                 "enablement": "resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled",
                 "icon": {
-                    "dark": "resources/icons/dark/play.svg",
-                    "light": "resources/icons/light/play.svg"
+                    "dark": "resources/icons/dark/run_code.svg",
+                    "light": "resources/icons/light/run_code.svg"
                 },
                 "title": "Run Code Inside Nuke"
             },
@@ -245,7 +245,7 @@
                     "contextualTitle": "Nuke Tools",
                     "icon": "resources/icons/nuke.svg",
                     "id": "nuke-tools",
-                    "name": "Nodes Inspector - Beta"
+                    "name": "Nodes Panel - Beta"
                 }
             ]
         },
@@ -272,7 +272,7 @@
         "fs-extra": "^10.0.1",
         "uuid": "^9.0.0"
     },
-    "description": "A bunch of Nuke related tools that will facilitate writing code for it.",
+    "description": "A set of tools related to Nuke that simplify the process of writing code for it.",
     "devDependencies": {
         "@istanbuljs/nyc-config-typescript": "^1.0.1",
         "@types/glob": "^7.1.3",
