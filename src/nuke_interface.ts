@@ -188,6 +188,9 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
+            if (!file.endsWith(".py")) {
+                continue;
+            }
 
             const knobFile = new KnobFile(file);
             const result = await sendToNuke(syncNodeSnippet(knobFile));
