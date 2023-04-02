@@ -13,11 +13,46 @@ import { BlinkScriptFormat } from "./blinkscript/blink_format";
 import { BlinkScriptCompletionProvider } from "./blinkscript/blink_completion";
 import { checkPackageUpdates } from "./download_package";
 
+import { NukeNodesInspectorProvider } from "./nuke_interface";
+
 export function activate(context: vscode.ExtensionContext): void {
     newUpdate.showUpdateMessage(context);
     stubs.fixAnalysisPath();
 
     checkPackageUpdates(context);
+
+    // ------------------ NodeInspector ------------------ //
+
+    // const nukeProvider = new NodeDependenciesProvider();
+    const nukeProvider = new NukeNodesInspectorProvider();
+
+    vscode.window.registerTreeDataProvider("nuke-tools", nukeProvider);
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.refreshNodes", () => nukeProvider.refresh())
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.syncNodes", () => nukeProvider.syncNodes())
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.on_itemClicked", (item) =>
+            nukeProvider.itemClicked(item)
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.addKnob", (item) => nukeProvider.addKnob(item))
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.syncKnob", (item) =>
+            nukeProvider.syncKnob(item)
+        )
+    );
+
+    // ------------------ NodeInspector ------------------ //
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.forceUpdatePackages", () => {
@@ -78,6 +113,8 @@ export function activate(context: vscode.ExtensionContext): void {
             vscode.window.showInformationMessage(socket.getAddresses());
         })
     );
+
+    // ------------------ BlinkScript ------------------ //
 
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(

@@ -1,9 +1,6 @@
 import * as vscode from "vscode";
 import * as utils from "./utils";
 
-import path = require("path");
-import { updatePackage } from "./download_package";
-
 /**
  * Get the stubs path included with the extension.
  *
@@ -14,10 +11,8 @@ export function getStubsPath(): string {
 }
 
 /**
- * Check if Python extension is installed.
- *
- * Python could be not installed, in that case adding the stubs to `analysis.extraPaths`
- * will fail.
+ * Check whether the Python extension is installed, as attempting to add the stubs to analysis.extraPaths will
+ * fail if Python is not installed.
  *
  * @returns true if extension is installed, false otherwise.
  */
@@ -43,12 +38,11 @@ export function extractVersion(path: string): string | null {
 }
 
 /**
- * Add stubs path to `python.analysis.extraPaths`.
+ * Add the stubs path to python.analysis.extraPaths.
+ * Only update the configuration value if the value is not already present or the version is
+ * lower than the current version.
  *
- * Update configuration value only if value is not present or the version is lower
- * than the current version.
- *
- * Note: The update is made by reference.
+ * Note that the update is made by reference value
  *
  * @param extraPaths - The `python.analysis.extraPaths` array object.
  * @param stubsPath - the stubs path to add in the `extraPaths` configuration.
@@ -76,7 +70,7 @@ export function addPath(extraPaths: string[], stubsPath: string): boolean {
 /**
  * Update `python.analysis.extraPath`.
  *
- * If path was already added, will do nothing
+ * If the path has already been added, this function will not modify it
  *
  * @param extraPaths - The `python.analysis.extraPaths` array object.
  * @param stubsPath - the stubs path to add in the `extraPaths` configuration.
@@ -93,7 +87,7 @@ export function updateAnalysisPath(extraPaths: string[], stubsPath: string): voi
 }
 
 /**
- * Get the setting parent for the extraPaths based on the current python server.
+ * Determine the configuration for extraPaths based on the current Python server.
  *
  *  - Pylance:  `python.analysis`
  *  - Jedi:  `python.autoComplete`
@@ -103,7 +97,7 @@ export function updateAnalysisPath(extraPaths: string[], stubsPath: string): voi
 export function getAutoCompleteSetting(): string {
     const pythonServer = vscode.workspace.getConfiguration("python").get("languageServer");
 
-    // XXX: pythonServer could be Default, which could be both Pylance or Jedi if Pylance is missing
+    // when pythonServer is Default, we assume that Pylance is installed. But it also be Jedi if Pylance is not installed.
     if (pythonServer === "Jedi") {
         return "python.autoComplete";
     }
@@ -114,11 +108,11 @@ export function getAutoCompleteSetting(): string {
 /**
  * Correct extraPath analysis entry.
  *
- * When updating the extension, workspace `python.analysis.extraPath` would point
- * to the old path, thus breaking the stubs path. This functions aims to update the
- * path each time vscode would reload.
+ * When the extension is updated, the python.analysis.extraPath setting in the workspace points to
+ * the old path, which can break the path to the stubs.
+ * This function is designed to update the path every time VS Code reloads to ensure that the path to the stubs is correct
  *
- * TODO: testing
+ * TODO: add testing
  */
 export function correctAnalysisPath(): void {
     const config = vscode.workspace.getConfiguration(getAutoCompleteSetting());
@@ -159,13 +153,12 @@ export async function addStubsPath(): Promise<boolean> {
 }
 
 /**
- * Each vscode reload, refresh the python.analysis path. 
- * 
- * Beucase the path includes the version of the extension, newer updates will break the stubs path.
+ * Refresh the python.analysis path every time VS Code reloads,
+ * since the path includes the extension version and newer updates can break the path to the stubs.
  *
  * @param context vscode.ExtensionContext
  */
-export function fixAnalysisPath() {
+export function fixAnalysisPath(): void {
     if (isPythonInstalled()) {
         correctAnalysisPath();
     }

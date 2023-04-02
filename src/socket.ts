@@ -237,8 +237,8 @@ export async function sendData(
             const filePath = JSON.parse(text)["file"];
             writeToOutputWindow(textData, filePath, showDebug);
 
+            status.message = data.toString().trim();
             client.end();
-            status.message = data.toString();
         });
 
         /**
@@ -299,7 +299,9 @@ export async function sendData(
             writeDebugNetwork(showDebug, "Connection ended.");
         });
 
-        resolve(status);
+        setTimeout(() => {
+            resolve(status);
+        }, 1000);
     });
 }
 
@@ -397,4 +399,8 @@ export async function sendMessage(): Promise<
     }
 
     return await sendData(getHost(), getPort(), JSON.stringify(prepareMessage(editor)));
+}
+
+export async function sendCommand(command: string) {
+    return await sendData(getHost(), getPort(), command);
 }

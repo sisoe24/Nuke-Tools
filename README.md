@@ -35,15 +35,15 @@ Nuke tools to help the development process inside Visual Studio Code.
 
 ## 1.1. Features
 
-- Execute code inside Nuke from a machine in your local network.
-  - Get the output of Nuke execution inside Visual Studio Code.
-  - When used locally (same machine), the extension requires no configuration, but running NukeServerSocket inside Nuke.
-  - BlinkScript support.
-- Nuke/Hiero python stubs for auto-complete suggestions.
-- Syntax color for `.nk` and `.gizmo` files.
-- PySide2 plugin template.
-- Commands for executing Nuke instances via the terminal with default or optional arguments.
-  - Add environment variables to the running Nuke instance.
+- Execute Nuke code from a local network machine within Visual Studio Code.
+- View Nuke execution output in Visual Studio Code.
+- No configuration is required when using the extension on the same machine. Simply run NukeServerSocket within Nuke.
+- Provides BlinkScript support.
+- Provides Nuke/Hiero Python stubs for auto-complete suggestions.
+- Adds syntax highlighting for .nk and .gizmo files.
+- Includes a PySide2 plugin template.
+- Provides commands for launching Nuke instances with default or optional arguments via the terminal.
+- Enables adding environment variables to running Nuke instances.
 
 ## 1.2. Requirements
 
@@ -73,7 +73,7 @@ Python stubs
 
 ### 1.3.1. Stubs are not working
 
-I have experienced some problems with the stubs in the most recent versions of vscode. One thing that helped me was to set the `python.analysis.packageIndexDepths` setting to something like this:
+If you're experiencing issues with the stubs in the latest versions of VSCode, you may find it helpful to adjust the python.analysis.packageIndexDepths setting. Try setting it to something like this:
 
 ```json
 "python.analysis.packageIndexDepths": [
