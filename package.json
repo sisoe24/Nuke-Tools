@@ -12,215 +12,277 @@
     "engines": {
         "vscode": "^1.58.0"
     },
+    "activationEvents": [
+        "onStartupFinished",
+        "onView:nuke-tools"
+    ],
     "categories": [
         "Other",
         "Programming Languages"
     ],
-    "activationEvents": [
-        "onStartupFinished"
-    ],
-    "license": "MIT",
-    "main": "./out/extension.js",
-    "keywords": [
-        "nuke",
-        "python",
-        "thefoundry",
-        "foundry",
-        "blinkscript",
-        "blink",
-        "stubs",
-        "gizmo",
-        "pyside"
-    ],
     "contributes": {
         "commands": [
             {
-                "command": "nuke-tools.createPySide2Project",
-                "title": "Create a PySide2 plugin",
-                "shortTitle": "Nuke",
-                "category": "Nuke"
+                "command": "nuke-tools.refreshNodes",
+                "icon": "$(extensions-refresh)",
+                "title": "Refresh Viewer"
             },
             {
-                "command": "nuke-tools.launchNuke",
-                "title": "Launch main executable",
-                "shortTitle": "Nuke",
-                "category": "Nuke"
+                "command": "nuke-tools.syncNodes",
+                "title": "Sync Nodes"
             },
             {
-                "command": "nuke-tools.launchNukeAlt",
-                "title": "Launch alternative executable",
-                "category": "Nuke"
+                "command": "nuke-tools.addKnob",
+                "title": "Add Python Knob",
+                "icon": "$(add)"
             },
             {
-                "command": "nuke-tools.launchNukeOptArgs",
-                "title": "Launch main executable with prompt",
-                "shortTitle": "Launch Nuke",
-                "category": "Nuke"
+                "command": "nuke-tools.syncKnob",
+                "title": "Send code to Knob",
+                "icon": "$(sync)"
             },
             {
-                "command": "nuke-tools.runCodeInsideNuke",
-                "title": "Run Code Inside Nuke",
+                "command": "nuke-tools.deleteEntry",
+                "title": "Delete"
+            },
+            {
                 "category": "Nuke",
+                "command": "nuke-tools.createPySide2Project",
+                "shortTitle": "Nuke",
+                "title": "Create a PySide2 plugin"
+            },
+            {
+                "category": "Nuke",
+                "command": "nuke-tools.launchNuke",
+                "shortTitle": "Nuke",
+                "title": "Launch main executable"
+            },
+            {
+                "category": "Nuke",
+                "command": "nuke-tools.launchNukeAlt",
+                "title": "Launch alternative executable"
+            },
+            {
+                "category": "Nuke",
+                "command": "nuke-tools.launchNukeOptArgs",
+                "shortTitle": "Launch Nuke",
+                "title": "Launch main executable with prompt"
+            },
+            {
+                "category": "Nuke",
+                "command": "nuke-tools.runCodeInsideNuke",
+                "enablement": "resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled",
                 "icon": {
-                    "dark": "resources/icons/play-dark.svg",
-                    "light": "resources/icons/play-light.svg"
+                    "dark": "resources/icons/dark/run_code.svg",
+                    "light": "resources/icons/light/run_code.svg"
                 },
-                "enablement": "resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled"
+                "title": "Run Code Inside Nuke"
             },
             {
+                "category": "Nuke",
                 "command": "nuke-tools.showNetworkAddresses",
-                "title": "Show Network addresses",
-                "category": "Nuke"
+                "title": "Show Network addresses"
             },
             {
+                "category": "Nuke",
                 "command": "nuke-tools.testRunInsideNuke",
-                "title": "Debug Message",
-                "category": "Nuke"
+                "title": "Debug Message"
             },
             {
+                "category": "Nuke",
                 "command": "nuke-tools.addPythonStubs",
-                "title": "Add Python Stubs",
-                "category": "Nuke"
+                "title": "Add Python Stubs"
             },
             {
+                "category": "Nuke",
                 "command": "nuke-tools.addNukeServerSocket",
-                "title": "Add NukeServerSocket",
-                "category": "Nuke"
+                "title": "Add NukeServerSocket"
             },
             {
+                "category": "Nuke",
                 "command": "nuke-tools.forceUpdatePackages",
-                "title": "Force Update packages",
-                "category": "Nuke"
+                "title": "Force Update packages"
             }
         ],
         "configuration": [
             {
-                "title": "Nuke Tools",
                 "properties": {
-                    "nukeTools.nukeExecutable.primaryExecutablePath": {
-                        "type": "string",
-                        "description": "Path to Nuke executable file."
-                    },
-                    "nukeTools.nukeExecutable.secondaryExecutablePath": {
-                        "type": "string",
-                        "description": "Path to alternative Nuke executable file."
-                    },
-                    "nukeTools.nukeExecutable.options.defaultCommandLineArguments": {
-                        "type": "string",
-                        "markdownDescription": "Command line arguments to be added when launching `#nukeTools.nukeExecutable.secondaryExecutablePath#`. [Nuke documentation](https://learn.foundry.com/nuke/content/comp_environment/configuring_nuke/command_line_operations.html)"
-                    },
-                    "nukeTools.nukeExecutable.options.restartInstance": {
-                        "type": "boolean",
+                    "nukeTools.network.debug": {
                         "default": false,
-                        "markdownDescription": "**Use with caution**. Restart the terminal instance instead of creating new ones."
-                    },
-                    "nukeTools.other.nukePaths": {
-                        "type": "array",
-                        "deprecationMessage": "This setting is deprecated. Use envVars instead.",
-                        "description": "A list of paths to be added to NUKE_PATH before launching Nuke from NukeTools."
-                    },
-                    "nukeTools.other.envVars": {
-                        "type": "object",
-                        "description": "A list of environment variable to be added before launching Nuke from NukeTools."
-                    },
-                    "nukeTools.other.clearPreviousOutput": {
-                        "type": "boolean",
-                        "default": false,
-                        "description": "Clear previous console output before next execution."
+                        "markdownDescription": "Show debugging information the in output window.",
+                        "type": "boolean"
                     },
                     "nukeTools.network.enableManualConnection": {
-                        "type": "boolean",
                         "default": false,
-                        "markdownDescription": "If enabled, `#nukeTools.network.port#` and `#nukeTools.network.host#` will override the default settings."
-                    },
-                    "nukeTools.network.port": {
-                        "type": "string",
-                        "markdownDescription": "Specify a different port for the connection. This will work only if `#nukeTools.network.enableManualConnection#` is enabled. Port value should be in range `49512` - `65535`"
+                        "markdownDescription": "If enabled, `#nukeTools.network.port#` and `#nukeTools.network.host#` will override the default settings.",
+                        "type": "boolean"
                     },
                     "nukeTools.network.host": {
-                        "type": "string",
-                        "markdownDescription": "Specify a different host/ip for the connection. This will work only if `#nukeTools.network.enableManualConnection#` is enabled."
+                        "markdownDescription": "Specify a different host/ip for the connection. This will work only if `#nukeTools.network.enableManualConnection#` is enabled.",
+                        "type": "string"
                     },
-                    "nukeTools.network.debug": {
-                        "type": "boolean",
+                    "nukeTools.network.port": {
+                        "markdownDescription": "Specify a different port for the connection. This will work only if `#nukeTools.network.enableManualConnection#` is enabled. Port value should be in range `49512` - `65535`",
+                        "type": "string"
+                    },
+                    "nukeTools.nukeExecutable.options.defaultCommandLineArguments": {
+                        "markdownDescription": "Command line arguments to be added when launching `#nukeTools.nukeExecutable.secondaryExecutablePath#`. [Nuke documentation](https://learn.foundry.com/nuke/content/comp_environment/configuring_nuke/command_line_operations.html)",
+                        "type": "string"
+                    },
+                    "nukeTools.nukeExecutable.options.restartInstance": {
                         "default": false,
-                        "markdownDescription": "Show debugging information the in output window."
+                        "markdownDescription": "**Use with caution**. Restart the terminal instance instead of creating new ones.",
+                        "type": "boolean"
                     },
-                    "nukeTools.pysideTemplate.pythonVersion": {
-                        "type": "string",
-                        "default": ">=3.6, <=3.7.7",
-                        "markdownDescription": "Python version to be used in pyproject.toml."
+                    "nukeTools.nukeExecutable.primaryExecutablePath": {
+                        "description": "Path to Nuke executable file.",
+                        "type": "string"
+                    },
+                    "nukeTools.nukeExecutable.secondaryExecutablePath": {
+                        "description": "Path to alternative Nuke executable file.",
+                        "type": "string"
+                    },
+                    "nukeTools.other.clearPreviousOutput": {
+                        "default": false,
+                        "description": "Clear previous console output before next execution.",
+                        "type": "boolean"
+                    },
+                    "nukeTools.other.envVars": {
+                        "description": "A list of environment variable to be added before launching Nuke from NukeTools.",
+                        "type": "object"
+                    },
+                    "nukeTools.other.nukePaths": {
+                        "deprecationMessage": "This setting is deprecated. Use envVars instead.",
+                        "description": "A list of paths to be added to NUKE_PATH before launching Nuke from NukeTools.",
+                        "type": "array"
                     },
                     "nukeTools.pysideTemplate.pysideVersion": {
-                        "type": "string",
                         "default": "5.12.2",
-                        "markdownDescription": "PySide2 version to be used in pyproject.toml and requirements.txt"
+                        "markdownDescription": "PySide2 version to be used in pyproject.toml and requirements.txt",
+                        "type": "string"
+                    },
+                    "nukeTools.pysideTemplate.pythonVersion": {
+                        "default": ">=3.6, <=3.7.7",
+                        "markdownDescription": "Python version to be used in pyproject.toml.",
+                        "type": "string"
                     }
-                }
+                },
+                "title": "Nuke Tools"
             }
         ],
-        "menus": {
-            "editor/title": [
-                {
-                    "group": "navigation",
-                    "command": "nuke-tools.runCodeInsideNuke",
-                    "when": "resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled"
-                }
-            ]
-        },
+        "grammars": [
+            {
+                "language": "blinkscript",
+                "path": "./language/blinkscript.tmLanguage.json",
+                "scopeName": "source.blink"
+            },
+            {
+                "language": "nuke",
+                "path": "./language/nuke.tmLanguage.json",
+                "scopeName": "source.nk"
+            }
+        ],
         "languages": [
             {
-                "id": "blinkscript",
                 "aliases": [
                     "BlinkScript",
                     "blinkscript"
                 ],
+                "configuration": "./language/language-configuration.json",
                 "extensions": [
                     ".blink"
                 ],
-                "configuration": "./language/language-configuration.json"
+                "id": "blinkscript"
             },
             {
-                "id": "nuke",
                 "aliases": [
                     "nuke"
                 ],
                 "extensions": [
                     ".nk",
                     ".gizmo"
-                ]
+                ],
+                "id": "nuke"
             }
         ],
-        "grammars": [
+        "menus": {
+            "commandPalette": [
+                {
+                    "command": "nuke-tools.testRunInsideNuke",
+                    "when": "false"
+                }
+            ],
+            "editor/title": [
+                {
+                    "command": "nuke-tools.runCodeInsideNuke",
+                    "group": "navigation",
+                    "when": "resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled"
+                }
+            ],
+            "view/item/context": [
+                {
+                    "command": "nuke-tools.addKnob",
+                    "when": "view == nuke-tools && viewItem == node",
+                    "group": "inline"
+                },
+                {
+                    "command": "nuke-tools.syncKnob",
+                    "when": "view == nuke-tools && viewItem == knob",
+                    "group": "inline"
+                }
+            ],
+            "view/title": [
+                {
+                    "command": "nuke-tools.refreshNodes",
+                    "group": "navigation",
+                    "when": "view == nuke-tools"
+                },
+                {
+                    "command": "nuke-tools.syncNodes",
+                    "when": "view == nuke-tools"
+                }
+            ]
+        },
+        "views": {
+            "nodes-inspector": [
+                {
+                    "contextualTitle": "Nuke Tools",
+                    "icon": "resources/icons/nuke.svg",
+                    "id": "nuke-tools",
+                    "name": "Nodes Panel"
+                }
+            ]
+        },
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "icon": "resources/icons/nuke.svg",
+                    "id": "nodes-inspector",
+                    "title": "Nuke Tools"
+                }
+            ]
+        },
+        "viewsWelcome": [
             {
-                "language": "blinkscript",
-                "scopeName": "source.blink",
-                "path": "./language/blinkscript.tmLanguage.json"
-            },
-            {
-                "language": "nuke",
-                "scopeName": "source.nk",
-                "path": "./language/nuke.tmLanguage.json"
+                "contents": "Nodes Panel is currently in beta. Some features may not work as expected.\nPlease connect NukeServerSocket and refresh. [Learn more](https://github.com/sisoe24/NukeServerSocket#141-execute-code).\n[Refresh](command:nuke-tools.refreshNodes)",
+                "view": "nuke-tools"
             }
         ]
     },
-    "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
-        "pretest": "npm run compile && npm run lint",
-        "lint": "eslint src --ext ts",
-        "test": "node ./out/test/runTest.js",
-        "vscode:prepublishe": "npm run esbuild-base -- --minify",
-        "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
-        "esbuild": "npm run esbuild-base -- --sourcemap",
-        "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch"
+    "dependencies": {
+        "@terascope/fetch-github-release": "^0.8.7",
+        "@types/fs-extra": "^9.0.13",
+        "extract-zip": "^2.0.1",
+        "fs-extra": "^10.0.1",
+        "uuid": "^9.0.0"
     },
+    "description": "A set of tools related to Nuke that simplify the process of writing code for it.",
     "devDependencies": {
         "@istanbuljs/nyc-config-typescript": "^1.0.1",
         "@types/glob": "^7.1.3",
         "@types/mocha": "^8.2.2",
         "@types/node": "14.x",
+        "@types/uuid": "^9.0.1",
         "@types/vscode": "^1.58.0",
         "@typescript-eslint/eslint-plugin": "^4.26.0",
         "@typescript-eslint/parser": "^4.26.0",
@@ -234,10 +296,41 @@
         "typescript": "^4.3.2",
         "vscode-test": "^1.5.2"
     },
-    "dependencies": {
-        "@terascope/fetch-github-release": "^0.8.7",
-        "@types/fs-extra": "^9.0.13",
-        "extract-zip": "^2.0.1",
-        "fs-extra": "^10.0.1"
-    }
+    "displayName": "Nuke Tools",
+    "engines": {
+        "vscode": "^1.58.0"
+    },
+    "icon": "resources/images/nuke_icon.png",
+    "keywords": [
+        "nuke",
+        "python",
+        "thefoundry",
+        "foundry",
+        "blinkscript",
+        "blink",
+        "stubs",
+        "gizmo",
+        "pyside"
+    ],
+    "license": "MIT",
+    "main": "./out/extension.js",
+    "name": "nuke-tools",
+    "publisher": "virgilsisoe",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/sisoe24/Nuke-Tools"
+    },
+    "scripts": {
+        "compile": "tsc -p ./",
+        "esbuild": "npm run esbuild-base -- --sourcemap",
+        "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
+        "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+        "lint": "eslint src --ext ts",
+        "pretest": "npm run compile && npm run lint",
+        "test": "node ./out/test/runTest.js",
+        "vscode:prepublish": "npm run compile",
+        "vscode:prepublishe": "npm run esbuild-base -- --minify",
+        "watch": "tsc -watch -p ./"
+    },
+    "version": "0.8.13"
 }

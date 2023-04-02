@@ -2,6 +2,12 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
+## [0.10.0] 04/02/2023
+
+## Added
+
+- Nodes Panel: A new panel that allows interaction with the nodes in the current Nuke script.
+
 ## [0.9.0] 03/25/2023
 
 ## Changed
