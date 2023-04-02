@@ -55,8 +55,21 @@ const osWalk = function (dir: string): string[] {
     return results;
 };
 
-// TODO: path should be inside the workspace
-const NUKETOOLS = path.join(util.extensionPath(), ".nuketools");
+// get vscode workspace path
+function getWorkspacePath() {
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    console.log("workspaceFolders:", workspaceFolders);
+    if (workspaceFolders) {
+        return workspaceFolders[0].uri.fsPath;
+    }
+    return "";
+}
+
+// create .nuketools directory in the workspace
+const KNOBS_DIR = path.join(getWorkspacePath(), ".nuketools");
+if (!fs.existsSync(KNOBS_DIR)) {
+    fs.mkdirSync(KNOBS_DIR);
+}
 
 // TODO: refactor this
 function sendToNuke(text: string) {
