@@ -2,8 +2,8 @@
     "name": "nuke-tools",
     "displayName": "Nuke Tools",
     "publisher": "virgilsisoe",
-    "description": "A collection of tools designed to help developers write code for Nuke more easily.",
-    "version": "0.9.1",
+    "description": "A set of tools related to Nuke that simplify the process of writing code for it.",
+    "version": "0.9.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/sisoe24/Nuke-Tools"
@@ -276,7 +276,6 @@
         "fs-extra": "^10.0.1",
         "uuid": "^9.0.0"
     },
-    "description": "A set of tools related to Nuke that simplify the process of writing code for it.",
     "devDependencies": {
         "@istanbuljs/nyc-config-typescript": "^1.0.1",
         "@types/glob": "^7.1.3",
@@ -296,11 +295,6 @@
         "typescript": "^4.3.2",
         "vscode-test": "^1.5.2"
     },
-    "displayName": "Nuke Tools",
-    "engines": {
-        "vscode": "^1.58.0"
-    },
-    "icon": "resources/images/nuke_icon.png",
     "keywords": [
         "nuke",
         "python",
@@ -314,12 +308,6 @@
     ],
     "license": "MIT",
     "main": "./out/extension.js",
-    "name": "nuke-tools",
-    "publisher": "virgilsisoe",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/sisoe24/Nuke-Tools"
-    },
     "scripts": {
         "compile": "tsc -p ./",
         "esbuild": "npm run esbuild-base -- --sourcemap",
@@ -331,6 +319,5 @@
         "vscode:prepublish": "npm run compile",
         "vscode:prepublishe": "npm run esbuild-base -- --minify",
         "watch": "tsc -watch -p ./"
-    },
-    "version": "0.8.13"
+    }
 }
