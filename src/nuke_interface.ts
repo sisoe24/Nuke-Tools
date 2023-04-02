@@ -128,7 +128,7 @@ class KnobFile {
     static create(item: { node: string; class: string }, knobName: string) {
         const fileSignature = KnobFile.fileSignature(item.node, item.class, knobName, uuid.v4());
 
-        const filePath = path.join(NUKETOOLS, `${fileSignature}.py`);
+        const filePath = path.join(KNOBS_DIR, `${fileSignature}.py`);
         return new KnobFile(filePath);
     }
 
@@ -148,15 +148,21 @@ class KnobFile {
      * @returns The content of the knob file.
      */
     content() {
-        return fs.readFileSync(path.join(NUKETOOLS, this.path), { encoding: "utf-8" });
+        return fs.readFileSync(path.join(KNOBS_DIR, this.path), { encoding: "utf-8" });
     }
 }
 
+/**
+ * An object containing the context value and the icon of the tree item.
+ */
 const itemContext = {
     node: { context: "node", icon: "symbol-misc" },
     knob: { context: "knob", icon: "symbol-file" },
 };
 
+/**
+ * A tree node item representing a dependency. The dependency can be a Node or a Knob.
+ */
 class Dependency extends vscode.TreeItem {
     constructor(
         public readonly label: string,
@@ -193,12 +199,14 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
     }
 
     /**
-     * Sync the nodes in Nuke with the ones in the .nuketools directory.
-     *
-     * If user renamed a node in Nuke, the node will be renamed in the .nuketools directory.
+     * Sync the files in the .nuketools directory with the nodes in Nuke. Because the user can rename
+     * a node in Nuke, when syncing, the file will be renamed in the .nuketools directory.
+     * 
+     * The new name is obtained from the return of the socket command. The socket command returns the
+     * name of the node or 'False' as a string if the node doesn't exist.
      */
     async syncNodes(): Promise<void> {
-        const files = osWalk(NUKETOOLS);
+        const files = osWalk(KNOBS_DIR);
         const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
         for (let i = 0; i < files.length; i++) {
@@ -215,7 +223,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
             const newName = knobFile.newName(result.message);
 
             try {
-                fs.renameSync(file, path.join(NUKETOOLS, newName));
+                fs.renameSync(file, path.join(KNOBS_DIR, newName));
             } catch (error) {
                 vscode.window.showErrorMessage(`Failed to rename ${file} to ${newName}: ${error}`);
             }
@@ -227,7 +235,8 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
     }
 
     /**
-     * Save the knob code content inside Nuke.
+     * Sync the knob code content inside Nuke. When the knob is 'knobChanged', the code will be
+     * act differently since it does not need to be setup as a knob.
      *
      * @param item A Node dependency item.
      */
@@ -245,8 +254,8 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
     /**
      * Add a new knob to a node.
      *
-     * The knob is created as a new file in the .nuketools directory and it will have the following format:
-     * nodename_nodeclass_knobname_uuid.py. If the knob already exists, it will not be created.
+     * The knob is created as a new file in the .nuketools directory and it will follow the signature of
+     * KnobFile.fileSignature. If the knob already exists, it will not be created.
      *
      * To create a new knob, the user will be prompted to enter the name of the knob. The name will be used
      * to create the file and the knob in Nuke.
@@ -268,7 +277,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
             knobName
         );
 
-        const files = osWalk(NUKETOOLS);
+        const files = osWalk(KNOBS_DIR);
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
 
@@ -302,7 +311,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
      */
     itemClicked(item: Dependency): void {
         if (item.label.endsWith(".py")) {
-            vscode.window.showTextDocument(vscode.Uri.file(path.join(NUKETOOLS, item.label)), {
+            vscode.window.showTextDocument(vscode.Uri.file(path.join(KNOBS_DIR, item.label)), {
                 preview: false,
             });
         }
@@ -313,7 +322,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
     }
 
     /**
-     * Get the knobs files for the node that was clicked.
+     * Get the knobs files for the node in the tree view.
      *
      * The function will iterate over all the files in the .nuketools folder and check if
      * the file name starts with the node name and class. If it does, will add it to the list.
@@ -323,7 +332,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
      */
     private getKnobs(element: Dependency) {
         const items: vscode.ProviderResult<Dependency[]> = [];
-        osWalk(NUKETOOLS).forEach((file) => {
+        osWalk(KNOBS_DIR).forEach((file) => {
             const filename = path.basename(file);
             // label is the node name and description is the node class
             if (filename.startsWith(`${element.label}_${element.description}`)) {
@@ -343,7 +352,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
     /**
      * Get the nodes in the current Nuke script.
      *
-     * The nodes are retrieved by sending a python script to the Nuke server socket.
+     * The nodes are retrieved by sending python code to the Nuke server socket.
      *
      * @returns A list of Dependency objects that represent the nodes in the current Nuke script.
      */
