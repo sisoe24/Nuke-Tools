@@ -26,7 +26,7 @@ export function showUpdateMessage(context: vscode.ExtensionContext): void {
     // store the current version in the global state key _value['virgilsisoe.nuke-tools.version']
     context.globalState.update(extVersion, currentVersion);
 
-    const updateMsg = "";
+    const updateMsg = "Nodes Panel is now in beta! Check the documentation for more information. If you find any bugs, have any suggestions or feedback, please open an issue on GitHub. Thank you!";
 
     // store the current update message in the global state key _value['virgilsisoe.nuke-tools.updateMsg']
     context.globalState.update(extUpdateMsg, updateMsg);
