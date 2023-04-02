@@ -36,6 +36,7 @@ Nuke tools to help the development process inside Visual Studio Code.
   - [1.7. PySide2 Template Project](#17-pyside2-template-project)
   - [1.8. Available Commands](#18-available-commands)
   - [1.9. Extension Settings](#19-extension-settings)
+  - [Contributing](#contributing)
 
 ## 1.1. Features
 
@@ -129,7 +130,7 @@ Quickly create a PySide2 template project with the `Nuke: Create a PySide2` comm
 
 ## 1.8. Available Commands
 
--   All commands are available by opening the Command Palette (`Command+Shift+P` on macOS and `Ctrl+Shift+P` on Windows/Linux) and typing in one of the following Command Name:
+- All commands are available by opening the Command Palette (`Command+Shift+P` on macOS and `Ctrl+Shift+P` on Windows/Linux) and typing in one of the following Command Name:
 
 | Command Name                                      | Command ID                        | Description                                                                     |
 | ------------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------- |
@@ -145,8 +146,8 @@ Quickly create a PySide2 template project with the `Nuke: Create a PySide2` comm
 
 NOTES:
 
--   Running `Nuke: Add NukeServerSocke`t or` Nuke: Create a Pyside2` plugin will add the corresponding plugin to `$HOME/.nuke/NukeTools` and generate an import statement in the menu.py file. If menu.py doesn't exist, it will be created.
--   By default, the extension does not provide any shortcut. But you can assign each command to one. (see [Key Bindings for Visual Studio Code](https://code.visualstudio.com/docs/getstarted/keybindings) for more information).
+- Running `Nuke: Add NukeServerSocke`t or` Nuke: Create a Pyside2` plugin will add the corresponding plugin to `$HOME/.nuke/NukeTools` and generate an import statement in the menu.py file. If menu.py doesn't exist, it will be created.
+- By default, the extension does not provide any shortcut. But you can assign each command to one. (see [Key Bindings for Visual Studio Code](https://code.visualstudio.com/docs/getstarted/keybindings) for more information).
     Example `keybindings.json` :
 
 ```json
@@ -165,40 +166,41 @@ NOTES:
 
 ## 1.9. Extension Settings
 
--   `nukeTools.nukeExecutable.primaryExecutablePath`: `string`
+- `nukeTools.nukeExecutable.primaryExecutablePath`: `string`
     A path for an executable.
 
-    -   On macOS, you can find the file in _Show Package Contents -> Contents/MacOS/Nuke..._
-    -   On Windows WSL, the path should be in Unix style: _/mnt/c/Program Files/..._
+    - On macOS, you can find the file in _Show Package Contents -> Contents/MacOS/Nuke..._
+    - On Windows WSL, the path should be in Unix style: _/mnt/c/Program Files/..._
 
--   `nukeTools.nukeExecutable.secondaryExecutablePath`: `string`
+- `nukeTools.nukeExecutable.secondaryExecutablePath`: `string`
     Same as primary executable. It could be a different Nuke version.
 
--   `nukeTools.nukeExecutable.options.defaultCommandLineArguments`: `string`
+- `nukeTools.nukeExecutable.options.defaultCommandLineArguments`: `string`
     Command-line arguments you can add at when running the secondary executable.
 
--   `nukeTools.nukeExecutable.options.restartInstance`: `boolean`
+- `nukeTools.nukeExecutable.options.restartInstance`: `boolean`
     Restart the terminal instance instead of creating new ones. **Use with caution**. This option will terminate every Nuke process spawned by the extension. Useful when rapid testing GUI plugins that don't need saving the composition.
 
--   `nukeTools.other.clearPreviousOutput`: `boolean`
+- `nukeTools.other.clearPreviousOutput`: `boolean`
     Clear the previous console output text.
 
--   `nukeTools.network.enableManualConnection`: `boolean`
+- `nukeTools.network.enableManualConnection`: `boolean`
     If enabled, `nukeTools.network.port` and `nukeTools.network.host` will take over the default settings. You might need this option when connecting to another computer.
 
-    -   `nukeTools.network.port`: `string`
+    - `nukeTools.network.port`: `string`
         Specify a different port for the connection. This option only works if `nukeTools.network.enableManualConnection` is active. The server address should be the same as in the Nuke plugin.
 
-    -   `nukeTools.network.host`: `string`
+    - `nukeTools.network.host`: `string`
         Same as the port. The host could be the local host or the local IP.
 
--   `nukeTools.network.debug`: `boolean`
+- `nukeTools.network.debug`: `boolean`
     Show network debug information in the output window. Enabling this option will not clean the console output after code execution.
 
--   `nukeTools.other.envVars`: `{key: string: value: string}`
+- `nukeTools.other.envVars`: `{key: string: value: string}`
+
     **NOTE**: Currently not working on Windows.
 
-    Add environment variables the current running Nuke instance.
+    Add environment variables the current running Nuke instance. At the moment, it does not take in account the system environment variables.
 
     ```json
     {
@@ -209,7 +211,7 @@ NOTES:
     }
     ```
 
--   `nukeTools.pysideTemplate.pythonVersion`: `string`
+- `nukeTools.pysideTemplate.pythonVersion`: `string`
     Set a default Python version to use in pyproject.toml. You can use
     Poetry [version-constraints](https://python-poetry.org/docs/dependency-specification/#version-constraints) specification.
 
@@ -219,12 +221,15 @@ NOTES:
     }
     ```
 
--   `nukeTools.pysideTemplate.pysideVersion`: `string`
+- `nukeTools.pysideTemplate.pysideVersion`: `string`
     Set a default PySide2 version to use in pyproject.toml and requirements.txt.
 
     ````json
-        {
-            "nukeTools.pysideTemplate.pysideVersion": "5.12.2"
-        }
-        ```
+    {
+        "nukeTools.pysideTemplate.pysideVersion": "5.12.2"
+    }
     ````
+
+## Contributing
+
+Contributions are welcome! If you have any ideas or suggestions, please open an issue or a pull request. At the moment, the extension tests are mostly broken. I will try to fix them as soon as possible.
