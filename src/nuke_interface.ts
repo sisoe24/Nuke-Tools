@@ -7,21 +7,24 @@ import * as uuid from "uuid";
 import * as util from "./utils";
 import { sendCommand } from "./socket";
 
-class Dependency extends vscode.TreeItem {
-    iconPath = {
-        light: path.join(__filename, "..", "..", "resources", "icons", "light", "dependency.svg"),
-        dark: path.join(__filename, "..", "..", "resources", "icons", "dark", "dependency.svg"),
-    };
-    contextValue = "dependency";
+// TODO: icons: add, sync, delete, save, refresh, file-code, node
 
+class Dependency extends vscode.TreeItem {
     constructor(
         public readonly label: string,
         private version: string,
+        contextValue: string,
+        icon: string,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState
     ) {
         super(label, collapsibleState);
         this.tooltip = `${this.label}-${this.version}`;
         this.description = this.version;
+        this.contextValue = contextValue;
+        this.iconPath = {
+            light: path.join(__filename, "..", "..", "resources", "icons", "light", `${icon}.svg`),
+            dark: path.join(__filename, "..", "..", "resources", "icons", "dark", `${icon}.svg`),
+        };
     }
 }
 
@@ -171,11 +174,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
      * @param item A Node dependency item.
      * @returns
      */
-    async saveKnob(item: Dependency): Promise<void> {
-        if (!item.label.endsWith(".py")) {
-            return;
-        }
-
+    saveKnob(item: Dependency): void {
         sendData(saveCodeSnippet(new KnobFile(item.label)));
     }
 
@@ -236,15 +235,12 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
     }
 
     getTreeItem(element: Dependency): vscode.TreeItem | Thenable<vscode.TreeItem> {
-        // Intercept the element and assign a command to it that will be executed when the user clicks on it.
-        const title = element.label ? element.label.toString() : "";
-        const result = new vscode.TreeItem(title, element.collapsibleState);
-        result.command = {
+        element.command = {
             command: "nuke-tools.on_itemClicked",
-            title: title,
+            title: element.label,
             arguments: [element],
         };
-        return result;
+        return element;
     }
 
     /**
@@ -262,7 +258,15 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
             const filename = path.basename(file);
             // label is the node name and description is the node class
             if (filename.startsWith(`${element.label}_${element.description}`)) {
-                items.push(new Dependency(filename, "", vscode.TreeItemCollapsibleState.None));
+                items.push(
+                    new Dependency(
+                        filename,
+                        "",
+                        "knob",
+                        "file-code",
+                        vscode.TreeItemCollapsibleState.None
+                    )
+                );
             }
         });
         return items;
@@ -285,7 +289,15 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
 
         const items: vscode.ProviderResult<Dependency[]> = [];
         for (const [key, value] of Object.entries(nodes)) {
-            items.push(new Dependency(key, value, vscode.TreeItemCollapsibleState.Collapsed));
+            items.push(
+                new Dependency(
+                    key,
+                    value,
+                    "node",
+                    "dependency",
+                    vscode.TreeItemCollapsibleState.Collapsed
+                )
+            );
         }
         return items;
     }
