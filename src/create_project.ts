@@ -6,7 +6,6 @@ import * as path from "path";
 import * as cp from "child_process";
 
 import * as utils from "./utils";
-import { updatePackage } from "./download_package";
 
 /**
  * The placeholders data.
