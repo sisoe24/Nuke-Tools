@@ -309,7 +309,6 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
      * @param item The item that was clicked
      */
     itemClicked(item: Dependency): void {
-        console.log("🚀 ~ item:", item)
         if (item.label.endsWith(".py")) {
             vscode.window.showTextDocument(vscode.Uri.file(path.join(KNOBS_DIR, item.label)), {
                 preview: false,
