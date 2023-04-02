@@ -43,12 +43,16 @@ export function getIncludedPath(directory: string, name: string): string {
     throw new Error(msg);
 }
 
-export function getIncludePath(name: string) {
+export function getIncludePath(name: string): string {
     return getIncludedPath("include", name);
 }
 
-export function getAssetsPath(name: string) {
+export function getAssetsPath(name: string): string {
     return getIncludedPath("assets", name);
+}
+
+export function getResourcesPath(name: string): string {
+    return getIncludedPath("resources", name);
 }
 
 /**
