@@ -340,7 +340,6 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
     }
 
     getChildren(element?: Dependency): Thenable<Dependency[]> {
-        // TODO: check if nukeserversocket is running
         if (element) {
             return Promise.resolve(this.getKnobs(element));
         }
