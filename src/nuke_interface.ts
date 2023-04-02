@@ -20,7 +20,12 @@ if not node.knob('${knobFile.knob}'):
     node.addKnob(script_knob)
 `;
 
-const saveCodeSnippet = (knobFile: KnobFile) => `
+const syncKnobChangedSnippet = (knobFile: KnobFile) => `
+node = nuke.toNode('${knobFile.node}')
+node.knob('knobChanged').setValue('''${knobFile.content()}''')
+`;
+
+const syncKnobCodeSnippet = (knobFile: KnobFile) => `
 node = nuke.toNode('${knobFile.node}')
 node.knob('${knobFile.knob}_${knobFile.id}').setValue('''${knobFile.content()}''')
 `;
@@ -207,10 +212,16 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
      * Save the knob code content inside Nuke.
      *
      * @param item A Node dependency item.
-     * @returns
      */
-    saveKnob(item: Dependency): void {
-        sendToNuke(saveCodeSnippet(new KnobFile(item.label)));
+    syncKnob(item: Dependency): void {
+        const knobFile = new KnobFile(item.label);
+
+        const codeSnippet =
+            knobFile.knob === "knobChanged"
+                ? syncKnobChangedSnippet(knobFile)
+                : syncKnobCodeSnippet(knobFile);
+
+        sendToNuke(codeSnippet);
     }
 
     /**
@@ -255,9 +266,15 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         fs.writeFileSync(knobFile.path, "");
         vscode.window.showTextDocument(vscode.Uri.file(knobFile.path), { preview: false });
 
-        sendToNuke(setupCodeSnippet(knobFile));
-
         this.refresh();
+
+        // If the knob is knobChanged, we don't need to send the code to Nuke.
+        // because the knob already exists.
+        if (knobName === "knobChanged") {
+            return;
+        }
+
+        sendToNuke(setupCodeSnippet(knobFile));
     }
 
     /**
