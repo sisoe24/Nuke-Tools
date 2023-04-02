@@ -284,6 +284,11 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
             "import nuke;import json;json.dumps({n.name():n.Class() for n in nuke.allNodes()})"
         );
 
+        // If the connection was refused, it means that Nuke server socket is not running.
+        if (data.message === "Connection refused") {
+            return [];
+        }
+
         // For some reason, the JSON is wrapped in single quotes, so we need to remove them
         const nodes: { string: string } = JSON.parse(data.message.replace(/'/g, ""));
 
