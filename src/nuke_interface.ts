@@ -58,7 +58,6 @@ const osWalk = function (dir: string): string[] {
 // get vscode workspace path
 function getWorkspacePath() {
     const workspaceFolders = vscode.workspace.workspaceFolders;
-    console.log("workspaceFolders:", workspaceFolders);
     if (workspaceFolders) {
         return workspaceFolders[0].uri.fsPath;
     }
