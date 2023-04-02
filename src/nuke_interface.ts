@@ -48,8 +48,7 @@ const osWalk = function (dir: string): string[] {
     const results: string[] = [];
 
     fs.readdirSync(dir).forEach(function (file) {
-        file = dir + path.sep + file;
-        results.push(file);
+        results.push(path.join(dir, file));
     });
     return results;
 };
@@ -57,7 +56,8 @@ const osWalk = function (dir: string): string[] {
 // TODO: path should be inside the workspace
 const NUKETOOLS = path.join(util.extensionPath(), ".nuketools");
 
-function sendData(text: string) {
+// TODO: refactor this
+function sendToNuke(text: string) {
     return sendCommand(
         JSON.stringify({
             text: text,
@@ -129,6 +129,7 @@ class Dependency extends vscode.TreeItem {
         };
     }
 }
+
 export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Dependency> {
     private _onDidChangeTreeData: vscode.EventEmitter<Dependency | undefined | null | void> =
         new vscode.EventEmitter<Dependency | undefined | null | void>();
@@ -155,7 +156,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
             const file = files[i];
 
             const knobFile = new KnobFile(file);
-            const result = await sendData(syncNodeSnippet(knobFile));
+            const result = await sendToNuke(syncNodeSnippet(knobFile));
             if (result.message === "False") {
                 continue;
             }
@@ -180,7 +181,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
      * @returns
      */
     saveKnob(item: Dependency): void {
-        sendData(saveCodeSnippet(new KnobFile(item.label)));
+        sendToNuke(saveCodeSnippet(new KnobFile(item.label)));
     }
 
     /**
@@ -221,7 +222,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         fs.writeFileSync(knobFile.path, "");
         vscode.window.showTextDocument(vscode.Uri.file(knobFile.path), { preview: false });
 
-        sendData(setupCodeSnippet(knobFile));
+        sendToNuke(setupCodeSnippet(knobFile));
 
         this.refresh();
     }
@@ -280,7 +281,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
      * @returns A list of Dependency objects that represent the nodes in the current Nuke script.
      */
     private async getNodes(): Promise<Dependency[]> {
-        const data = await sendData(
+        const data = await sendToNuke(
             "import nuke;import json;json.dumps({n.name():n.Class() for n in nuke.allNodes()})"
         );
 
