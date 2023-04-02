@@ -25,29 +25,70 @@ class Dependency extends vscode.TreeItem {
     }
 }
 
-const setupCodeSnippet = (node: string, nodeClass: string, knob: string, id: string) => `
+class KnobFile {
+    knob: string;
+    node: string;
+    nodeClass: string;
+    id: string;
+    path: string;
+    filename: string;
+
+    constructor(knobFile: string) {
+        console.log("🚀 :", knobFile);
+        this.filename = path.basename(knobFile);
+        this.path = knobFile;
+
+        const split = this.filename.split("_");
+        this.node = split[0];
+        this.nodeClass = split[1];
+        this.knob = split[2];
+        this.id = split[3].replace(".py", "");
+    }
+
+    private static fileSignature(node: string, nodeClass: string, knob: string, id: string) {
+        return `${node}_${nodeClass}_${knob.replace(" ", "_")}_${id}`;
+    }
+
+    static create(item: { node: string; class: string }, knobName: string) {
+        const fileSignature = KnobFile.fileSignature(item.node, item.class, knobName, uuid.v4());
+
+        const filePath = path.join(NUKETOOLS, `${fileSignature}.py`);
+        return new KnobFile(filePath);
+    }
+
+    newName(name: string) {
+        return KnobFile.fileSignature(name, this.nodeClass, this.knob, this.id);
+    }
+
+    content() {
+        return fs.readFileSync(path.join(NUKETOOLS, this.path), { encoding: "utf-8" });
+    }
+}
+
+const setupCodeSnippet = (knobFile: KnobFile) => `
 nuketools_tab = nuke.Tab_Knob('nuketools', 'NukeTools')
 
-node = nuke.toNode('${node}')
+node = nuke.toNode('${knobFile.node}')
 
 if not node.knob('nuketools'):
     node.addKnob(nuketools_tab)
 
-script_knob = nuke.PyScript_Knob('${knob}_${id}', '${knob}')
+script_knob = nuke.PyScript_Knob('${knobFile.knob}_${knobFile.id}', '${knobFile.knob}')
 
-if not node.knob('${knob}'):
+if not node.knob('${knobFile.knob}'):
     node.addKnob(script_knob)
 `;
 
-const saveCodeSnippet = (node: string, knob: string, content: string) => `
-nuke.toNode('${node}').knob('${knob}').setValue('''${content}''')
+const saveCodeSnippet = (knobFile: KnobFile) => `
+node = nuke.toNode('${knobFile.node}')
+node.knob('${knobFile.knob}_${knobFile.id}').setValue('''${knobFile.content()}''')
 `;
 
-const syncNodeSnippet = (node: string, nodeClass: string, knob: string, id: string) => `
+const syncNodeSnippet = (knobFile: KnobFile) => `
 def getnodes():
-    for node in nuke.allNodes('${nodeClass}'):
+    for node in nuke.allNodes('${knobFile.nodeClass}'):
         for knob in node.allKnobs():
-            if knob.name() == '${knob}_${id}':
+            if knob.name() == '${knobFile.knob}_${knobFile.id}':
                 return node.name()
     return False
 print(getnodes())
@@ -79,20 +120,6 @@ function sendData(text: string) {
         })
     );
 }
-class KnobFile {
-    knob: string;
-    node: string;
-    nodeClass: string;
-    id: string;
-
-    constructor(filename: string) {
-        const split = filename.split("_");
-        this.node = split[0];
-        this.nodeClass = split[1];
-        this.knob = split[2];
-        this.id = split[3].replace(".py", "");
-    }
-}
 
 export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Dependency> {
     private _onDidChangeTreeData: vscode.EventEmitter<Dependency | undefined | null | void> =
@@ -100,13 +127,16 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
     readonly onDidChangeTreeData: vscode.Event<Dependency | undefined | null | void> =
         this._onDidChangeTreeData.event;
 
+    /**
+     * Refresh the tree view.
+     */
     refresh(): void {
         this._onDidChangeTreeData.fire();
     }
 
     /**
      * Sync the nodes in Nuke with the ones in the .nuketools directory.
-     * 
+     *
      * If user renamed a node in Nuke, the node will be renamed in the .nuketools directory.
      */
     async syncNodes(): Promise<void> {
@@ -116,14 +146,12 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
 
-            const fileParts = path.basename(file).replace(".py", "").split("_");
-            const result = await sendData(
-                syncNodeSnippet(fileParts[0], fileParts[1], fileParts[2], fileParts[3])
-            );
+            const knobFile = new KnobFile(file);
+            const result = await sendData(syncNodeSnippet(knobFile));
             if (result.message === "False") {
                 continue;
             }
-            const newName = `${result.message}_${fileParts[1]}_${fileParts[2]}_${fileParts[3]}.py`;
+            const newName = knobFile.newName(result.message);
 
             try {
                 fs.renameSync(file, path.join(NUKETOOLS, newName));
@@ -139,23 +167,16 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
 
     /**
      * Save the knob code content inside Nuke.
-     * 
+     *
      * @param item A Node dependency item.
-     * @returns 
+     * @returns
      */
     async saveKnob(item: Dependency): Promise<void> {
         if (!item.label.endsWith(".py")) {
             return;
         }
 
-        const fileParts = path.basename(item.label).split("_");
-        sendData(
-            saveCodeSnippet(
-                fileParts[0],
-                `${fileParts[2]}_${fileParts[3].replace(".py", "")}`,
-                fs.readFileSync(path.join(NUKETOOLS, item.label), { encoding: "utf-8" })
-            )
-        );
+        sendData(saveCodeSnippet(new KnobFile(item.label)));
     }
 
     /**
@@ -175,44 +196,30 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
             return;
         }
 
-        const fileHeader = `${item.label}_${item.description}_${knobName.replace(" ", "_")}`;
-        const filePath = path.join(NUKETOOLS, `${fileHeader}_${uuid.v4()}.py`);
+        const knobFile = KnobFile.create(
+            { node: item.label, class: item.description as string },
+            knobName
+        );
 
         const files = osWalk(NUKETOOLS);
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            // Check if the file already exists
-            if (path.basename(file).startsWith(fileHeader)) {
+
+            // Get the knob name file parts without the id to check if the knob already exists.
+            const knobFileName = knobFile.filename.split("_").slice(0, 3).join("_");
+
+            if (path.basename(file).startsWith(knobFileName)) {
                 vscode.window.showErrorMessage("Knob already exists");
                 return;
             }
         }
 
-        fs.writeFileSync(filePath, "");
-        vscode.window.showTextDocument(vscode.Uri.file(filePath), { preview: false });
+        fs.writeFileSync(knobFile.path, "");
+        vscode.window.showTextDocument(vscode.Uri.file(knobFile.path), { preview: false });
 
-        const fileParts = path.basename(filePath).split("_");
-        sendData(
-            setupCodeSnippet(
-                item.label,
-                fileParts[1],
-                fileParts[2],
-                fileParts[3].replace(".py", "")
-            )
-        );
+        sendData(setupCodeSnippet(knobFile));
 
         this.refresh();
-    }
-
-    getTreeItem(element: Dependency): vscode.TreeItem | Thenable<vscode.TreeItem> {
-        const title = element.label ? element.label.toString() : "";
-        const result = new vscode.TreeItem(title, element.collapsibleState);
-        result.command = {
-            command: "nuke-tools.on_itemClicked",
-            title: title,
-            arguments: [element],
-        };
-        return result;
     }
 
     /**
@@ -228,6 +235,18 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         }
     }
 
+    getTreeItem(element: Dependency): vscode.TreeItem | Thenable<vscode.TreeItem> {
+        // Intercept the element and assign a command to it that will be executed when the user clicks on it.
+        const title = element.label ? element.label.toString() : "";
+        const result = new vscode.TreeItem(title, element.collapsibleState);
+        result.command = {
+            command: "nuke-tools.on_itemClicked",
+            title: title,
+            arguments: [element],
+        };
+        return result;
+    }
+
     /**
      * Get the knobs files for the node that was clicked.
      *
@@ -241,6 +260,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         const items: vscode.ProviderResult<Dependency[]> = [];
         osWalk(NUKETOOLS).forEach((file) => {
             const filename = path.basename(file);
+            // label is the node name and description is the node class
             if (filename.startsWith(`${element.label}_${element.description}`)) {
                 items.push(new Dependency(filename, "", vscode.TreeItemCollapsibleState.None));
             }
