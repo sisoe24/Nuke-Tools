@@ -137,26 +137,30 @@ class KnobFile {
     }
 }
 
+const itemContext = {
+    node: { context: "node", icon: "dependency" },
+    knob: { context: "knob", icon: "file-code" },
+};
+
 class Dependency extends vscode.TreeItem {
     constructor(
         public readonly label: string,
         private version: string,
-        contextValue: string,
-        icon: string,
+        context: { context: string; icon: string },
         public readonly collapsibleState: vscode.TreeItemCollapsibleState
     ) {
         super(label, collapsibleState);
         this.tooltip = `${this.label}-${this.version}`;
         this.description = this.version;
-        this.contextValue = contextValue;
+        this.contextValue = context.context;
         this.command = {
             command: "nuke-tools.on_itemClicked",
             title: label,
             arguments: [this],
         };
         this.iconPath = {
-            light: path.join(util.getResourcesPath("icons"), "light", `${icon}.svg`),
-            dark: path.join(util.getResourcesPath("icons"), "dark", `${icon}.svg`),
+            light: path.join(util.getResourcesPath("icons"), "light", `${context.icon}.svg`),
+            dark: path.join(util.getResourcesPath("icons"), "dark", `${context.icon}.svg`),
         };
     }
 }
@@ -294,8 +298,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
                     new Dependency(
                         filename,
                         "",
-                        "knob",
-                        "file-code",
+                        itemContext.knob,
                         vscode.TreeItemCollapsibleState.None
                     )
                 );
@@ -330,8 +333,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
                 new Dependency(
                     key,
                     value,
-                    "node",
-                    "dependency",
+                    itemContext.node,
                     vscode.TreeItemCollapsibleState.Collapsed
                 )
             );
