@@ -15,39 +15,27 @@
             },
             {
                 "command": "nuke-tools.refreshNodes",
-                "icon": {
-                    "dark": "resources/icons/dark/refresh.svg",
-                    "light": "resources/icons/light/refresh.svg"
-                },
+                "icon": "$(extensions-refresh)",
                 "title": "Refresh Viewer"
             },
             {
                 "command": "nuke-tools.syncNodes",
-                "icon": {
-                    "dark": "resources/icons/dark/sync.svg",
-                    "light": "resources/icons/light/sync.svg"
-                },
                 "title": "Sync Nodes"
             },
             {
                 "command": "nuke-tools.addKnob",
-                "title": "Add Knob",
-                "icon": {
-                    "dark": "resources/icons/dark/add.svg",
-                    "light": "resources/icons/light/add.svg"
-                }
+                "title": "Add Python Knob",
+                "icon": "$(add)"
             },
             {
                 "command": "nuke-tools.saveKnob",
-                "title": "Save Knob code"
+                "title": "Send code to Knob",
+                "icon": "$(sync)"
             },
             {
                 "command": "nuke-tools.editEntry",
-                "icon": {
-                    "dark": "resources/icons/dark/edit.svg",
-                    "light": "resources/icons/light/edit.svg"
-                },
-                "title": "Edit"
+                "title": "Edit",
+                "icon": "$(edit)"
             },
             {
                 "command": "nuke-tools.deleteEntry",
@@ -235,7 +223,8 @@
                 },
                 {
                     "command": "nuke-tools.saveKnob",
-                    "when": "view == nuke-tools && viewItem == knob"
+                    "when": "view == nuke-tools && viewItem == knob",
+                    "group": "inline"
                 }
             ],
             "view/title": [
@@ -246,7 +235,6 @@
                 },
                 {
                     "command": "nuke-tools.syncNodes",
-                    "group": "navigation",
                     "when": "view == nuke-tools"
                 }
             ]
