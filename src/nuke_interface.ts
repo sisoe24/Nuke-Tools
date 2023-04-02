@@ -155,6 +155,8 @@ class Dependency extends vscode.TreeItem {
         this.tooltip = `${this.label}-${this.version}`;
         this.description = this.version;
         this.contextValue = context.context;
+
+        // TODO: add command only to knobs
         this.command = {
             command: "nuke-tools.on_itemClicked",
             title: label,
