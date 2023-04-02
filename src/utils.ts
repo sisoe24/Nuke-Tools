@@ -51,10 +51,6 @@ export function getAssetsPath(name: string): string {
     return getIncludedPath("assets", name);
 }
 
-export function getResourcesPath(name: string): string {
-    return getIncludedPath("resources", name);
-}
-
 /**
  * Get configuration property value.
  *
