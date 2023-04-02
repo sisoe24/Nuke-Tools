@@ -265,7 +265,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         const knobName = await vscode.window.showInputBox({
             title: "Add knob",
             placeHolder: "Enter the name of the knob",
-            prompt: "Remember to not special characters",
+            prompt: "Use only alphanumeric characters and underscores.",
         });
         if (!knobName) {
             return;
