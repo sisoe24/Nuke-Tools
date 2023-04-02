@@ -228,7 +228,11 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
      * @param item A Node dependency item.
      */
     async addKnob(item: Dependency): Promise<void> {
-        const knobName = await vscode.window.showInputBox();
+        const knobName = await vscode.window.showInputBox({
+            title: "Add knob",
+            placeHolder: "Enter the name of the knob",
+            prompt: "Remember to not special characters",
+        });
         if (!knobName) {
             return;
         }
