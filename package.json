@@ -229,18 +229,13 @@
             ],
             "view/item/context": [
                 {
-                    "command": "nuke-tools.editEntry",
-                    "group": "inline",
-                    "when": "view == nuke-tools"
-                },
-                {
                     "command": "nuke-tools.addKnob",
-                    "when": "view == nuke-tools",
+                    "when": "view == nuke-tools && viewItem == node",
                     "group": "inline"
                 },
                 {
                     "command": "nuke-tools.saveKnob",
-                    "when": "view == nuke-tools"
+                    "when": "view == nuke-tools && viewItem == knob"
                 }
             ],
             "view/title": [
@@ -262,7 +257,7 @@
                     "contextualTitle": "Nuke Tools",
                     "icon": "resources/icons/nuke.svg",
                     "id": "nuke-tools",
-                    "name": "Nodes Inspector"
+                    "name": "Nodes Inspector - Beta"
                 }
             ]
         },
@@ -271,13 +266,13 @@
                 {
                     "icon": "resources/icons/nuke.svg",
                     "id": "nodes-inspector",
-                    "title": "Nuke Nodes Inspector"
+                    "title": "Nuke Tools"
                 }
             ]
         },
         "viewsWelcome": [
             {
-                "contents": "Please connect NukeServerSocket and refresh. [learn more](https://www.npmjs.com/).\n[Refresh](command:nuke-tools.refreshNodes)",
+                "contents": "Please connect NukeServerSocket and refresh. [Learn more](https://github.com/sisoe24/NukeServerSocket#141-execute-code).\n[Refresh](command:nuke-tools.refreshNodes)",
                 "view": "nuke-tools"
             }
         ]
