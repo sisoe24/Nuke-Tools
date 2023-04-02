@@ -2,7 +2,7 @@
     "name": "nuke-tools",
     "displayName": "Nuke Tools",
     "publisher": "virgilsisoe",
-    "description": "A bunch of Nuke related tools that will facilitate writing code for it.",
+    "description": "A collection of tools designed to help developers write code for Nuke more easily.",
     "version": "0.9.1",
     "repository": {
         "type": "git",
