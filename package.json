@@ -10,10 +10,6 @@
     "contributes": {
         "commands": [
             {
-                "command": "nuke-tools.item_clicked",
-                "title": "nuke tools view item"
-            },
-            {
                 "command": "nuke-tools.refreshNodes",
                 "icon": "$(extensions-refresh)",
                 "title": "Refresh Viewer"
@@ -31,11 +27,6 @@
                 "command": "nuke-tools.syncKnob",
                 "title": "Send code to Knob",
                 "icon": "$(sync)"
-            },
-            {
-                "command": "nuke-tools.editEntry",
-                "title": "Edit",
-                "icon": "$(edit)"
             },
             {
                 "command": "nuke-tools.deleteEntry",
@@ -245,7 +236,7 @@
                     "contextualTitle": "Nuke Tools",
                     "icon": "resources/icons/nuke.svg",
                     "id": "nuke-tools",
-                    "name": "Nodes Panel - Beta"
+                    "name": "Nodes Panel - Preview"
                 }
             ]
         },
