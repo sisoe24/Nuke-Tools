@@ -22,8 +22,6 @@ export function activate(context: vscode.ExtensionContext): void {
     checkPackageUpdates(context);
 
     // ------------------ NodeInspector ------------------ //
-
-    // const nukeProvider = new NodeDependenciesProvider();
     const nukeProvider = new NukeNodesInspectorProvider();
 
     vscode.window.registerTreeDataProvider("nuke-tools", nukeProvider);
