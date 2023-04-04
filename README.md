@@ -21,7 +21,9 @@ Includes the following packages:
 [![Main Build](https://img.shields.io/github/v/release/sisoe24/nuke-python-stubs?label=nuke-python-stubs)](https://github.com/sisoe24/nuke-python-stubs/releases)
 [![Main Build](https://img.shields.io/github/v/release/sisoe24/pyside2-template?label=pyside2-template)](https://github.com/sisoe24/pyside2-template/releases)
 
-This is a handy collection of tools that's I created to enhance the experience of coding for Nuke! Whether you're a pro or just starting out, these tools are meant to assist you and improve your coding workflows.
+---
+
+Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to write, execute, and debug Nuke scripts with ease.
 
 - [1. Nuke Tools README](#1-nuke-tools-readme)
   - [1.1. Features](#11-features)
@@ -40,8 +42,7 @@ This is a handy collection of tools that's I created to enhance the experience o
 
 ## 1.1. Features
 
-- Execute Nuke code from a local network machine within Visual Studio Code.
-- View Nuke execution output in Visual Studio Code.
+- Execute code and view the Nuke execution output in Visual Studio Code
 - No configuration is required when using the extension on the same machine. Simply run NukeServerSocket within Nuke.
 - Provides BlinkScript support.
 - Provides Nuke/Hiero Python stubs for auto-complete suggestions.
@@ -49,11 +50,11 @@ This is a handy collection of tools that's I created to enhance the experience o
 - Includes a PySide2 plugin template.
 - Provides commands for launching Nuke instances with default or optional arguments via the terminal.
 - Enables adding environment variables to running Nuke instances.
-- [New](#14-nodes-panel) A node panel that allows you to view and interact with the nodes from Nuke current DAG.
+- [[New](#14-nodes-panel)] A node panel that allows you to view and interact with the nodes from Nuke current DAG.
 
 ## 1.2. Requirements
 
-Executing code will only work when NukeServerSocket is up and running.
+The interaction with Nuke is only possible when NukeServerSocket is up and running.
 
 ## 1.3. Execute code
 
@@ -75,7 +76,7 @@ Executing code will only work when NukeServerSocket is up and running.
 
 ### 1.4.1. Stubs are not working
 
-If you're experiencing issues with the stubs in the latest versions of VSCode, you may find it helpful to adjust the python.analysis.packageIndexDepths setting. Try setting it to something like this:
+If you're experiencing issues with the stubs in the latest versions of VSCode, you may find it helpful to adjust the `python.analysis.packageIndexDepths` setting. Try setting it to something like this:
 
 ```json
 "python.analysis.packageIndexDepths": [
@@ -101,16 +102,16 @@ The nodes panel is currently in Preview and may not work as expected. If you enc
 
 ![NodesPanel](/resources/images/nodes_panel.gif)
 
-The nodes panel allows you to view and interact with nodes in the current DAG in Nuke. Currently, the panel only supports adding and editing Python Knobs, including the `knobChanged` knob, for a specific node.
+The nodes panel allows you to view and interact with nodes in the current DAG in Nuke. Currently, the panel only supports adding and editing Python Knobs, including the `knobChanged` knob.
 
 ### 1.5.1. Usage
 
-Access the nodes panel by clicking on the Nuke icon in the Activity Bar. The panel will be empty until you **connect NukeServerSocket**. Once connected, the panel will be populated with nodes from the current DAG.
-After adding a new knob in Nuke, you'll need to refresh with the **Refresh** button to see the new knob.
+Access the nodes panel by clicking on the Nuke icon in the Activity Bar. The panel will be empty until you connect [NukeServerSocket](https://github.com/sisoe24/NukeServerSocket). Once connected, the panel will be populated with nodes from the current DAG.
+After adding a new knob in Nuke, you'll need to refresh with the "Refresh" button to see the new knob.
 
-Click the `+` button on a node in the panel to assign it a new knob. Each knob has a file reference which you can edit. Once you save the file, you can sync the file content with the knob by clicking the **Send code to Kno**b button.
+Click the `+` button on a node in the panel to assign it a new knob. Each knob has a file reference which you can edit. Once you save the file, you can sync the file content with the knob by clicking the "Send code to Knob" button. To use the `knobChanged`, type its name into the input dialog when creatin a new knob.
 
-If you change a node's name in Nuke, you'll need to sync the node's name by clicking the Sync Nodes button which can be found in the panel's top right corner.
+If you change a node's name in Nuke, you'll need to sync it with the panel by clicking the Sync Nodes button which can be found in the panel's top right corner.
 
 ### 1.5.2. Known Issues and Limitations
 
@@ -232,4 +233,4 @@ NOTES:
 
 ## Contributing
 
-Contributions are welcome! If you have any ideas or suggestions, please open an issue or a pull request. At the moment, the extension tests are mostly broken. I will try to fix them as soon as possible.
+Contributions are welcome! If you have any ideas or suggestions, please open an issue or a pull request. At the moment, the extension tests are broken. I will try to fix them as soon as possible.
