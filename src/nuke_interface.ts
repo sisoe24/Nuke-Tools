@@ -66,13 +66,10 @@ function getWorkspacePath() {
 
 // create .nuketools directory in the workspace
 const KNOBS_DIR = path.join(getWorkspacePath(), ".nuketools");
-if (!fs.existsSync(KNOBS_DIR)) {
-    fs.mkdirSync(KNOBS_DIR);
-}
 
 // TODO: refactor this
-function sendToNuke(text: string) {
-    return sendCommand(
+async function sendToNuke(text: string) {
+    return await sendCommand(
         JSON.stringify({
             text: text,
             file: "",
@@ -200,7 +197,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
     /**
      * Sync the files in the .nuketools directory with the nodes in Nuke. Because the user can rename
      * a node in Nuke, when syncing, the file will be renamed in the .nuketools directory.
-     * 
+     *
      * The new name is obtained from the return of the socket command. The socket command returns the
      * name of the node or 'False' as a string if the node doesn't exist.
      */
@@ -383,6 +380,9 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
     }
 
     getChildren(element?: Dependency): Thenable<Dependency[]> {
+        if (!fs.existsSync(KNOBS_DIR)) {
+            fs.mkdirSync(KNOBS_DIR);
+        }
         if (element) {
             return Promise.resolve(this.getKnobs(element));
         }
