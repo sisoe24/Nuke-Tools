@@ -299,9 +299,9 @@ export async function sendData(
             writeDebugNetwork(showDebug, "Connection ended.");
         });
 
-        resolve(status);
-        // setTimeout(() => {
-        // }, 1000);
+        setTimeout(() => {
+            resolve(status);
+        }, 1000);
     });
 }
 
