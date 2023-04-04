@@ -26,6 +26,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
     vscode.window.registerTreeDataProvider("nuke-tools", nukeProvider);
 
+    // TODO: move commands to nuke_interface.ts?
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.refreshNodes", () => nukeProvider.refresh())
     );
@@ -50,7 +51,7 @@ export function activate(context: vscode.ExtensionContext): void {
         )
     );
 
-    // ------------------ NodeInspector ------------------ //
+    // ------------------------------------ //
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.forceUpdatePackages", () => {
