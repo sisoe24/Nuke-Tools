@@ -52,7 +52,7 @@
                 },
                 {
                     "name": "storage.type.builtin.primitive.nk",
-                    "match": "\\b(true|false|set|push|\\$)\\b"
+                    "match": "\\b(True|False|none|true|false|set|push|\\$)\\b"
                 },
                 {
                     "name": "keyword.other.unit.suffix.floating-point.nk",
