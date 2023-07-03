@@ -13,7 +13,8 @@ import { BlinkScriptFormat } from "./blinkscript/blink_format";
 import { BlinkScriptCompletionProvider } from "./blinkscript/blink_completion";
 import { checkPackageUpdates } from "./download_package";
 
-import { NukeNodesInspectorProvider } from "./nuke_interface";
+import { NukeNodesInspectorProvider } from "./nuke/nodes_tree";
+import { NukeCompletionProvider } from "./nuke/completitions";
 
 export function activate(context: vscode.ExtensionContext): void {
     newUpdate.showUpdateMessage(context);
@@ -49,6 +50,12 @@ export function activate(context: vscode.ExtensionContext): void {
         vscode.commands.registerCommand("nuke-tools.syncKnob", (item) =>
             nukeProvider.syncKnob(item)
         )
+    );
+
+    // ----------- Nuke Completion -------- //
+
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider("python", new NukeCompletionProvider(), '(')
     );
 
     // ------------------------------------ //
