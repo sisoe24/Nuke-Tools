@@ -4,7 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as uuid from "uuid";
 
-import { sendCommand } from "./socket";
+import { sendCommand } from "../socket";
 
 const setupCodeSnippet = (knobFile: KnobFile) => `
 nuketools_tab = nuke.Tab_Knob('nuketools', 'NukeTools')
