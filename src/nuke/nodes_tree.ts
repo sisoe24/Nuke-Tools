@@ -67,7 +67,6 @@ function getWorkspacePath() {
 // create .nuketools directory in the workspace
 const KNOBS_DIR = path.join(getWorkspacePath(), ".nuketools");
 
-// TODO: refactor this
 async function sendToNuke(text: string) {
     return await sendCommand(
         JSON.stringify({

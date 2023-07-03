@@ -193,7 +193,7 @@ export async function sendData(
         client.setTimeout(timeout, () => {
             writeDebugNetwork(showDebug, "Connection timeout.");
             client.destroy(new Error("Connection timeout"));
-            reject(status);
+            resolve(status);
         });
 
         try {
@@ -275,7 +275,7 @@ export async function sendData(
             vscode.window.showErrorMessage(msg);
 
             status.message = "Connection refused";
-            reject(status);
+            resolve(status);
         });
 
         /**
@@ -293,7 +293,7 @@ export async function sendData(
         client.on("close", function (hadError: boolean) {
             writeDebugNetwork(showDebug, `Connection closed. Had Errors: ${hadError.toString()}`);
             status.error = hadError;
-            reject(status);
+            resolve(status);
         });
 
         /**

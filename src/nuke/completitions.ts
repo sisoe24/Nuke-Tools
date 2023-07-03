@@ -16,12 +16,12 @@ export class NukeCompletionProvider implements vscode.CompletionItemProvider {
     > {
         const linePrefix = document.lineAt(position).text.substring(0, position.character);
         if (linePrefix.endsWith("nuke.toNode(")) {
-            return this.getCompletionItems();
+            return this.getAllNodes();
         }
         return [];
     }
 
-    private async getCompletionItems(): Promise<vscode.CompletionItem[]> {
+    private async getAllNodes(): Promise<vscode.CompletionItem[]> {
         return askNuke("[n.name() for n in nuke.allNodes()]").then((data) => {
             const nodes = JSON.parse(data.message.replace(/'/g, '"'));
 
