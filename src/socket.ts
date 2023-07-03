@@ -174,7 +174,7 @@ export async function sendData(
     text: string,
     timeout = 10000
 ): Promise<{ message: string; error: boolean; errorMessage: string }> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const client = new Socket();
         const showDebug = utils.nukeToolsConfig("network.debug") as boolean;
         const status = {
@@ -193,6 +193,7 @@ export async function sendData(
         client.setTimeout(timeout, () => {
             writeDebugNetwork(showDebug, "Connection timeout.");
             client.destroy(new Error("Connection timeout"));
+            reject(status);
         });
 
         try {
@@ -239,6 +240,7 @@ export async function sendData(
 
             status.message = data.toString().trim();
             client.end();
+            resolve(status);
         });
 
         /**
@@ -273,6 +275,7 @@ export async function sendData(
             vscode.window.showErrorMessage(msg);
 
             status.message = "Connection refused";
+            reject(status);
         });
 
         /**
@@ -290,6 +293,7 @@ export async function sendData(
         client.on("close", function (hadError: boolean) {
             writeDebugNetwork(showDebug, `Connection closed. Had Errors: ${hadError.toString()}`);
             status.error = hadError;
+            reject(status);
         });
 
         /**
@@ -298,10 +302,10 @@ export async function sendData(
         client.on("end", function () {
             writeDebugNetwork(showDebug, "Connection ended.");
         });
-
-        setTimeout(() => {
-            resolve(status);
-        }, 1000);
+        
+        // setTimeout(() => {
+        //     resolve(status);
+        // }, 5000);
     });
 }
 
@@ -401,6 +405,10 @@ export async function sendMessage(): Promise<
     return await sendData(getHost(), getPort(), JSON.stringify(prepareMessage(editor)));
 }
 
-export async function sendCommand(command: string) {
-    return await sendData(getHost(), getPort(), command);
+export function sendCommand(command: string): Promise<{
+    message: string;
+    error: boolean;
+    errorMessage: string;
+}> {
+    return sendData(getHost(), getPort(), command);
 }
