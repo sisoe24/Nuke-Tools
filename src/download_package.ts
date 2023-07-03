@@ -21,7 +21,7 @@ if (!existsSync(assetsPath)) {
  */
 const PACKAGES = {
     NukeServerSocket: "0.6.0",
-    "nuke-python-stubs": "0.2.2",
+    "nuke-python-stubs": "0.2.3",
     "pyside2-template": "0.2.0",
 };
 
