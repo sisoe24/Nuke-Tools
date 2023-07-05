@@ -50,7 +50,7 @@ Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to
 - Includes a PySide2 plugin template.
 - Provides commands for launching Nuke instances with default or optional arguments via the terminal.
 - Enables adding environment variables to running Nuke instances.
-- [[New](#14-nodes-panel)] A node panel that allows you to view and interact with the nodes from Nuke current DAG.
+- A node panel that allows you to view and interact with the nodes from Nuke current DAG.
 
 ## 1.2. Requirements
 

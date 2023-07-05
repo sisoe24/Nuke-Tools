@@ -2,6 +2,16 @@
 
 All notable changes to the "nuke-tools" extension will be documented in this file.
 
+## [0.11.0] 02/07/2023
+
+## Added
+
+- Initial support for some completions providers. Currently only works for the `nuke.toNode` function.
+
+## Changed
+
+- Update the handling of the socket connection to resolve as soon as it receives the data.
+
 ## [0.10.0] 04/02/2023
 
 ## Added
