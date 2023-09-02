@@ -16,18 +16,11 @@ import { checkPackageUpdates } from "./download_package";
 import { NukeNodesInspectorProvider } from "./nuke/nodes_tree";
 import { NukeCompletionProvider } from "./nuke/completitions";
 
-export function activate(context: vscode.ExtensionContext): void {
-    newUpdate.showUpdateMessage(context);
-    stubs.fixAnalysisPath();
-
-    checkPackageUpdates(context);
-
-    // ------------------ NodeInspector ------------------ //
+function registerNodesInspectorCommands(context: vscode.ExtensionContext): void {
     const nukeProvider = new NukeNodesInspectorProvider();
 
     vscode.window.registerTreeDataProvider("nuke-tools", nukeProvider);
 
-    // TODO: move commands to nuke_interface.ts?
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.refreshNodes", () => nukeProvider.refresh())
     );
@@ -51,14 +44,30 @@ export function activate(context: vscode.ExtensionContext): void {
             nukeProvider.syncKnob(item)
         )
     );
+}
 
-    // ----------- Nuke Completion -------- //
-
+function registerBlinkScriptCommands(context: vscode.ExtensionContext): void {
     context.subscriptions.push(
-        vscode.languages.registerCompletionItemProvider("python", new NukeCompletionProvider(), '(')
+        vscode.languages.registerDocumentFormattingEditProvider(
+            "blinkscript",
+            new BlinkScriptFormat()
+        )
     );
 
-    // ------------------------------------ //
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider(
+            "blinkscript",
+            new BlinkScriptCompletionProvider()
+        )
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider("blinkscript", new BlinkSnippets())
+    );
+}
+
+function registerPackagesCommands(context: vscode.ExtensionContext): void {
+    checkPackageUpdates(context);
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.forceUpdatePackages", () => {
@@ -83,7 +92,9 @@ export function activate(context: vscode.ExtensionContext): void {
             nuke.addNukeServerSocket();
         })
     );
+}
 
+function registerExecutablesCommands(context: vscode.ExtensionContext): void {
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.launchNuke", () => {
             executables.launchPrimaryExecutable();
@@ -100,6 +111,20 @@ export function activate(context: vscode.ExtensionContext): void {
         vscode.commands.registerCommand("nuke-tools.launchNukeOptArgs", () => {
             void executables.launchPromptExecutable();
         })
+    );
+}
+
+export function activate(context: vscode.ExtensionContext): void {
+    newUpdate.showUpdateMessage(context);
+    stubs.fixAnalysisPath();
+
+    registerNodesInspectorCommands(context);
+    registerBlinkScriptCommands(context);
+    registerPackagesCommands(context);
+    registerExecutablesCommands(context);
+
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider("python", new NukeCompletionProvider(), "(")
     );
 
     context.subscriptions.push(
@@ -118,26 +143,6 @@ export function activate(context: vscode.ExtensionContext): void {
         vscode.commands.registerCommand("nuke-tools.showNetworkAddresses", () => {
             vscode.window.showInformationMessage(socket.getAddresses());
         })
-    );
-
-    // ------------------ BlinkScript ------------------ //
-
-    context.subscriptions.push(
-        vscode.languages.registerDocumentFormattingEditProvider(
-            "blinkscript",
-            new BlinkScriptFormat()
-        )
-    );
-
-    context.subscriptions.push(
-        vscode.languages.registerCompletionItemProvider(
-            "blinkscript",
-            new BlinkScriptCompletionProvider()
-        )
-    );
-
-    context.subscriptions.push(
-        vscode.languages.registerCompletionItemProvider("blinkscript", new BlinkSnippets())
     );
 }
 

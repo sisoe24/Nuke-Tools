@@ -17,7 +17,6 @@ export type PlaceHolders = {
 };
 
 function getGithubUser(): string {
-    // TODO: [NUK-14] this value might be wrong since git != github
     return cp.execSync("git config user.name").toString().trim();
 }
 
