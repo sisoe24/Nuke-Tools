@@ -1,9 +1,11 @@
-import * as vscode from "vscode";
-import * as utils from "./utils";
 import * as os from "os";
-import { Socket } from "net";
 import * as fs from "fs";
 import * as path from "path";
+import * as utils from "./utils";
+import * as vscode from "vscode";
+import { getConfig } from "./config";
+
+import { Socket } from "net";
 
 const outputWindow = vscode.window.createOutputChannel("Nuke Tools");
 
@@ -29,7 +31,7 @@ export function getNukeIni(): string {
  * @returns - the property value.
  */
 export function getManualAddress(property: string, defaultValue: string): string {
-    const manualAddress = utils.nukeToolsConfig(`network.${property}`) as string;
+    const manualAddress = getConfig(`network.${property}`) as string;
 
     if (!manualAddress) {
         const manualErrorMsg = `
@@ -88,7 +90,7 @@ export function getPort(): number {
         port = getPortFromIni(configIni, port);
     }
 
-    if (utils.nukeToolsConfig("network.enableManualConnection")) {
+    if (getConfig("network.enableManualConnection")) {
         port = getManualAddress("port", port);
     }
     return parseInt(port);
@@ -105,7 +107,7 @@ export function getPort(): number {
 function getHost(): string {
     let host = "127.0.0.1";
 
-    if (utils.nukeToolsConfig("network.enableManualConnection")) {
+    if (getConfig("network.enableManualConnection")) {
         host = getManualAddress("host", host);
     }
 
@@ -131,7 +133,7 @@ export function getAddresses(): string {
  * @param showDebug if true, the output window will not be cleared despite the settings.
  */
 export function writeToOutputWindow(data: string, filePath: string, showDebug: boolean): string {
-    if (utils.nukeToolsConfig("other.clearPreviousOutput") && !showDebug) {
+    if (getConfig("other.clearPreviousOutput") && !showDebug) {
         outputWindow.clear();
     }
 
@@ -176,7 +178,7 @@ export async function sendData(
 ): Promise<{ message: string; error: boolean; errorMessage: string }> {
     return new Promise((resolve, reject) => {
         const client = new Socket();
-        const showDebug = utils.nukeToolsConfig("network.debug") as boolean;
+        const showDebug = getConfig("network.debug") as boolean;
         const status = {
             message: "",
             error: false,

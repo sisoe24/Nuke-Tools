@@ -1,8 +1,9 @@
-import * as vscode from "vscode";
-import * as utils from "./utils";
-import * as path from "path";
 import * as os from "os";
 import * as fs from "fs";
+import * as path from "path";
+import * as vscode from "vscode";
+
+import { getConfig } from "./config";
 
 /**
  * ExecutablePath object class.
@@ -121,7 +122,7 @@ export function getCliCmd(execPath: ExecutablePath): string {
         return cliCmd;
     }
 
-    const envVars = utils.nukeToolsConfig("other.envVars") as { key: string; value: string };
+    const envVars = getConfig("other.envVars") as { key: string; value: string };
 
     // TODO: get system key if exists
     let appendVars = "";
@@ -141,7 +142,7 @@ export function getCliCmd(execPath: ExecutablePath): string {
 export function execCommand(execPath: ExecutablePath): void {
     const terminalName = execPath.terminalName();
 
-    const shouldRestart = utils.nukeToolsConfig("nukeExecutable.options.restartInstance");
+    const shouldRestart = getConfig("nukeExecutable.options.restartInstance");
     if (shouldRestart) {
         restartInstance(terminalName);
     }
@@ -172,7 +173,7 @@ export function launchExecutable(execObj: ExecutablePath): ExecutablePath {
  */
 export function launchPrimaryExecutable(): ExecutablePath {
     const execObj = new ExecutablePath(
-        utils.nukeToolsConfig("nukeExecutable.primaryExecutablePath") as string,
+        getConfig("nukeExecutable.primaryExecutablePath") as string,
         "Main"
     );
     launchExecutable(execObj);
@@ -186,10 +187,10 @@ export function launchPrimaryExecutable(): ExecutablePath {
  */
 export function launchSecondaryExecutable(): ExecutablePath {
     const execObj = new ExecutablePath(
-        utils.nukeToolsConfig("nukeExecutable.secondaryExecutablePath") as string,
+        getConfig("nukeExecutable.secondaryExecutablePath") as string,
         "Alt."
     );
-    const defaultArgs = utils.nukeToolsConfig(
+    const defaultArgs = getConfig(
         "nukeExecutable.options.defaultCommandLineArguments"
     ) as string;
 
@@ -207,7 +208,7 @@ export function launchSecondaryExecutable(): ExecutablePath {
  */
 export async function launchPromptExecutable(): Promise<ExecutablePath> {
     const execObj = new ExecutablePath(
-        utils.nukeToolsConfig("nukeExecutable.primaryExecutablePath") as string,
+        getConfig("nukeExecutable.primaryExecutablePath") as string,
         "Main Prompt"
     );
 

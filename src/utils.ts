@@ -1,7 +1,7 @@
-import * as vscode from "vscode";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
+import * as vscode from "vscode";
 
 export const nukeDir = path.join(os.homedir(), ".nuke");
 export const nukeToolsDir = path.join(nukeDir, "NukeTools");
@@ -49,23 +49,4 @@ export function getIncludePath(name: string): string {
 
 export function getAssetsPath(name: string): string {
     return getIncludedPath("assets", name);
-}
-
-/**
- * Get configuration property value.
- *
- * If property name is not found, throws an error.
- *
- * @param property - name of the configuration property to get.
- * @returns - the value of the property.
- */
-export function nukeToolsConfig(property: string): unknown {
-    const config = vscode.workspace.getConfiguration("nukeTools");
-    const subConfig = config.get(property);
-
-    if (typeof subConfig === "undefined") {
-        throw new Error(`Configuration: ${property} doesn't exist`);
-    }
-
-    return subConfig;
 }

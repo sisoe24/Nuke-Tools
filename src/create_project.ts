@@ -1,11 +1,10 @@
-import * as vscode from "vscode";
-
 import * as fs from "fs";
 import * as os from "os";
-import * as path from "path";
 import * as cp from "child_process";
-
+import * as path from "path";
 import * as utils from "./utils";
+import * as vscode from "vscode";
+import { getConfig } from "./config";
 
 /**
  * The placeholders data.
@@ -39,13 +38,13 @@ export async function askUser(): Promise<PlaceHolders> {
 
     const projectPython = (await vscode.window.showInputBox({
         title: "Python version",
-        value: (utils.nukeToolsConfig("pysideTemplate.pythonVersion") as string) || "~3.7.7",
+        value: (getConfig("pysideTemplate.pythonVersion") as string) || "~3.7.7",
     })) as string;
 
     const projectPySide = (await vscode.window.showInputBox({
         title: "PySide2 Version",
         placeHolder: "Version of PySide2",
-        value: (utils.nukeToolsConfig("pysideTemplate.pysideVersion") as string) || "5.12.2",
+        value: (getConfig("pysideTemplate.pysideVersion") as string) || "5.12.2",
     })) as string;
 
     const projectAuthor = (await vscode.window.showInputBox({

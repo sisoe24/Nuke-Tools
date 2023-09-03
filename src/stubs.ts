@@ -139,11 +139,7 @@ export async function addStubsPath(): Promise<boolean> {
         return false;
     }
 
-    vscode.window.showInformationMessage(`
-    Python stubs added.
-    If the stubs are not working properly, update the "python.analysis.packageIndexDepths" setting. 
-    More information is available in the extension README at https://github.com/sisoe24/Nuke-Tools#131-stubs-not-working-correctly.`
-    );
+    vscode.window.showInformationMessage('Python stubs added.');
 
     const config = vscode.workspace.getConfiguration(getAutoCompleteSetting());
     const extraPaths = config.get("extraPaths") as Array<string>;

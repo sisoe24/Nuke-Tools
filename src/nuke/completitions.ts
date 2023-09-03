@@ -5,6 +5,7 @@ import { sendCommand } from "../socket";
 async function askNuke(text: string) {
     return sendCommand(JSON.stringify({ text: text, file: "" }));
 }
+
 export class NukeCompletionProvider implements vscode.CompletionItemProvider {
     provideCompletionItems(
         document: vscode.TextDocument,
