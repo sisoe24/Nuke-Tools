@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 
 import * as executables from "./launch_executable";
 import * as socket from "./socket";
-import * as newUpdate from "./update_message";
+import * as newUpdate from "./notification";
 
 import * as nuke from "./nuke_server_socket";
 import * as stubs from "./stubs";
