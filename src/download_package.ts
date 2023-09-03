@@ -1,13 +1,14 @@
-import * as vscode from "vscode";
 import * as path from "path";
-
 import * as utils from "./utils";
+import * as vscode from "vscode";
+
+import { existsSync, mkdirSync } from "fs";
+
+import extract = require("extract-zip");
 
 import { GithubRelease } from "@terascope/fetch-github-release/dist/src/interfaces";
 import { downloadRelease } from "@terascope/fetch-github-release";
 
-import extract = require("extract-zip");
-import { existsSync, mkdirSync } from "fs";
 
 const assetsPath = path.join(utils.extensionPath(), "assets");
 if (!existsSync(assetsPath)) {
@@ -58,23 +59,33 @@ function downloadPackage(repo: string, destination: string) {
  * Update a package if a newer version is released.
  *
  * @param context vscode.ExtensionContext
+ * @param packageId Package name
+ * @param currentVersion Current version of the package
+ * 
  */
-export async function updatePackage(
+export function updatePackage(
     context: vscode.ExtensionContext,
     packageId: string,
     currentVersion: string
-) {
+): void {
     const pkgVersionId = `virgilsisoe.nuke-tools.${packageId}`;
     const previousPkgVersion = (context.globalState.get(pkgVersionId) as string) ?? "0.0.0";
 
-    if (currentVersion > previousPkgVersion) {
-        if (downloadPackage(packageId, path.join(assetsPath, packageId))) {
-            context.globalState.update(pkgVersionId, currentVersion);
-        }
+    if (
+        currentVersion > previousPkgVersion &&
+        downloadPackage(packageId, path.join(assetsPath, packageId))
+    ) {
+        context.globalState.update(pkgVersionId, currentVersion);
     }
 }
 
-export function checkPackageUpdates(context: vscode.ExtensionContext, forceUpdate = false) {
+/**
+ * Check if a package needs to be updated. If so, update it.
+ * 
+ * @param context vscode.ExtensionContext
+ * @param forceUpdate Force update all packages
+ */
+export function checkPackageUpdates(context: vscode.ExtensionContext, forceUpdate = false): void {
     for (const [pkg, version] of Object.entries(PACKAGES)) {
         if (forceUpdate) {
             context.globalState.update(`virgilsisoe.nuke-tools.${pkg}`, "0.0.0");
