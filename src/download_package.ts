@@ -9,7 +9,6 @@ import extract = require("extract-zip");
 import { GithubRelease } from "@terascope/fetch-github-release/dist/src/interfaces";
 import { downloadRelease } from "@terascope/fetch-github-release";
 
-
 const assetsPath = path.join(utils.extensionPath(), "assets");
 if (!existsSync(assetsPath)) {
     mkdirSync(assetsPath);
@@ -29,7 +28,7 @@ const PACKAGES = {
 /**
  * Download a package from the github release page.
  */
-function downloadPackage(repo: string, destination: string) {
+export function downloadPackage(repo: string, destination: string): boolean {
     function filterRelease(release: GithubRelease) {
         return release.prerelease === false;
     }
@@ -38,9 +37,9 @@ function downloadPackage(repo: string, destination: string) {
         .then(function () {
             console.log(`Package updated: ${repo}`);
         })
-        .catch(async function (err: { message: any }) {
+        .catch(async function (err: { message: unknown }) {
             vscode.window.showWarningMessage(
-                `Failed to download package from GitHub: ${err}. Fallback on local zip.`
+                `Failed to download package from GitHub: ${err.message}. Fallback on local zip.`
             );
             try {
                 await extract(utils.getIncludePath(`${repo}.zip`), {
@@ -61,7 +60,7 @@ function downloadPackage(repo: string, destination: string) {
  * @param context vscode.ExtensionContext
  * @param packageId Package name
  * @param currentVersion Current version of the package
- * 
+ *
  */
 export function updatePackage(
     context: vscode.ExtensionContext,
@@ -81,7 +80,7 @@ export function updatePackage(
 
 /**
  * Check if a package needs to be updated. If so, update it.
- * 
+ *
  * @param context vscode.ExtensionContext
  * @param forceUpdate Force update all packages
  */
