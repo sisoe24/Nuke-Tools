@@ -304,7 +304,7 @@ export async function sendData(
         client.on("end", function () {
             writeDebugNetwork(showDebug, "Connection ended.");
         });
-        
+
         // setTimeout(() => {
         //     resolve(status);
         // }, 5000);
@@ -361,16 +361,11 @@ export async function sendDebugMessage(): Promise<{
  * @param editor - vscode TextEditor instance.
  * @returns a stringified object with the data to be sent.
  */
-export function prepareMessage(editor: vscode.TextEditor): { text: string; file: string } {
-    const document = editor.document;
-    const selection = editor.selection;
-    const selectedText = document.getText(selection);
-
-    const data = {
+export function composeMessage(editor: vscode.TextEditor): { text: string; file: string } {
+    return {
         file: editor.document.fileName,
-        text: selectedText || editor.document.getText(),
+        text: editor.document.getText(editor.selection) || editor.document.getText(),
     };
-    return data;
 }
 
 /**
@@ -404,7 +399,7 @@ export async function sendMessage(): Promise<
         return;
     }
 
-    return await sendData(getHost(), getPort(), JSON.stringify(prepareMessage(editor)));
+    return await sendData(getHost(), getPort(), JSON.stringify(composeMessage(editor)));
 }
 
 export function sendCommand(command: string): Promise<{
