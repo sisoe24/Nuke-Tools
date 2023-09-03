@@ -6,7 +6,7 @@ import * as vscode from "vscode";
 import { downloadPackage } from "./download_package";
 
 /**
- * Check whether the Python extension is installed, as attempting to add the stubs 
+ * Check whether the Python extension is installed, as attempting to add the stubs
  * to analysis.extraPaths will fail if Python is not installed.
  *
  * @returns true if extension is installed, false otherwise.
@@ -34,12 +34,11 @@ export function getPythonLspKey(): string {
     return "python.analysis";
 }
 
-
 /**
  * Update the python.analysis.extraPaths setting with the stubs path.
- * 
+ *
  * @param nukeToolsStubsPath - path to the stubs directory
- * 
+ *
  */
 function updatePythonExtraPaths(nukeToolsStubsPath: string) {
     const config = vscode.workspace.getConfiguration(getPythonLspKey(), null);
@@ -54,7 +53,7 @@ function updatePythonExtraPaths(nukeToolsStubsPath: string) {
 /**
  * Add the stubs path to the python.analysis.extraPaths setting.
  */
-export function addStubsPath(): void {
+export function addStubs(): void {
     if (!isPythonInstalled()) {
         vscode.window.showErrorMessage(
             "Python extension is not installed. Could not add stubs path."

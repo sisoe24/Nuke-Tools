@@ -14,7 +14,7 @@ import { checkPackageUpdates } from "./download_package";
 import { NukeCompletionProvider } from "./nuke/completitions";
 import { NukeNodesInspectorProvider } from "./nuke/nodes_tree";
 
-import {showNotification} from "./notification";
+import { showNotification } from "./notification";
 
 function registerNodesInspectorCommands(context: vscode.ExtensionContext): void {
     const nukeProvider = new NukeNodesInspectorProvider();
@@ -83,7 +83,7 @@ function registerPackagesCommands(context: vscode.ExtensionContext): void {
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.addPythonStubs", () => {
-            stubs.addStubsPath();
+            stubs.addStubs();
         })
     );
 
@@ -116,7 +116,6 @@ function registerExecutablesCommands(context: vscode.ExtensionContext): void {
 
 export function activate(context: vscode.ExtensionContext): void {
     showNotification(context);
-    stubs.fixAnalysisPath();
 
     registerNodesInspectorCommands(context);
     registerBlinkScriptCommands(context);
