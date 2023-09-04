@@ -14,21 +14,22 @@ if (!existsSync(assetsPath)) {
     mkdirSync(assetsPath);
 }
 
-/**
- * nuke-python-stubs are only the stubs from the repo
- * pyside2-template is the source code: git archive ...
- * NukeServerSocket is the source code
- */
-const PACKAGES = {
-    NukeServerSocket: "0.6.0",
-    "nuke-python-stubs": "0.2.3",
-    "pyside2-template": "0.2.0",
-};
+enum Package {
+    nukeServerSocket = "NukeServerSocket",
+    nukePythonStubs = "nuke-python-stubs",
+    pySide2Template = "pyside2-template",
+}
+
+const latest = new Map<Package, string>([
+    [Package.nukeServerSocket, "0.6.0"],
+    [Package.nukePythonStubs, "0.2.3"],
+    [Package.pySide2Template, "0.2.0"],
+]);
 
 /**
  * Download a package from the github release page.
  */
-export function downloadPackage(repo: string, destination: string): boolean {
+function downloadPackage(repo: Package, destination: string): boolean {
     function filterRelease(release: GithubRelease) {
         return release.prerelease === false;
     }
@@ -55,6 +56,16 @@ export function downloadPackage(repo: string, destination: string): boolean {
 }
 
 /**
+ * Download the NukeServerSocket package.
+ * 
+ * @param dest Destination path
+ * @returns true if the package was downloaded, false otherwise.
+ */
+export function downloadNukeServerSocket(dest: string): boolean {
+    return downloadPackage(Package.nukeServerSocket, dest);
+}
+
+/**
  * Update a package if a newer version is released.
  *
  * @param context vscode.ExtensionContext
@@ -64,7 +75,7 @@ export function downloadPackage(repo: string, destination: string): boolean {
  */
 export function updatePackage(
     context: vscode.ExtensionContext,
-    packageId: string,
+    packageId: Package,
     currentVersion: string
 ): void {
     const pkgVersionId = `virgilsisoe.nuke-tools.${packageId}`;
@@ -85,7 +96,7 @@ export function updatePackage(
  * @param forceUpdate Force update all packages
  */
 export function checkPackageUpdates(context: vscode.ExtensionContext, forceUpdate = false): void {
-    for (const [pkg, version] of Object.entries(PACKAGES)) {
+    for (const [pkg, version] of latest) {
         if (forceUpdate) {
             context.globalState.update(`virgilsisoe.nuke-tools.${pkg}`, "0.0.0");
         }
