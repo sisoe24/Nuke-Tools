@@ -57,12 +57,12 @@ function downloadPackage(repo: Package, destination: string): boolean {
 
 /**
  * Download the NukeServerSocket package.
- * 
+ *
  * @param dest Destination path
  * @returns true if the package was downloaded, false otherwise.
  */
-export function downloadNukeServerSocket(dest: string): boolean {
-    return downloadPackage(Package.nukeServerSocket, dest);
+export function downloadStubs(dest: string): boolean {
+    return downloadPackage(Package.nukePythonStubs, dest);
 }
 
 /**
