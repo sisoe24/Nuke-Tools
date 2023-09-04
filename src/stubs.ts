@@ -3,7 +3,7 @@ import * as path from "path";
 import * as utils from "./utils";
 import * as vscode from "vscode";
 
-import { downloadPackage } from "./download_package";
+import { downloadNukeServerSocket } from "./download_package";
 
 /**
  * Check whether the Python extension is installed, as attempting to add the stubs
@@ -67,7 +67,7 @@ export function addStubs(): void {
         fs.mkdirSync(nukeToolsStubsPath);
     }
 
-    downloadPackage("nuke-python-stubs", nukeToolsStubsPath);
+    downloadNukeServerSocket(nukeToolsStubsPath);
 
     // Add the stubs path to the python.analysis.extraPaths setting at user level
     updatePythonExtraPaths(nukeToolsStubsPath);
