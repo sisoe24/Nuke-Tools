@@ -164,9 +164,9 @@ export function getCliCmd(execPath: ExecutablePath): string {
         return cliCmd;
     }
 
-    let env = getConfig("env.envVars") as EnvVars;
+    let env = getConfig("other.envVars") as EnvVars;
 
-    if (getConfig("env.useSystemEnvVars") as boolean) {
+    if (getConfig("other.useSystemEnvVars") as boolean) {
         env = concatEnv(env);
     }
 
