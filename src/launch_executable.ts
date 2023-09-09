@@ -166,7 +166,7 @@ export function getCliCmd(execPath: ExecutablePath): string {
 
     let env = getConfig("env.envVars") as EnvVars;
 
-    if (getConfig("env.useSystemEnv") as boolean) {
+    if (getConfig("env.useSystemEnvVars") as boolean) {
         env = concatEnv(env);
     }
 

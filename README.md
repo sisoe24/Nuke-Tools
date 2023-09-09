@@ -214,7 +214,7 @@ NOTES:
     }
     ```
 
-- `nukeTools.env.useSystemEnvVars`: `boolean`
+- `nukeTools.other.useSystemEnvVars`: `boolean`
 
     Add system environment variables. When enabled, the extension will also add the corresponding system environment variables to the running Nuke instance.
 
