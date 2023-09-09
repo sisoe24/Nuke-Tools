@@ -1,34 +1,33 @@
-import * as vscode from "vscode";
 import * as path from "path";
-
 import * as utils from "./utils";
+import * as vscode from "vscode";
+
+import extract = require("extract-zip");
 
 import { GithubRelease } from "@terascope/fetch-github-release/dist/src/interfaces";
 import { downloadRelease } from "@terascope/fetch-github-release";
 
-import extract = require("extract-zip");
-import { existsSync, mkdirSync } from "fs";
-
-const assetsPath = path.join(utils.extensionPath(), "assets");
-if (!existsSync(assetsPath)) {
-    mkdirSync(assetsPath);
+export enum Package {
+    nukeServerSocket = "NukeServerSocket",
+    nukePythonStubs = "nuke-python-stubs",
+    pySide2Template = "pyside2-template",
 }
 
-/**
- * nuke-python-stubs are only the stubs from the repo
- * pyside2-template is the source code: git archive ...
- * NukeServerSocket is the source code
- */
-const PACKAGES = {
-    NukeServerSocket: "0.6.0",
-    "nuke-python-stubs": "0.2.3",
-    "pyside2-template": "0.2.0",
-};
+const latest = new Map<Package, string>([
+    [Package.nukeServerSocket, "0.6.0"],
+    [Package.nukePythonStubs, "0.2.3"],
+    [Package.pySide2Template, "0.2.0"],
+]);
 
 /**
- * Download a package from the github release page.
+ * Download a package from the github release page. If the download fails, 
+ * fallback on the local zip.
+ * 
+ * @param repo A {@link Package} name
+ * @param destination Destination path
+ * @returns true if the package was downloaded, false otherwise.
  */
-function downloadPackage(repo: string, destination: string) {
+function downloadPackage(repo: Package, destination: string): boolean {
     function filterRelease(release: GithubRelease) {
         return release.prerelease === false;
     }
@@ -37,13 +36,13 @@ function downloadPackage(repo: string, destination: string) {
         .then(function () {
             console.log(`Package updated: ${repo}`);
         })
-        .catch(async function (err: { message: any }) {
+        .catch(async function (err: { message: unknown }) {
             vscode.window.showWarningMessage(
-                `Failed to download package from GitHub: ${err}. Fallback on local zip.`
+                `Failed to download package from GitHub: ${err.message}. Fallback on local zip.`
             );
             try {
-                await extract(utils.getIncludePath(`${repo}.zip`), {
-                    dir: path.join(utils.extensionPath(), "assets", repo),
+                await extract(utils.getPath("include", `${repo}.zip`), {
+                    dir: path.join(utils.assetsPath, repo),
                 });
             } catch (err) {
                 vscode.window.showErrorMessage(err as string);
@@ -55,27 +54,47 @@ function downloadPackage(repo: string, destination: string) {
 }
 
 /**
+ * Utility function to download the Stubs package.
+ *
+ * @param dest Destination path
+ * @returns true if the package was downloaded, false otherwise.
+ */
+export function downloadStubs(dest: string): boolean {
+    return downloadPackage(Package.nukePythonStubs, dest);
+}
+
+/**
  * Update a package if a newer version is released.
  *
  * @param context vscode.ExtensionContext
+ * @param packageId Package name
+ * @param currentVersion Current version of the package
+ *
  */
-export async function updatePackage(
+export function updatePackage(
     context: vscode.ExtensionContext,
-    packageId: string,
+    packageId: Package,
     currentVersion: string
-) {
+): void {
     const pkgVersionId = `virgilsisoe.nuke-tools.${packageId}`;
     const previousPkgVersion = (context.globalState.get(pkgVersionId) as string) ?? "0.0.0";
 
-    if (currentVersion > previousPkgVersion) {
-        if (downloadPackage(packageId, path.join(assetsPath, packageId))) {
-            context.globalState.update(pkgVersionId, currentVersion);
-        }
+    if (
+        currentVersion > previousPkgVersion &&
+        downloadPackage(packageId, path.join(utils.assetsPath, packageId))
+    ) {
+        context.globalState.update(pkgVersionId, currentVersion);
     }
 }
 
-export function checkPackageUpdates(context: vscode.ExtensionContext, forceUpdate = false) {
-    for (const [pkg, version] of Object.entries(PACKAGES)) {
+/**
+ * Check if a package needs to be updated. If so, update it.
+ *
+ * @param context vscode.ExtensionContext
+ * @param forceUpdate Force update all packages
+ */
+export function checkPackageUpdates(context: vscode.ExtensionContext, forceUpdate = false): void {
+    for (const [pkg, version] of latest) {
         if (forceUpdate) {
             context.globalState.update(`virgilsisoe.nuke-tools.${pkg}`, "0.0.0");
         }

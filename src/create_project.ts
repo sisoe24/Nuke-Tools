@@ -1,11 +1,10 @@
-import * as vscode from "vscode";
-
 import * as fs from "fs";
 import * as os from "os";
-import * as path from "path";
 import * as cp from "child_process";
-
+import * as path from "path";
 import * as utils from "./utils";
+import * as vscode from "vscode";
+import { getConfig } from "./config";
 
 /**
  * The placeholders data.
@@ -17,7 +16,6 @@ export type PlaceHolders = {
 };
 
 function getGithubUser(): string {
-    // TODO: [NUK-14] this value might be wrong since git != github
     return cp.execSync("git config user.name").toString().trim();
 }
 
@@ -40,13 +38,13 @@ export async function askUser(): Promise<PlaceHolders> {
 
     const projectPython = (await vscode.window.showInputBox({
         title: "Python version",
-        value: (utils.nukeToolsConfig("pysideTemplate.pythonVersion") as string) || "~3.7.7",
+        value: (getConfig("pysideTemplate.pythonVersion") as string) || "~3.7.7",
     })) as string;
 
     const projectPySide = (await vscode.window.showInputBox({
         title: "PySide2 Version",
         placeHolder: "Version of PySide2",
-        value: (utils.nukeToolsConfig("pysideTemplate.pysideVersion") as string) || "5.12.2",
+        value: (getConfig("pysideTemplate.pysideVersion") as string) || "5.12.2",
     })) as string;
 
     const projectAuthor = (await vscode.window.showInputBox({
@@ -138,7 +136,7 @@ async function importStatementMenu(module: string): Promise<void> {
     })) as string;
 
     if (loadNukeInit === "Yes") {
-        utils.nukeMenuImport(`from NukeTools import ${module}`);
+        utils.writeImport(`from NukeTools import ${module}`);
     }
 }
 
@@ -157,7 +155,7 @@ export async function createTemplate(): Promise<void> {
         return;
     }
 
-    const source = vscode.Uri.file(utils.getAssetsPath("pyside2-template"));
+    const source = vscode.Uri.file(utils.getPath("assets", "pyside2-template"));
     await vscode.workspace.fs.copy(source, destination);
 
     const pythonFiles = osWalk(destination.fsPath);

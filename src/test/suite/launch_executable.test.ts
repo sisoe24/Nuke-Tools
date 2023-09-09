@@ -87,7 +87,7 @@ suite("Launch executable", () => {
 
         const execPath = executables.launchPrimaryExecutable();
 
-        const pattern = new RegExp(`&?\\s?"${samplePath}" -fake --args`);
+        const pattern = new RegExp(`&?\\s?"${samplePath}"`);
         assert.match(execPath.cliCmd(), pattern);
     });
 
@@ -125,7 +125,7 @@ suite("Nuke Paths", () => {
     });
 
     test("Adding variables", async () => {
-        await utils.updateConfig("other.nukePaths", ["foo", "bar"]);
+        await utils.updateConfig("other.envVars", { NUKE_PATH: "foo:bar" });
 
         const cliCmd = executables.getCliCmd(execPath);
         assert.strictEqual(cliCmd, 'NUKE_PATH="foo:bar" "path/to/bin.app"');

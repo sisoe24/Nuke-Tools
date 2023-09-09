@@ -1,6 +1,7 @@
-import { readFileSync } from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
+
+import { readFileSync } from "fs";
 
 /**
  * Sample blinkscript file. same as Nuke default blinkscript node.

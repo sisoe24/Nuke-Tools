@@ -151,6 +151,11 @@
                         "description": "A list of environment variable to be added before launching Nuke from NukeTools.",
                         "type": "object"
                     },
+                    "nukeTools.other.useSystemEnvVars": {
+                        "description": "Use system environment variables. This will add the system environment variables to the environment variables list.",
+                        "type": "boolean",
+                        "default": false
+                    },
                     "nukeTools.other.nukePaths": {
                         "deprecationMessage": "This setting is deprecated. Use envVars instead.",
                         "description": "A list of paths to be added to NUKE_PATH before launching Nuke from NukeTools.",

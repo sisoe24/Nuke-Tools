@@ -106,7 +106,7 @@ suite("Prepare message", () => {
     test("prepareMessage with no selection: entire document", () => {
         const editor = vscode.window.activeTextEditor;
         if (editor) {
-            const msg = socket.prepareMessage(editor);
+            const msg = socket.composeMessage(editor);
 
             assert.ok(Object.prototype.hasOwnProperty.call(msg, "text"));
             assert.ok(Object.prototype.hasOwnProperty.call(msg, "file"));
@@ -125,7 +125,7 @@ suite("Prepare message", () => {
                 new vscode.Position(0, 0),
                 new vscode.Position(0, 5)
             );
-            const msg = socket.prepareMessage(editor);
+            const msg = socket.composeMessage(editor);
 
             assert.ok(Object.prototype.hasOwnProperty.call(msg, "text"));
             assert.ok(Object.prototype.hasOwnProperty.call(msg, "file"));

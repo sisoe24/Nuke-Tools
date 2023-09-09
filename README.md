@@ -69,7 +69,9 @@ The interaction with Nuke is only possible when NukeServerSocket is up and runni
 
 ## 1.4. Python stubs
 
-1. Use the command `Nuke: Add Python Stubs` to add the stubs to your `python.analysis.extraPaths` setting.
+> UPDATE: From NukeTools 0.12.0, the stubs are now added inside `~/.nuke/NukeTools/stubs` and are added to the user settings instead of workspace.
+
+1. Use the command `Nuke: Add Python Stubs` to add the stubs to your user `python.analysis.extraPaths` setting.
 2. Write `import nuke` into your script.
 
 ![PythonStubs](/resources/images/auto_complete.gif)
@@ -139,7 +141,7 @@ Quickly create a PySide2 template project with the `Nuke: Create a PySide2` comm
 | `Nuke: Launch alternative executable`             | `nuke-tools.launchNukeAlt`        | Launch alternative executable                                                   |
 | `Nuke: Launch alternative executable with prompt` | `nuke-tools.launchNukeOptArgs`    | Launch alternative exec. with prompt for optional args                          |
 | `Nuke: Run Inside Nuke`                           | `nuke-tools.runCodeInsideNuke`    | Execute code inside Nuke                                                        |
-| `Nuke: Add Stubs to Workspace`                    | `nuke-tools.addPythonStubs`       | Add stubs path to workspace settings                                            |
+| `Nuke: Add Python Stubs`                    | `nuke-tools.addPythonStubs`       | Add stubs path to workspace settings                                            |
 | `Nuke: Add NukeServerSocket`                      | `nuke-tools.addNukeServerSocket`  | Add NukeServerSocket plugin to `.nuke` dir and `menu.py`                        |
 | `Nuke: Create a PySide2 plugin`                   | `nuke-tools.createPySide2Project` | Create a PySide2 plugin from template                                           |
 | `Nuke: Show Network Addresses`                    | `nuke-tools.showNetworkAddresses` | Show network addresses                                                          |
@@ -212,24 +214,16 @@ NOTES:
     }
     ```
 
+- `nukeTools.other.useSystemEnvVars`: `boolean`
+
+    Add system environment variables. When enabled, the extension will also add the corresponding system environment variables to the running Nuke instance.
+
 - `nukeTools.pysideTemplate.pythonVersion`: `string`
     Set a default Python version to use in pyproject.toml. You can use
-    Poetry [version-constraints](https://python-poetry.org/docs/dependency-specification/#version-constraints) specification.
-
-    ```json
-    {
-        "nukeTools.pysideTemplate.pythonVersion": "~3.7.7"
-    }
-    ```
+    Poetry [version-constraints](https://python-poetry.org/docs/dependency-specification/#version-constraints) specification (e.g. `~3.7.7`)
 
 - `nukeTools.pysideTemplate.pysideVersion`: `string`
-    Set a default PySide2 version to use in pyproject.toml and requirements.txt.
-
-    ````json
-    {
-        "nukeTools.pysideTemplate.pysideVersion": "5.12.2"
-    }
-    ````
+    Set a default PySide2 version to use in pyproject.toml and requirements.txt. (e.g. `5.12.2`)
 
 ## Contributing
 
