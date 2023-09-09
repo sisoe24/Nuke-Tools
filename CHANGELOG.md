@@ -1,36 +1,43 @@
 # Change Log
 
-All notable changes to the "nuke-tools" extension will be documented in this file.
+
+## [Unreleased]
+
+## [0.12.0] - 09/23/2023
+
+### Changed
+
+- The stubs now are added to the `~/.nuke/NukeTools/stubs` folder and the LSP config path is added at a user level instead of workspace level.
 
 ## [0.11.0] 02/07/2023
 
-## Added
+### Added
 
 - Initial support for some completions providers. Currently only works for the `nuke.toNode` function.
 
-## Changed
+### Changed
 
 - Update the handling of the socket connection to resolve as soon as it receives the data.
 
 ## [0.10.0] 04/02/2023
 
-## Added
+### Added
 
 - Nodes Panel: A new panel that allows interaction with the nodes in the current Nuke script.
 
 ## [0.9.0] 03/25/2023
 
-## Changed
+### Changed
 
 - Fetch the latests release of the included packages via the GitHub release page.
 
 ## [0.8.12] 03/19/2023
 
-## Added
+### Added
 
 - New and improved nuke stubs files.
 
-## Changed
+### Changed
 
 - Fallback on Pylance Python Server if Default.
 - Include stubs inside zip file.
@@ -38,7 +45,7 @@ All notable changes to the "nuke-tools" extension will be documented in this fil
 
 ## [0.8.4] 09/01/2023
 
-## Changed
+### Changed
 
 - Changed Python version for the pyside2 plugin to `~3.7.7`
 
