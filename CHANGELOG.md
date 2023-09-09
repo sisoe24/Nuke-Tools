@@ -1,9 +1,12 @@
 # Change Log
 
-
 ## [Unreleased]
 
 ## [0.12.0] - 09/23/2023
+
+### Added
+
+- New settings `nukeTools.other.useSystemEnvVars` that allows to use the system environment variables together with the ones defined in the extension settings.
 
 ### Changed
 
