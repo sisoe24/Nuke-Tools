@@ -214,6 +214,10 @@ NOTES:
     }
     ```
 
+- `nukeTools.env.useSystemEnvVars`: `boolean`
+
+    Add system environment variables. When enabled, the extension will also add the corresponding system environment variables to the running Nuke instance.
+
 - `nukeTools.pysideTemplate.pythonVersion`: `string`
     Set a default Python version to use in pyproject.toml. You can use
     Poetry [version-constraints](https://python-poetry.org/docs/dependency-specification/#version-constraints) specification (e.g. `~3.7.7`)
