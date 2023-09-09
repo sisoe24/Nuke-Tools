@@ -95,7 +95,6 @@ export class BlinkScriptCompletionProvider implements vscode.CompletionItemProvi
         /**
          * `kernel abc : type <` match
          */
-        // const kernelGranularity = RegExp(/kernel\s\w+\s*:\s*\w+\s*</);
         if (kernelGranularity.match.test(linePrefix)) {
             return kernelGranularity.items;
         }
