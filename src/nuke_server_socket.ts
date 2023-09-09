@@ -4,13 +4,12 @@ import * as utils from "./utils";
 import * as vscode from "vscode";
 import * as fsExtra from "fs-extra";
 
-
 /**
  * Add NukeServerSocket to the .nuke folder and import it inside the menu.py
  */
 export function addNukeServerSocket(): void {
     const destination = path.join(utils.nukeToolsDir, "NukeServerSocket");
-    fsExtra.copySync(utils.getAssetsPath("NukeServerSocket"), destination, {
+    fsExtra.copySync(utils.getPath("assets", "NukeServerSocket"), destination, {
         overwrite: true,
     });
 
@@ -19,7 +18,7 @@ export function addNukeServerSocket(): void {
         fsExtra.removeSync(legacySrcFolder);
     }
 
-    utils.nukeMenuImport("from NukeTools import NukeServerSocket");
+    utils.writeImport("from NukeTools import NukeServerSocket");
 
     const msg = `Added/Updated NukeServerSocket inside \`~/.nuke/NukeTools\`.
     You can now launch Nuke and find the plugin inside the Windows Custom panel.
