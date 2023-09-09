@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 
-const _msg = "";
+const _msg = `New in 0.12.0: Stubs are now added at user level instead of workspace level.`;
 
 /**
  * Show update message box if version is newer or update message is different.
