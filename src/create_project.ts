@@ -136,7 +136,7 @@ async function importStatementMenu(module: string): Promise<void> {
     })) as string;
 
     if (loadNukeInit === "Yes") {
-        utils.nukeMenuImport(`from NukeTools import ${module}`);
+        utils.writeImport(`from NukeTools import ${module}`);
     }
 }
 
@@ -155,7 +155,7 @@ export async function createTemplate(): Promise<void> {
         return;
     }
 
-    const source = vscode.Uri.file(utils.getAssetsPath("pyside2-template"));
+    const source = vscode.Uri.file(utils.getPath("assets", "pyside2-template"));
     await vscode.workspace.fs.copy(source, destination);
 
     const pythonFiles = osWalk(destination.fsPath);
