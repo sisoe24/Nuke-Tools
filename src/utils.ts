@@ -5,48 +5,47 @@ import * as vscode from "vscode";
 
 export const nukeDir = path.join(os.homedir(), ".nuke");
 export const nukeToolsDir = path.join(nukeDir, "NukeTools");
+const rootExtensionPath = vscode.extensions.getExtension("virgilsisoe.nuke-tools")
+    ?.extensionPath as string;
+
+export const assetsPath = path.join(rootExtensionPath, "assets");
+if (!fs.existsSync(assetsPath)) {
+    fs.mkdirSync(assetsPath);
+}
 
 /**
- * Import NukeServerSocket inside the menu.py
+ * Write the import statement to the `menu.py` file. If the file doesn't exist, it will be created.
  *
- * If file does not exists will create one and write to it, otherwise will append
- * the statement at the end.
+ * @param text the text to write (e.g. `from NukeTools import NukeServerSocket`)
  */
-export function nukeMenuImport(statement: string): void {
+export function writeImport(text: string): void {
     const menuPy = path.join(nukeDir, "menu.py");
 
     if (fs.existsSync(menuPy)) {
-        if (!fs.readFileSync(menuPy, "utf-8").match(statement)) {
-            fs.appendFileSync(menuPy, `\n${statement}\n`);
+        const fileContent = fs.readFileSync(menuPy, "utf-8");
+        if (!fileContent.includes(text)) {
+            fs.appendFileSync(menuPy, `\n${text}\n`);
         }
     } else {
-        fs.writeFileSync(menuPy, statement);
+        fs.writeFileSync(menuPy, text);
     }
 }
 
-export function extensionPath(): string {
-    return vscode.extensions.getExtension("virgilsisoe.nuke-tools")?.extensionPath as string;
-}
+type Directories = "include" | "assets";
 
 /**
  * Get a path from the included directory.
  *
- * @returns the path or undefined if couldn't resolve the path.
+ * @returns the path to the included directory
+ * @throws an error if the path could not be resolved
  */
-export function getIncludedPath(directory: string, name: string): string {
-    if (extensionPath()) {
-        return path.join(extensionPath(), directory, name);
+export function getPath(directory: Directories, name: string): string {
+    const file = path.join(rootExtensionPath, directory, name);
+
+    if (!fs.existsSync(file)) {
+        const msg = `Could not find ${name} path.`;
+        throw new Error(msg);
     }
 
-    const msg = `Could not resolve ${name} path.`;
-    vscode.window.showErrorMessage(msg);
-    throw new Error(msg);
-}
-
-export function getIncludePath(name: string): string {
-    return getIncludedPath("include", name);
-}
-
-export function getAssetsPath(name: string): string {
-    return getIncludedPath("assets", name);
+    return file;
 }

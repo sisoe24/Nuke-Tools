@@ -2,19 +2,12 @@ import * as path from "path";
 import * as utils from "./utils";
 import * as vscode from "vscode";
 
-import { existsSync, mkdirSync } from "fs";
-
 import extract = require("extract-zip");
 
 import { GithubRelease } from "@terascope/fetch-github-release/dist/src/interfaces";
 import { downloadRelease } from "@terascope/fetch-github-release";
 
-const assetsPath = path.join(utils.extensionPath(), "assets");
-if (!existsSync(assetsPath)) {
-    mkdirSync(assetsPath);
-}
-
-enum Package {
+export enum Package {
     nukeServerSocket = "NukeServerSocket",
     nukePythonStubs = "nuke-python-stubs",
     pySide2Template = "pyside2-template",
@@ -27,7 +20,12 @@ const latest = new Map<Package, string>([
 ]);
 
 /**
- * Download a package from the github release page.
+ * Download a package from the github release page. If the download fails, 
+ * fallback on the local zip.
+ * 
+ * @param repo A {@link Package} name
+ * @param destination Destination path
+ * @returns true if the package was downloaded, false otherwise.
  */
 function downloadPackage(repo: Package, destination: string): boolean {
     function filterRelease(release: GithubRelease) {
@@ -43,8 +41,8 @@ function downloadPackage(repo: Package, destination: string): boolean {
                 `Failed to download package from GitHub: ${err.message}. Fallback on local zip.`
             );
             try {
-                await extract(utils.getIncludePath(`${repo}.zip`), {
-                    dir: path.join(utils.extensionPath(), "assets", repo),
+                await extract(utils.getPath("include", `${repo}.zip`), {
+                    dir: path.join(utils.assetsPath, repo),
                 });
             } catch (err) {
                 vscode.window.showErrorMessage(err as string);
@@ -56,7 +54,7 @@ function downloadPackage(repo: Package, destination: string): boolean {
 }
 
 /**
- * Download the NukeServerSocket package.
+ * Utility function to download the Stubs package.
  *
  * @param dest Destination path
  * @returns true if the package was downloaded, false otherwise.
@@ -83,7 +81,7 @@ export function updatePackage(
 
     if (
         currentVersion > previousPkgVersion &&
-        downloadPackage(packageId, path.join(assetsPath, packageId))
+        downloadPackage(packageId, path.join(utils.assetsPath, packageId))
     ) {
         context.globalState.update(pkgVersionId, currentVersion);
     }
