@@ -106,6 +106,48 @@ export function restartInstance(name: string): void {
     });
 }
 
+type EnvVars = { [key: string]: string };
+
+/**
+ * Concatenate the user's environment variables with the system's environment variables.
+ *
+ * @param userConfigVars EnvVars object containing the user's environment variables
+ * return an EnvVars object containing the concatenated environment variables
+ */
+function concatEnv(userConfigVars: EnvVars): EnvVars {
+    const env: EnvVars = {};
+
+    for (const [k, v] of Object.entries(userConfigVars)) {
+        const systemEnvVar = process.env[k];
+
+        if (systemEnvVar) {
+            env[k] = `${systemEnvVar}:${v}`;
+        } else {
+            env[k] = v;
+        }
+
+        // remove double colons just in case
+        env[k] = env[k].replace(/::/g, ":");
+    }
+
+    return env;
+}
+
+/**
+ * Stringify the environment variables into a string that can be used in the terminal.
+ *
+ * @param env EnvVars object containing the environment variables to stringify
+ * @returns a string containing the environment variables
+ */
+function stringifyEnv(env: EnvVars): string {
+    let envString = "";
+
+    for (const [k, v] of Object.entries(env)) {
+        envString += `${k}=${v} `;
+    }
+
+    return envString;
+}
 /**
  * Get the command line text to use when launching a nuke executable.
  *
@@ -122,15 +164,15 @@ export function getCliCmd(execPath: ExecutablePath): string {
         return cliCmd;
     }
 
-    const envVars = getConfig("other.envVars") as { key: string; value: string };
+    let env = getConfig("env.envVars") as EnvVars;
 
-    // TODO: get system key if exists
-    let appendVars = "";
-    for (const [k, v] of Object.entries(envVars)) {
-        appendVars += `${k}="${v}" `;
+    if (getConfig("env.useSystemEnv") as boolean) {
+        env = concatEnv(env);
     }
 
-    return appendVars + cliCmd;
+    const envString = stringifyEnv(env);
+
+    return `${envString} ${cliCmd}`;
 }
 
 /**
@@ -190,9 +232,7 @@ export function launchSecondaryExecutable(): ExecutablePath {
         getConfig("nukeExecutable.secondaryExecutablePath") as string,
         "Alt."
     );
-    const defaultArgs = getConfig(
-        "nukeExecutable.options.defaultCommandLineArguments"
-    ) as string;
+    const defaultArgs = getConfig("nukeExecutable.options.defaultCommandLineArguments") as string;
 
     if (defaultArgs) {
         execObj.args = defaultArgs;
