@@ -207,21 +207,17 @@ export async function sendData(
             client.connect(port, host, function () {
                 writeDebugNetwork(showDebug, "Connected.");
                 client.write(text);
-
-                status.message = "Connected";
             });
         } catch (error) {
             if (error instanceof RangeError) {
                 const msg = `Port is out of range. Value should be >= 49567 and < 65536. Received: ${port}`;
                 writeDebugNetwork(showDebug, msg);
                 client.destroy(new Error("Port out of range"));
-
                 status.errorMessage = "Port is out of range";
             } else {
                 const msg = `Unknown exception. ${String(error)}`;
                 writeDebugNetwork(showDebug, msg);
                 client.destroy(new Error(msg));
-
                 status.errorMessage = msg;
             }
         }
@@ -276,7 +272,8 @@ export async function sendData(
             ${error.message}`;
             vscode.window.showErrorMessage(msg);
 
-            status.message = "Connection refused";
+            status.errorMessage = "Connection refused";
+            status.error = true;
             resolve(status);
         });
 
@@ -305,9 +302,6 @@ export async function sendData(
             writeDebugNetwork(showDebug, "Connection ended.");
         });
 
-        // setTimeout(() => {
-        //     resolve(status);
-        // }, 5000);
     });
 }
 

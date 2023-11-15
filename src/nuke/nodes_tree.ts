@@ -204,6 +204,8 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         const files = osWalk(KNOBS_DIR);
         const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+        // TODO: send all the code at once and then rename the files. 
+
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             if (!file.endsWith(".py")) {
@@ -212,7 +214,8 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
 
             const knobFile = new KnobFile(file);
             const result = await sendToNuke(syncNodeSnippet(knobFile));
-            if (result.message === "False") {
+            if (result.error) {
+                vscode.window.showErrorMessage(`Failed to sync ${file}: ${result.errorMessage}`);
                 continue;
             }
             const newName = knobFile.newName(result.message);
@@ -357,7 +360,13 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         );
 
         // If the connection was refused, it means that Nuke server socket is not running.
-        if (data.message === "Connection refused") {
+        if (data.error) {
+            vscode.window.showErrorMessage(`Failed to get nodes: ${data.errorMessage}`);
+            return [];
+        }
+
+        if (!data.message) {
+            vscode.window.showErrorMessage(`Failed to get nodes: no message received from Nuke`);
             return [];
         }
 
