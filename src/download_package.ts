@@ -13,8 +13,9 @@ export enum Package {
     pySide2Template = "pyside2-template",
 }
 
+// TODO: Get latest version from github api
 const latest = new Map<Package, string>([
-    [Package.nukeServerSocket, "0.6.0"],
+    [Package.nukeServerSocket, "0.6.2"],
     [Package.nukePythonStubs, "0.2.3"],
     [Package.pySide2Template, "0.2.0"],
 ]);
