@@ -1,6 +1,11 @@
 # Change Log
 
-## [Unreleased]
+## [0.12.1] - 11/19/2023
+
+### Changed
+
+- Update NukeServerSocket to version to latest
+- Update socket debug functionallity.
 
 ## [0.12.0] - 09/23/2023
 
