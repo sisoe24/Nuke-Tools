@@ -132,8 +132,8 @@ export function getAddresses(): string {
  * @param filePath path to the file that is being executed.
  * @param showDebug if true, the output window will not be cleared despite the settings.
  */
-export function writeToOutputWindow(data: string, filePath: string, showDebug: boolean): string {
-    if (getConfig("other.clearPreviousOutput") && !showDebug) {
+export function writeToOutputWindow(data: string, filePath: string): string {
+    if (getConfig("other.clearPreviousOutput") && !getConfig("network.debug")) {
         outputWindow.clear();
     }
 
@@ -151,14 +151,14 @@ export function writeToOutputWindow(data: string, filePath: string, showDebug: b
  * @param showDebug if true, will output debug information to the output window.
  * @param data text data to write into the output window.
  */
-export function writeDebugNetwork(showDebug: boolean, data: string): string {
-    let msg = "";
-
-    if (showDebug) {
-        const timestamp = new Date();
-        msg = `[${timestamp.toISOString()}] - ${data}`;
-        outputWindow.appendLine(msg);
+export function logDebugNetwork(data: string): string {
+    if (!getConfig("network.debug")) {
+        return "";
     }
+
+    const timestamp = new Date();
+    const msg = `[${timestamp.toISOString()}] - ${data}`;
+    outputWindow.appendLine(msg);
     return msg;
 }
 
@@ -178,14 +178,13 @@ export async function sendData(
 ): Promise<{ message: string; error: boolean; errorMessage: string }> {
     return new Promise((resolve, reject) => {
         const client = new Socket();
-        const showDebug = getConfig("network.debug") as boolean;
         const status = {
             message: "",
             error: false,
             errorMessage: "",
         };
 
-        writeDebugNetwork(showDebug, `Try connecting to ${host}:${port}`);
+        logDebugNetwork(`Try connecting to ${host}:${port}`);
 
         /**
          * Set connection timeout.
@@ -193,9 +192,9 @@ export async function sendData(
          * Once emitted will close the socket with an error: 'connection timeout'.
          */
         client.setTimeout(timeout, () => {
-            writeDebugNetwork(showDebug, "Connection timeout.");
+            logDebugNetwork("Connection timeout.");
             client.destroy(new Error("Connection timeout"));
-            resolve(status);
+            reject(status);
         });
 
         try {
@@ -205,21 +204,23 @@ export async function sendData(
              * If host is undefined, will fallback to localhost.
              */
             client.connect(port, host, function () {
-                writeDebugNetwork(showDebug, "Connected.");
+                logDebugNetwork("Connected.");
                 client.write(text);
             });
         } catch (error) {
             if (error instanceof RangeError) {
                 const msg = `Port is out of range. Value should be >= 49567 and < 65536. Received: ${port}`;
-                writeDebugNetwork(showDebug, msg);
+                logDebugNetwork(msg);
                 client.destroy(new Error("Port out of range"));
                 status.errorMessage = "Port is out of range";
             } else {
                 const msg = `Unknown exception. ${String(error)}`;
-                writeDebugNetwork(showDebug, msg);
+                logDebugNetwork(msg);
                 client.destroy(new Error(msg));
                 status.errorMessage = msg;
             }
+            status.error = true;
+            reject(status);
         }
 
         /**
@@ -231,14 +232,14 @@ export async function sendData(
             const textData = data.toString();
 
             const oneLineData = textData.replace(/\n/g, "\\n");
-            writeDebugNetwork(showDebug, `Received: "${oneLineData}"\n`);
+            logDebugNetwork(`Received: "${oneLineData}"\n`);
 
             const filePath = JSON.parse(text)["file"];
-            writeToOutputWindow(textData, filePath, showDebug);
+            writeToOutputWindow(textData, filePath);
 
             status.message = data.toString().trim();
-            client.end();
             resolve(status);
+            client.end();
         });
 
         /**
@@ -247,16 +248,17 @@ export async function sendData(
         client.on(
             "lookup",
             function (error: Error | null, address: string, family: string, host: string) {
-                writeDebugNetwork(
-                    showDebug,
+                logDebugNetwork(
                     "Socket Lookup :: " +
                         JSON.stringify({ address, family, host, error }, null, " ")
                 );
 
                 if (error) {
-                    writeDebugNetwork(showDebug, `${error.message}`);
+                    logDebugNetwork(`${error.message}`);
                     status.errorMessage = error.message;
+                    reject(status);
                 }
+
             }
         );
 
@@ -274,7 +276,7 @@ export async function sendData(
 
             status.errorMessage = "Connection refused";
             status.error = true;
-            resolve(status);
+            reject(status);
         });
 
         /**
@@ -283,23 +285,21 @@ export async function sendData(
          * Triggered immediately after 'connect'.
          */
         client.on("ready", function () {
-            writeDebugNetwork(showDebug, "Message ready.");
+            logDebugNetwork("Message ready.");
         });
 
         /**
          * Emitted once the socket is fully closed.
          */
         client.on("close", function (hadError: boolean) {
-            writeDebugNetwork(showDebug, `Connection closed. Had Errors: ${hadError.toString()}`);
-            status.error = hadError;
-            resolve(status);
+            logDebugNetwork(`Connection closed. Had Errors: ${hadError.toString()}`);
         });
 
         /**
          * Emitted when the other end of the socket signals the end of transmission.
          */
         client.on("end", function () {
-            writeDebugNetwork(showDebug, "Connection ended.");
+            logDebugNetwork("Connection ended.");
         });
 
     });
