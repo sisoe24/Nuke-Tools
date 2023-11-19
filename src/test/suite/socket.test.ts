@@ -83,12 +83,12 @@ suite("Socket", () => {
     });
 
     test("Write debug network", () => {
-        const msg = socket.writeDebugNetwork(true, "random msg");
+        const msg = socket.logDebugNetwork("random msg");
         assert.match(msg, /\[[^\]]+] - random msg/);
     });
 
     test("Dont write debug network", () => {
-        const msg = socket.writeDebugNetwork(false, "random msg");
+        const msg = socket.logDebugNetwork("random msg");
         assert.strictEqual(msg, "");
     });
 
