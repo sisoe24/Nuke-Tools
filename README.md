@@ -97,10 +97,11 @@ If you're experiencing issues with the stubs in the latest versions of VSCode, y
 
 ## 1.5. Nodes Panel
 
-----------------------
+---
+
 The nodes panel is currently in Preview and may not work as expected. If you encounter any issues, please open an issue on the GitHub repository. You can also request new features or contribute by opening a PR.
 
-----------------------
+---
 
 ![NodesPanel](/resources/images/nodes_panel.gif)
 
@@ -117,6 +118,7 @@ If you change a node's name in Nuke, you'll need to sync it with the panel by cl
 
 ### 1.5.2. Known Issues and Limitations
 
+- NukeServerSocket <= `0.6.1` has a bug that wrongly assumes the server is set on using the ScriptEditor engine. Because the panel does not work with the Nuke Internal engine, you'll need to switch to the Internal Engine and then back to the ScriptEditor engine. This will force NukeServerSocket to use the ScriptEditor engine. This issue is fixed in `0.6.2`.
 - Knob scripts are tied to the current Workspace, which means that once you create a knob file, it will be saved in the current `$workspace/.nuketools` directory. If you change the Workspace, the panel will not be able to find the knob files.
 - After syncing the knob's value, Nuke may not execute the code until you execute a command in the Script Editor. This is a Nuke-specific issue and not related to the extension. I am still trying to understand why this happens so if you have any ideas, let me know.
 - When creatin a new knob, the input prompt for the name is not restrictive as the one in Nuke. This means that you can enter any character, including invalid ones, and the panel will not be able to detect it. Please keep this in mind and use only letters, numbers, and underscores.
