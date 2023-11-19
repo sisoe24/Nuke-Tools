@@ -87,13 +87,8 @@ suite("Socket", () => {
         assert.match(msg, /\[[^\]]+] - random msg/);
     });
 
-    test("Dont write debug network", () => {
-        const msg = socket.logDebugNetwork("random msg");
-        assert.strictEqual(msg, "");
-    });
-
     test("Write to output window", () => {
-        const msg = socket.writeToOutputWindow("random msg", tmpFile, false);
+        const msg = socket.writeToOutputWindow("random msg", tmpFile);
         assert.strictEqual(msg, `> Executing: ${tmpFile}\\nrandom msg`);
     });
 });
