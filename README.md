@@ -38,6 +38,7 @@ Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to
   - [1.7. PySide2 Template Project](#17-pyside2-template-project)
   - [1.8. Available Commands](#18-available-commands)
   - [1.9. Extension Settings](#19-extension-settings)
+  - [Known Issues](#known-issues)
   - [Contributing](#contributing)
 
 ## 1.1. Features
@@ -109,7 +110,7 @@ The nodes panel allows you to view and interact with nodes in the current DAG in
 
 ### 1.5.1. Usage
 
-Access the nodes panel by clicking on the Nuke icon in the Activity Bar. The panel will be empty until you connect [NukeServerSocket](https://github.com/sisoe24/NukeServerSocket). Once connected, the panel will be populated with nodes from the current DAG.
+Access the nodes panel by clicking on the Nuke icon in the Activity Bar. The panel will be empty until you connect [NukeServerSocket](https://github.com/sisoe24/NukeServerSocket) and make sure that the Code Execution Engine is set to `Script Editor`. Once connected, the panel will be populated with nodes from the current DAG.
 After adding a new knob in Nuke, you'll need to refresh with the "Refresh" button to see the new knob.
 
 Click the `+` button on a node in the panel to assign it a new knob. Each knob has a file reference which you can edit. Once you save the file, you can sync the file content with the knob by clicking the "Send code to Knob" button. To use the `knobChanged`, type its name into the input dialog when creatin a new knob.
@@ -118,7 +119,7 @@ If you change a node's name in Nuke, you'll need to sync it with the panel by cl
 
 ### 1.5.2. Known Issues and Limitations
 
-- NukeServerSocket <= `0.6.1` has a bug that wrongly assumes the server is set on using the ScriptEditor engine. Because the panel does not work with the Nuke Internal engine, you'll need to switch to the Internal Engine and then back to the ScriptEditor engine. This will force NukeServerSocket to use the ScriptEditor engine. This issue is fixed in `0.6.2`.
+- The panel only works with NukeServerSocket Scritp Editor engine (see [Known Issues](#known-issues)).
 - Knob scripts are tied to the current Workspace, which means that once you create a knob file, it will be saved in the current `$workspace/.nuketools` directory. If you change the Workspace, the panel will not be able to find the knob files.
 - After syncing the knob's value, Nuke may not execute the code until you execute a command in the Script Editor. This is a Nuke-specific issue and not related to the extension. I am still trying to understand why this happens so if you have any ideas, let me know.
 - When creatin a new knob, the input prompt for the name is not restrictive as the one in Nuke. This means that you can enter any character, including invalid ones, and the panel will not be able to detect it. Please keep this in mind and use only letters, numbers, and underscores.
@@ -128,6 +129,8 @@ If you change a node's name in Nuke, you'll need to sync it with the panel by cl
 BlinkScript features are currently basic, but you can request more or contribute by opening a PR. Also, try using Material Icon Theme which adds a Nuke icon for the .blink file.
 
 Features include code execution, syntax highlighting, formatting, simple code suggestion, and a startup saturation snippet. When using the extension, a blinkscript node will be created with the same name as the active file, and if the node already exists, the code will be updated and recompiled. Accepted file extensions are `.cpp` or `.blink` .
+
+To create a new BlinkScript node, make sure that the NukeServerSocket Code execution engine is set to the `Script Editor` (see [Known Issues](#known-issues)). Once done, create a new file with the `.cpp` or `.blink` extension, and run the code with the command `Nuke: Run code inside nuke`. The node will be created in the current DAG. If you want to update the code, simply run the code again.
 
 ## 1.7. PySide2 Template Project
 
@@ -226,6 +229,10 @@ NOTES:
 
 - `nukeTools.pysideTemplate.pysideVersion`: `string`
     Set a default PySide2 version to use in pyproject.toml and requirements.txt. (e.g. `5.12.2`)
+
+## Known Issues
+
+- There is a bug in NukeServerSocket <= 0.6.1 that wrongly assumes the server is set on using the Script Editor engine. The NodesPanel and the BlinkScript features do not work with the Nuke Internal engine, so you'll need to switch to the Internal Engine and then back to the ScriptEditor engine. This will force NukeServerSocket to use the Script Editor engine. This issue is fixed in 0.6.2.
 
 ## Contributing
 
