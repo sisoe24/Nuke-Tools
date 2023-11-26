@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 
-const _msg = `New in 0.12.0: Stubs are now added at user level instead of workspace level.`;
+const _msg = `NukeServerSocket <= 0.6.1 containts a bug that prevents the extension to run properly. Please update with "Nuke: Add NukeServerSocket" command.`;
 
 /**
  * Show update message box if version is newer or update message is different.
