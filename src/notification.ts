@@ -1,6 +1,9 @@
 import * as vscode from "vscode";
 
-const _msg = `NukeServerSocket <= 0.6.1 containts a bug that prevents the extension to run properly. Please update with "Nuke: Add NukeServerSocket" command.`;
+const _msg = `
+VimDcc is now part of NukeTools. A Vim-like experience for Nuke's default Script Editor. Use the command \`NukeTools: Add VimDcc\` to install it.
+More information on the official github (github.com/sisoe24/vimdcc) page.
+`;
 
 /**
  * Show update message box if version is newer or update message is different.

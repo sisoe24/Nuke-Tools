@@ -26,3 +26,18 @@ export function addNukeServerSocket(): void {
     `;
     vscode.window.showInformationMessage(msg);
 }
+
+/**
+ * Add vimdcc to the .nuke folder and import it inside the menu.py
+ */
+export function addVimDcc(): void {
+    const destination = path.join(utils.nukeToolsDir, "vimdcc");
+    fsExtra.copySync(utils.getPath("assets", "vimdcc"), destination, {
+        overwrite: true,
+    });
+
+    utils.writeImport("from NukeTools.vimdcc import vimdcc\nvimdcc.install_nuke()");
+
+    const msg = "Added/Updated VimDcc inside `~/.nuke/NukeTools`.";
+    vscode.window.showInformationMessage(msg);
+}
