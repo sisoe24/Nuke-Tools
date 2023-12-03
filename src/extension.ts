@@ -77,7 +77,7 @@ function registerPackagesCommands(context: vscode.ExtensionContext): void {
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.createPySide2Project", () => {
-            nukeTemplate.createTemplate();
+            void nukeTemplate.createTemplate();
         })
     );
 
