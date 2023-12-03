@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 
-import * as nuke from "./nuke_server_socket";
+import * as nuke from "./add_package";
 import * as stubs from "./stubs";
 import * as socket from "./socket";
 import * as executables from "./launch_executable";
@@ -90,6 +90,12 @@ function registerPackagesCommands(context: vscode.ExtensionContext): void {
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.addNukeServerSocket", () => {
             nuke.addNukeServerSocket();
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.addVimDcc", () => {
+            nuke.addVimDcc();
         })
     );
 }

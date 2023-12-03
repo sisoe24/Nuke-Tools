@@ -11,6 +11,7 @@ export enum Package {
     nukeServerSocket = "NukeServerSocket",
     nukePythonStubs = "nuke-python-stubs",
     pySide2Template = "pyside2-template",
+    vimdcc = "vimdcc",
 }
 
 // TODO: Get latest version from github api
@@ -18,6 +19,7 @@ const latest = new Map<Package, string>([
     [Package.nukeServerSocket, "0.6.2"],
     [Package.nukePythonStubs, "0.2.3"],
     [Package.pySide2Template, "0.2.0"],
+    [Package.vimdcc, "0.1.0"]
 ]);
 
 /**
