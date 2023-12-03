@@ -38,6 +38,6 @@ export function addVimDcc(): void {
 
     utils.writeImport("from NukeTools.vimdcc import vimdcc\nvimdcc.install_nuke()");
 
-    const msg = `Added/Updated VimDCC inside \`~/.nuke/NukeTools\`.`;
+    const msg = "Added/Updated VimDcc inside `~/.nuke/NukeTools`.";
     vscode.window.showInformationMessage(msg);
 }

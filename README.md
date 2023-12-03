@@ -34,7 +34,7 @@ Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to
     - [1.4.1. Python stubs](#141-python-stubs)
       - [1.4.1.1. Stubs are not working?](#1411-stubs-are-not-working)
     - [1.4.2. PySide2 Template Project](#142-pyside2-template-project)
-    - [1.4.3. VimDCC](#143-vimdcc)
+    - [1.4.3. VimDcc](#143-vimdcc)
   - [1.5. Nodes Panel](#15-nodes-panel)
     - [1.5.1. Usage](#151-usage)
     - [1.5.2. Known Issues and Limitations](#152-known-issues-and-limitations)
@@ -105,9 +105,9 @@ If you're experiencing issues with the stubs in the latest versions of VSCode, y
 
 Quickly create a PySide2 template project with the `Nuke: Create a PySide2` command. The plugin can be found in `~/.nuke/NukeTools` . For more information, refer to the project's GitHub README [https://github.com/sisoe24/pyside2-template#readme].
 
-### 1.4.3. VimDCC
+### 1.4.3. VimDcc
 
-VimDCC offers a Vim-like experience for Nuke's default Script Editor. It's perfect for quick coding without an IDE. Check out the project's GitHub README [vimdcc](github.com/sisoe24/vimdcc) for more info. To install, use `Nuke: Install VimDCC`.
+VimDcc offers a Vim-like experience for Nuke's default Script Editor. It's perfect for quick coding without an IDE. Check out the project's GitHub README [vimdcc](github.com/sisoe24/vimdcc) for more info. To install, use `Nuke: Install VimDcc`.
 
 ## 1.5. Nodes Panel
 
@@ -153,13 +153,14 @@ To create a new BlinkScript node, make sure that the NukeServerSocket Code execu
 | `Nuke: Run Inside Nuke`                           | `nuke-tools.runCodeInsideNuke`    | Execute code inside Nuke                                                        |
 | `Nuke: Add Python Stubs`                    | `nuke-tools.addPythonStubs`       | Add stubs path to workspace settings                                            |
 | `Nuke: Add NukeServerSocket`                      | `nuke-tools.addNukeServerSocket`  | Add NukeServerSocket plugin to `.nuke` dir and `menu.py`                        |
+| `Nuke: Add VimDcc`                      | `nuke-tools.addVimDcc`  | Add VimDcc plugin to `.nuke` dir and `menu.py`                        |
 | `Nuke: Create a PySide2 plugin`                   | `nuke-tools.createPySide2Project` | Create a PySide2 plugin from template                                           |
 | `Nuke: Show Network Addresses`                    | `nuke-tools.showNetworkAddresses` | Show network addresses                                                          |
 | `Nuke: Force Update packages`                     | `nuke-tools.forceUpdatePackages`  | Update the included packages (NukeServerSocket, Python stubs, pyside2-template) |
 
 NOTES:
 
-- Running `Nuke: Add NukeServerSocke`t or `Nuke: Create a Pyside2` plugin will add the corresponding plugin to `$HOME/.nuke/NukeTools` and generate an import statement in the menu.py file. If menu.py doesn't exist, it will be created.
+- When Running `Nuke: Add NukeServerSocket` or `Nuke: Create a Pyside2` plugin will add the corresponding plugin to `$HOME/.nuke/NukeTools` and generate an import statement in the menu.py file. If menu.py doesn't exist, it will be created.
 - By default, the extension does not provide any shortcut. But you can assign each command to one. (see [Key Bindings for Visual Studio Code](https://code.visualstudio.com/docs/getstarted/keybindings) for more information).
     Example `keybindings.json` :
 

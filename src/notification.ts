@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 
 const _msg = `
-VimDCC is now part of NukeTools. A Vim-like experience for Nuke's default Script Editor. Use the command \`NukeTools: Add VimDCC\` to install it.
+VimDcc is now part of NukeTools. A Vim-like experience for Nuke's default Script Editor. Use the command \`NukeTools: Add VimDcc\` to install it.
 More information on the official github (github.com/sisoe24/vimdcc) page.
 `;
 
