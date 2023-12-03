@@ -20,6 +20,7 @@ Includes the following packages:
 [![Main Build](https://img.shields.io/github/v/release/sisoe24/NukeServerSocket?label=NukeServerSocket)](https://github.com/sisoe24/NukeServerSocket/releases)
 [![Main Build](https://img.shields.io/github/v/release/sisoe24/nuke-python-stubs?label=nuke-python-stubs)](https://github.com/sisoe24/nuke-python-stubs/releases)
 [![Main Build](https://img.shields.io/github/v/release/sisoe24/pyside2-template?label=pyside2-template)](https://github.com/sisoe24/pyside2-template/releases)
+[![Main Build](https://img.shields.io/github/v/release/sisoe24/vimdcc?label=vimdcc)](https://github.com/sisoe24/vimdcc/releases)
 
 ---
 
