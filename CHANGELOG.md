@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.13.0] - 03/12/2023
+
+### Added
+
+- New command `Nuke: Add VimDcc` that adds the VimDcc plugin to the current Nuke installation.
+
 ## [0.12.1] - 11/19/2023
 
 ### Changed
