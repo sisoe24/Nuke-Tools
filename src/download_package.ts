@@ -17,7 +17,7 @@ export enum Package {
 // TODO: Get latest version from github api
 const latest = new Map<Package, string>([
     [Package.nukeServerSocket, "0.6.2"],
-    [Package.nukePythonStubs, "0.2.3"],
+    [Package.nukePythonStubs, "0.2.4"],
     [Package.pySide2Template, "0.2.0"],
     [Package.vimdcc, "0.1.0"]
 ]);
