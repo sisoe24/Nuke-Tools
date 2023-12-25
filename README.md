@@ -211,7 +211,7 @@ NOTES:
 
     **NOTE**: Currently not working on Windows.
 
-    Add environment variables the current running Nuke instance. At the moment, it does not take in account the system environment variables.
+    Add environment variables the current running Nuke instance.
 
     ```json
     {
