@@ -6,12 +6,31 @@ import * as fsExtra from "fs-extra";
 import * as assets from "./assets";
 
 export const nukeDir = path.join(os.homedir(), ".nuke");
+export const nssConfigJSON = path.join(nukeDir, "nukeserversocket.json");
+export const nssConfigIni = path.join(nukeDir, "NukeServerSocket.ini");
 export const nukeToolsDir = path.join(nukeDir, "NukeTools");
 export const pythonStubsDir = path.join(nukeToolsDir, "stubs");
-if (!fs.existsSync(pythonStubsDir )) {
-    fs.mkdirSync(pythonStubsDir );
+if (!fs.existsSync(pythonStubsDir)) {
+    fs.mkdirSync(pythonStubsDir);
 }
 
+export function getNssConfig(value: string, defaultValue: string): string {
+    if (fs.existsSync(nssConfigJSON)) {
+        const fileContent = fs.readFileSync(nssConfigJSON, "utf-8");
+        return JSON.parse(fileContent)[value] || defaultValue;
+    }
+
+    // Legacy support for NukeServerSocket.ini
+    if (fs.existsSync(nssConfigIni)) {
+        const fileContent = fs.readFileSync(nssConfigIni, "utf-8");
+        const match = new RegExp(`${value}=(.+)`).exec(fileContent);
+        if (match) {
+            return match[1];
+        }
+    }
+
+    return defaultValue;
+}
 /**
  * Write the import statement to the `menu.py` file. If the file doesn't exist, it will be created.
  *
