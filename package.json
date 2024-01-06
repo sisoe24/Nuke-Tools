@@ -216,12 +216,7 @@
             }
         ],
         "menus": {
-            "commandPalette": [
-                {
-                    "command": "nuke-tools.testRunInsideNuke",
-                    "when": "false"
-                }
-            ],
+  
             "editor/title": [
                 {
                     "command": "nuke-tools.runCodeInsideNuke",
