@@ -2,10 +2,6 @@ import * as vscode from "vscode";
 
 import { sendCommand } from "../socket";
 
-async function askNuke(text: string) {
-    return sendCommand(JSON.stringify({ text: text, file: "" }));
-}
-
 export class NukeCompletionProvider implements vscode.CompletionItemProvider {
     provideCompletionItems(
         document: vscode.TextDocument,
@@ -23,7 +19,9 @@ export class NukeCompletionProvider implements vscode.CompletionItemProvider {
     }
 
     private async getAllNodes(): Promise<vscode.CompletionItem[]> {
-        return askNuke("[n.name() for n in nuke.allNodes()]").then((data) => {
+        return sendCommand(
+            JSON.stringify({ text: "[n.name() for n in nuke.allNodes()]", formatText: "0" })
+        ).then((data) => {
             const nodes = JSON.parse(data.message.replace(/'/g, '"'));
 
             const items: vscode.CompletionItem[] = [];
