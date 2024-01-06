@@ -1,7 +1,7 @@
 import * as os from "os";
 import * as fs from "fs";
 import * as path from "path";
-import * as utils from "./utils";
+import * as nuke from "./nuke";
 import * as vscode from "vscode";
 import { getConfig } from "./config";
 
@@ -17,7 +17,7 @@ const outputWindow = vscode.window.createOutputChannel("Nuke Tools");
  * @returns - path like string.
  */
 export function getNukeIni(): string {
-    return path.join(utils.nukeDir, "NukeServerSocket.ini");
+    return path.join(nuke.nukeDir, "NukeServerSocket.ini");
 }
 
 /**
