@@ -1,6 +1,4 @@
 import * as os from "os";
-import * as fs from "fs";
-import * as path from "path";
 import * as nuke from "./nuke";
 import * as vscode from "vscode";
 import { getConfig } from "./config";
@@ -9,16 +7,6 @@ import { Socket } from "net";
 
 const outputWindow = vscode.window.createOutputChannel("Nuke Tools");
 
-/**
- * Get the NukeServerSocket.ini file path.
- *
- * The path will be returned even if there is no file.
- *
- * @returns - path like string.
- */
-export function getNukeIni(): string {
-    return path.join(nuke.nukeDir, "NukeServerSocket.ini");
-}
 
 /**
  * Get the manual address by looking in the configuration network property.
@@ -44,51 +32,10 @@ export function getManualAddress(property: string, defaultValue: string): string
     return manualAddress;
 }
 
-/**
- * Get the port value from the NukeServerSocket.ini.
- *
- * If NukeServerSocket.ini has a wrong value, will default back on `defaultPort`.
- *
- * @param configIni - path of the NukeServerSocket.ini.
- * @param defaultPort - default port value if ini file had no valid value.
- * @returns - the port value.
- */
-export function getPortFromIni(configIni: string, defaultPort: string): string {
-    const fileContent = fs.readFileSync(configIni, "utf-8");
-    const match = fileContent.match(/port=(\d{5})(\b|\n)/);
 
-    if (!match) {
-        const msg = `
-            The configuration for the server/port appears to be invalid.
-            Falling back on port 54321 for now.
-            Try disconnecting and connecting back the server inside Nuke.
-            `;
-        vscode.window.showErrorMessage(msg);
-        return defaultPort;
-    }
-
-    return match[1];
-}
-
-/**
- * Get the port configuration value.
- *
- * The order of which the port value is taken is as follows:
- *  1. Create a default port value of: 54321
- *  2. If NukeServerSocket.ini has a valid port value, will be taken instead.
- *  3. If manual configuration is enabled, will be taken instead.
- *
- * If step 2 or 3 will fail, will default back on step 1.
- *
- * @returns - port value for the connection.
- */
 export function getPort(): number {
-    let port = "54321";
 
-    const configIni = getNukeIni();
-    if (fs.existsSync(configIni)) {
-        port = getPortFromIni(configIni, port);
-    }
+    let port = nuke.getNssConfig('port', '54321');
 
     if (getConfig("network.enableManualConnection")) {
         port = getManualAddress("port", port);
