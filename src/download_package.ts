@@ -1,5 +1,5 @@
 import * as path from "path";
-import * as utils from "./utils";
+import * as assets from "./assets";
 import * as vscode from "vscode";
 
 import extract = require("extract-zip");
@@ -44,8 +44,8 @@ function downloadPackage(repo: Package, destination: string): boolean {
                 `Failed to download package from GitHub: ${err.message}. Fallback on local zip.`
             );
             try {
-                await extract(utils.getPath("include", `${repo}.zip`), {
-                    dir: path.join(utils.assetsPath, repo),
+                await extract(assets.getPath("include", `${repo}.zip`), {
+                    dir: path.join(assets.PATH, repo),
                 });
             } catch (err) {
                 vscode.window.showErrorMessage(err as string);
@@ -84,7 +84,7 @@ export function updatePackage(
 
     if (
         currentVersion > previousPkgVersion &&
-        downloadPackage(packageId, path.join(utils.assetsPath, packageId))
+        downloadPackage(packageId, path.join(assets.PATH, packageId))
     ) {
         context.globalState.update(pkgVersionId, currentVersion);
     }
