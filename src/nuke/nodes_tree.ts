@@ -72,6 +72,7 @@ async function sendToNuke(text: string) {
         JSON.stringify({
             text: text,
             file: "",
+            formatText: "0",
         })
     );
 }
