@@ -10,9 +10,7 @@ export const nssConfigJSON = path.join(nukeDir, "nukeserversocket.json");
 export const nssConfigIni = path.join(nukeDir, "NukeServerSocket.ini");
 export const nukeToolsDir = path.join(nukeDir, "NukeTools");
 export const pythonStubsDir = path.join(nukeToolsDir, "stubs");
-if (!fs.existsSync(pythonStubsDir)) {
-    fs.mkdirSync(pythonStubsDir);
-}
+
 
 export function getNssConfig(value: string, defaultValue: string): string {
     if (fs.existsSync(nssConfigJSON)) {
@@ -31,12 +29,15 @@ export function getNssConfig(value: string, defaultValue: string): string {
 
     return defaultValue;
 }
-/**
- * Write the import statement to the `menu.py` file. If the file doesn't exist, it will be created.
- *
- * @param text the text to write (e.g. `from NukeTools import NukeServerSocket`)
- */
-export function writeMenuImport(text: string): void {
+
+function addImport(name: string, text: string): void {
+    const destination = path.join(nukeToolsDir, name);
+    if (fs.existsSync(destination)) {
+        fs.rmSync(destination, { recursive: true });
+    }
+
+    fsExtra.copySync(assets.getPath("assets", name), destination, {});
+
     const menuPy = path.join(nukeDir, "menu.py");
 
     if (fs.existsSync(menuPy)) {
@@ -47,39 +48,23 @@ export function writeMenuImport(text: string): void {
     } else {
         fs.writeFileSync(menuPy, text);
     }
+
+    vscode.window.showInformationMessage(`Added/Updated ${name} in ~/.nuke/NukeTools.`);
 }
 
 /**
  * Add NukeServerSocket to the .nuke folder and import it inside the menu.py
  */
 export function addNukeServerSocket(): void {
-    const destination = path.join(nukeToolsDir, "NukeServerSocket");
-    if (fs.existsSync(destination)) {
-        fs.rmSync(destination, { recursive: true });
-    }
-
-    fsExtra.copySync(assets.getPath("assets", "NukeServerSocket"), destination, {});
-
-    writeMenuImport("from NukeTool.NukeServerSocket import nukeserversocket\nnukeserversocket.install_nuke()");
-
-    const msg = `Updated NukeServerSocket in ~/.nuke/NukeTools. 
-    Find the plugin in Windows Custom panel. 
-    Visit GitHub repo for more info. [README](https://github.com/sisoe24/NukeServerSocket#readme) page.
-    `;
-    vscode.window.showInformationMessage(msg);
+    addImport(
+        "NukeServerSocket",
+        "from NukeTools.NukeServerSocket import nukeserversocket\nnukeserversocket.install_nuke()"
+    );
 }
 
 /**
  * Add vimdcc to the .nuke folder and import it inside the menu.py
  */
 export function addVimDcc(): void {
-    const destination = path.join(nukeToolsDir, "vimdcc");
-    fsExtra.copySync(assets.getPath("assets", "vimdcc"), destination, {
-        overwrite: true,
-    });
-
-    writeMenuImport("from NukeTools.vimdcc import vimdcc\nvimdcc.install_nuke()");
-
-    const msg = "Added/Updated VimDcc inside `~/.nuke/NukeTools`.";
-    vscode.window.showInformationMessage(msg);
+    addImport("vimdcc", "from NukeTools.vimdcc import vimdcc\nvimdcc.install_nuke()");
 }

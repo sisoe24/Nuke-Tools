@@ -1,3 +1,4 @@
+import * as fs from "fs";
 import * as nuke from "./nuke";
 import * as vscode from "vscode";
 
@@ -57,6 +58,10 @@ export function addStubs(): void {
             "Python extension is not installed. Could not add stubs path."
         );
         return;
+    }
+
+    if (!fs.existsSync(nuke.pythonStubsDir)) {
+        fs.mkdirSync(nuke.pythonStubsDir);
     }
 
     downloadStubs(nuke.pythonStubsDir);
