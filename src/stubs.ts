@@ -59,8 +59,8 @@ export function addStubs(): void {
         return;
     }
 
-    downloadStubs(nuke.nukePythonStubsDir);
-    updatePythonExtraPaths(nuke.nukePythonStubsDir);
+    downloadStubs(nuke.pythonStubsDir);
+    updatePythonExtraPaths(nuke.pythonStubsDir);
 
     vscode.window.showInformationMessage("Python stubs added.");
 }
