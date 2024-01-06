@@ -1,6 +1,4 @@
-import * as fs from "fs";
-import * as path from "path";
-import * as utils from "./utils";
+import * as nuke from "./nuke";
 import * as vscode from "vscode";
 
 import { downloadStubs } from "./download_package";
@@ -61,16 +59,8 @@ export function addStubs(): void {
         return;
     }
 
-    const nukeToolsStubsPath = path.join(utils.nukeToolsDir, "stubs");
-
-    if (!fs.existsSync(nukeToolsStubsPath)) {
-        fs.mkdirSync(nukeToolsStubsPath);
-    }
-
-    downloadStubs(nukeToolsStubsPath);
-
-    // Add the stubs path to the python.analysis.extraPaths setting at user level
-    updatePythonExtraPaths(nukeToolsStubsPath);
+    downloadStubs(nuke.nukePythonStubsDir);
+    updatePythonExtraPaths(nuke.nukePythonStubsDir);
 
     vscode.window.showInformationMessage("Python stubs added.");
 }
