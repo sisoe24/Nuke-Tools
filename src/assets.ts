@@ -9,6 +9,7 @@ export const PATH = path.join(rootExtensionPath, "assets");
 if (!fs.existsSync(PATH)) {
     fs.mkdirSync(PATH);
 }
+export const pyside2Template = path.join(PATH, "pyside2-template");
 
 type Directories = "include" | "assets";
 
