@@ -7,10 +7,9 @@ import * as assets from "./assets";
 
 export const nukeDir = path.join(os.homedir(), ".nuke");
 export const nukeToolsDir = path.join(nukeDir, "NukeTools");
-
-export const nukePythonStubsDir = path.join(nukeToolsDir, "stubs");
-if (!fs.existsSync(nukePythonStubsDir )) {
-    fs.mkdirSync(nukePythonStubsDir );
+export const pythonStubsDir = path.join(nukeToolsDir, "stubs");
+if (!fs.existsSync(pythonStubsDir )) {
+    fs.mkdirSync(pythonStubsDir );
 }
 
 /**
