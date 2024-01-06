@@ -4,7 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as uuid from "uuid";
 
-import { sendCommand } from "../socket";
+import { isConnected, sendCommand } from "../socket";
 
 const setupCodeSnippet = (knobFile: KnobFile) => `
 nuketools_tab = nuke.Tab_Knob('nuketools', 'NukeTools')
@@ -205,7 +205,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         const files = osWalk(KNOBS_DIR);
         const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-        // TODO: send all the code at once and then rename the files. 
+        // TODO: send all the code at once and then rename the files.
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
@@ -389,12 +389,25 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
     }
 
     getChildren(element?: Dependency): Thenable<Dependency[]> {
-        if (!fs.existsSync(KNOBS_DIR)) {
-            fs.mkdirSync(KNOBS_DIR);
-        }
-        if (element) {
-            return Promise.resolve(this.getKnobs(element));
-        }
-        return Promise.resolve(this.getNodes());
+        return isConnected()
+            .then((connected) => {
+
+                if (!connected) {
+                    return Promise.resolve([]);
+                }
+
+                if (!fs.existsSync(KNOBS_DIR)) {
+                    fs.mkdirSync(KNOBS_DIR);
+                }
+                if (element) {
+                    return Promise.resolve(this.getKnobs(element));
+                }
+
+                return Promise.resolve(this.getNodes());
+            })
+            .catch((err) => {
+                vscode.window.showErrorMessage(`Failed to get nodes: ${err}`);
+                return Promise.resolve([]);
+            });
     }
 }
