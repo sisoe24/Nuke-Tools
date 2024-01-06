@@ -258,7 +258,6 @@ export async function sendData(
                     status.errorMessage = error.message;
                     reject(status);
                 }
-
             }
         );
 
@@ -301,7 +300,6 @@ export async function sendData(
         client.on("end", function () {
             logDebugNetwork("Connection ended.");
         });
-
     });
 }
 
@@ -317,22 +315,17 @@ export function prepareDebugMsg(): { text: string; file: string } {
     const r1 = random();
     const r2 = random();
 
-    let code = `
+    const code = `
     from __future__ import print_function
     print("Hostname: ${os.hostname() as string} User: ${os.userInfo()["username"] as string}")
     print("Connected to ${getAddresses()}")
     print("${r1} * ${r2} =", ${r1 * r2})
     `;
 
-    // make everything a single line python command
-    code = code.trim().replace(/\n/g, ";");
-
-    const data = {
-        text: code,
+    return {
+        text: code.trim().replace(/\n/g, ";"),
         file: "tmp_file",
     };
-
-    return data;
 }
 
 /**
@@ -347,23 +340,7 @@ export async function sendDebugMessage(): Promise<{
 }
 
 /**
- * Prepare the message to be sent to the socket.
- *
- * If editor has no selected text, the whole file will be sent. Otherwise only
- * the selected text.
- *
- * @param editor - vscode TextEditor instance.
- * @returns a stringified object with the data to be sent.
- */
-export function composeMessage(editor: vscode.TextEditor): { text: string; file: string } {
-    return {
-        file: editor.document.fileName,
-        text: editor.document.getText(editor.selection) || editor.document.getText(),
-    };
-}
-
-/**
- * Send data over TCP connection.
+ * Send the current active file to the socket.
  *
  * The data to be sent over will the current active file name and its content.
  * Data will be wrapped inside a stringified object before being sent.
@@ -378,14 +355,11 @@ export async function sendMessage(): Promise<
     | undefined
 > {
     const editor = vscode.window.activeTextEditor;
-
     if (!editor) {
         return;
     }
 
-    // the output window is treated as an active text editor, so if it has the
-    // focus and user tries to execute the command, the text from the output window
-    // window will be sent instead.
+    // for some reason, the output window is considered as an active editor.
     if (editor.document.uri.scheme === "output") {
         vscode.window.showInformationMessage(
             "You currently have the Output window in focus. Return the focus on the text editor."
@@ -393,9 +367,20 @@ export async function sendMessage(): Promise<
         return;
     }
 
-    return await sendData(getHost(), getPort(), JSON.stringify(composeMessage(editor)));
+    const data = {
+        file: editor.document.fileName,
+        text: editor.document.getText(editor.selection) || editor.document.getText(),
+    };
+
+    return await sendData(getHost(), getPort(), JSON.stringify(data));
 }
 
+/**
+ * Send an arbitrary command to the socket.
+ *
+ * @param command a stringified command to be sent to the socket.
+ * @returns
+ */
 export function sendCommand(command: string): Promise<{
     message: string;
     error: boolean;
