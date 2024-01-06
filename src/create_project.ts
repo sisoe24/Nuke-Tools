@@ -2,8 +2,9 @@ import * as fs from "fs";
 import * as os from "os";
 import * as cp from "child_process";
 import * as path from "path";
-import * as utils from "./utils";
+import * as nuke from "./nuke";
 import * as vscode from "vscode";
+import * as assets from "./assets";
 import { getConfig } from "./config";
 
 /**
@@ -136,7 +137,7 @@ async function importStatementMenu(module: string): Promise<void> {
     })) as string;
 
     if (loadNukeInit === "Yes") {
-        utils.writeImport(`from NukeTools import ${module}`);
+        nuke.writeMenuImport(`from NukeTools import ${module}`);
     }
 }
 
@@ -148,14 +149,14 @@ async function importStatementMenu(module: string): Promise<void> {
 export async function createTemplate(): Promise<void> {
     const userData = await askUser();
 
-    const destination = vscode.Uri.file(path.join(utils.nukeToolsDir, userData.__projectSlug__));
+    const destination = vscode.Uri.file(path.join(nuke.nukeToolsDir, userData.__projectSlug__));
 
     if (fs.existsSync(destination.fsPath)) {
         await vscode.window.showErrorMessage("Directory exists already.");
         return;
     }
 
-    const source = vscode.Uri.file(utils.getPath("assets", "pyside2-template"));
+    const source = vscode.Uri.file(assets.pyside2Template);
     await vscode.workspace.fs.copy(source, destination);
 
     const pythonFiles = osWalk(destination.fsPath);
