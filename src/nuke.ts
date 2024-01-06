@@ -54,20 +54,17 @@ export function writeMenuImport(text: string): void {
  */
 export function addNukeServerSocket(): void {
     const destination = path.join(nukeToolsDir, "NukeServerSocket");
-    fsExtra.copySync(assets.getPath("assets", "NukeServerSocket"), destination, {
-        overwrite: true,
-    });
-
-    const legacySrcFolder = path.join(destination, "src");
-    if (fs.existsSync(legacySrcFolder)) {
-        fsExtra.removeSync(legacySrcFolder);
+    if (fs.existsSync(destination)) {
+        fs.rmSync(destination, { recursive: true });
     }
 
-    writeMenuImport("from NukeTools import NukeServerSocket\nNukeServerSocket.install_nuke()");
+    fsExtra.copySync(assets.getPath("assets", "NukeServerSocket"), destination, {});
 
-    const msg = `Added/Updated NukeServerSocket inside \`~/.nuke/NukeTools\`.
-    You can now launch Nuke and find the plugin inside the Windows Custom panel.
-    For more information please visit the official [README](https://github.com/sisoe24/NukeServerSocket#readme) page.
+    writeMenuImport("from NukeTool.NukeServerSocket import nukeserversocket\nnukeserversocket.install_nuke()");
+
+    const msg = `Updated NukeServerSocket in ~/.nuke/NukeTools. 
+    Find the plugin in Windows Custom panel. 
+    Visit GitHub repo for more info. [README](https://github.com/sisoe24/NukeServerSocket#readme) page.
     `;
     vscode.window.showInformationMessage(msg);
 }
