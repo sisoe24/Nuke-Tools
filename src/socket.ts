@@ -7,7 +7,6 @@ import { Socket } from "net";
 
 const outputWindow = vscode.window.createOutputChannel("Nuke Tools");
 
-
 /**
  * Get the manual address by looking in the configuration network property.
  *
@@ -32,10 +31,8 @@ export function getManualAddress(property: string, defaultValue: string): string
     return manualAddress;
 }
 
-
 export function getPort(): number {
-
-    let port = nuke.getNssConfig('port', '54321');
+    let port = nuke.getNssConfig("port", "54321");
 
     if (getConfig("network.enableManualConnection")) {
         port = getManualAddress("port", port);
@@ -334,4 +331,17 @@ export function sendCommand(command: string): Promise<{
     errorMessage: string;
 }> {
     return sendData(getHost(), getPort(), command);
+}
+
+export function isConnected(): Promise<boolean> {
+    return sendCommand(
+        JSON.stringify({
+            file: "tmp_file",
+            text: "print('test')",
+            formatText: "0"
+        })
+    ).then(
+        () => true,
+        () => false
+    );
 }
