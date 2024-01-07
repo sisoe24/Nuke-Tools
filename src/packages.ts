@@ -57,13 +57,15 @@ export const packageMap = new Map<PackageIds, PackageType>([
 
 /**
  * Extract a zip file to a destination.
+ * 
+ * Because the zip file will completely replace the destination folder,
+ * the destination folder will be renamed to destination + "-master"
+ * to prevent the destination folder from being replaced if something goes wrong during the extraction.
  *
  * @param source Source zip file.
  * @param destination Destination folder.
  */
 function extractPackage(source: string, destination: string): Promise<void> {
-    console.log(`NukeTools: Extracting package: ${source} to ${destination}`);
-
     return new Promise((resolve, reject) => {
         try {
             extract(source, { dir: destination + "-master" })
@@ -88,6 +90,19 @@ function extractPackage(source: string, destination: string): Promise<void> {
     });
 }
 
+/**
+ * Add a package to the .nuke/NukeTools folder.
+ * 
+ * Adding a package can be done in two ways:
+ *  - Download the latest release from GitHub
+ *  - Extract the package from the assets folder
+ * 
+ * When the package is downloaded from GitHub, it will be extracted to the assets folder. 
+ * So the next time the package is added, it will be extracted from the assets folder.
+ * 
+ * @param packageId the package to add
+ * @returns 
+ */
 export async function addPackage(packageId: PackageIds): Promise<PackageType | null> {
     const pkg = packageMap.get(packageId);
     if (!pkg) {
