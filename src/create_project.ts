@@ -16,10 +16,6 @@ export type PlaceHolders = {
     [key: string]: string;
 };
 
-function getGithubUser(): string {
-    return cp.execSync("git config user.name").toString().trim();
-}
-
 /**
  * Ask user to fill the data that we are going to use to replace the placeholders
  * inside the pyside2 template project.
@@ -48,11 +44,6 @@ export async function askUser(): Promise<PlaceHolders> {
         value: (getConfig("pysideTemplate.pysideVersion") as string) || "5.12.2",
     })) as string;
 
-    const projectAuthor = (await vscode.window.showInputBox({
-        title: "Project Author",
-        value: os.userInfo().username,
-    })) as string;
-
     const slug = (name: string) => {
         return name.replace(/\s/g, "").toLowerCase();
     };
@@ -63,10 +54,10 @@ export async function askUser(): Promise<PlaceHolders> {
     placeholders.__projectDescription__ = projectDescription;
     placeholders.__projectPython__ = projectPython;
     placeholders.__projectPySide__ = projectPySide;
-    placeholders.__author__ = projectAuthor;
+    placeholders.__author__ = os.userInfo().username;
     placeholders.__projectSlug__ = slug(placeholders.__projectName__);
     placeholders.__authorSlug__ = slug(placeholders.__author__);
-    placeholders.__githubUser__ = getGithubUser();
+    placeholders.__githubUser__ = cp.execSync("git config user.name").toString().trim();
     placeholders.__email__ = placeholders.__author__ + "@email.com";
 
     return placeholders;
@@ -137,27 +128,23 @@ async function importStatementMenu(module: string): Promise<void> {
     })) as string;
 
     if (loadNukeInit === "Yes") {
-        nuke.writeMenuImport(`from NukeTools import ${module}`);
+        nuke.addMenuImport(`from NukeTools import ${module}`);
     }
 }
 
 /**
  * Create a PySide2 template Nuke plugin.
- *
- * @returns Promise<void>
  */
 export async function createTemplate(): Promise<void> {
     const userData = await askUser();
 
     const destination = vscode.Uri.file(path.join(nuke.nukeToolsDir, userData.__projectSlug__));
-
     if (fs.existsSync(destination.fsPath)) {
         await vscode.window.showErrorMessage("Directory exists already.");
         return;
     }
 
-    const source = vscode.Uri.file(assets.pyside2Template);
-    await vscode.workspace.fs.copy(source, destination);
+    await vscode.workspace.fs.copy(vscode.Uri.file(assets.pyside2Template), destination);
 
     const pythonFiles = osWalk(destination.fsPath);
     substitutePlaceholders(pythonFiles, userData);
