@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
+import * as os from "os";
 
 import * as vscode from "vscode";
 import extract = require("extract-zip");
@@ -7,8 +8,9 @@ import { GithubRelease } from "@terascope/fetch-github-release/dist/src/interfac
 import { downloadRelease } from "@terascope/fetch-github-release";
 
 import * as assets from "./assets";
-import * as nuke from "./nuke";
 import { Version } from "./version";
+
+const NUKE_TOOLS_DIR = path.join(os.homedir(), ".nuke", "NukeTools");
 
 type PackageType = {
     name: string;
@@ -22,33 +24,33 @@ export enum PackageIds {
     vimdcc = "vimdcc",
 }
 
-const packageMap = new Map<PackageIds, PackageType>([
+export const packageMap = new Map<PackageIds, PackageType>([
     [
         PackageIds.nukeServerSocket,
         {
             name: "NukeServerSocket",
-            destination: nuke.nukeToolsDir,
+            destination: NUKE_TOOLS_DIR,
         },
     ],
     [
         PackageIds.nukePythonStubs,
         {
             name: "nuke-python-stubs",
-            destination: nuke.pythonStubsDir,
+            destination: path.join(NUKE_TOOLS_DIR, "stubs"),
         },
     ],
     [
         PackageIds.pySide2Template,
         {
             name: "pyside2-template",
-            destination: assets.ASSETS_PATH,
+            destination: NUKE_TOOLS_DIR,
         },
     ],
     [
         PackageIds.vimdcc,
         {
             name: "vimdcc",
-            destination: nuke.nukeToolsDir,
+            destination: NUKE_TOOLS_DIR,
         },
     ],
 ]);
@@ -60,15 +62,23 @@ const packageMap = new Map<PackageIds, PackageType>([
  * @param destination Destination folder.
  */
 function extractPackage(source: string, destination: string): void {
+    destination += "-master";
+
+    console.log(`NukeTools: Extracting package: ${source} to ${destination}`);
+
     try {
         extract(source, {
             dir: destination,
         })
             .then(() => {
-                console.log(`NukeTools: Package updated: ${source}`);
+                fs.rmSync(destination, { recursive: true });
+                fs.renameSync(destination + "-master", destination);
+                vscode.window.showInformationMessage(`NukeTools: Package updated: ${source}`);
             })
             .catch((err) => {
-                console.log(err);
+                vscode.window.showErrorMessage(
+                    `NukeTools: Failed to extract package: ${source}. ${err}`
+                );
             });
     } catch (err) {
         vscode.window.showErrorMessage(err as string);
@@ -76,20 +86,21 @@ function extractPackage(source: string, destination: string): void {
     }
 }
 
-export function getPackage(packageId: PackageIds): void {
-
-    const {currentVersion, previousVersion} = new Version();
-
-    const archivedPackage = path.join(assets.ASSETS_PATH, `${packageId}.zip`);
+export function addPackage(packageId: PackageIds): PackageType {
+    // const {currentVersion, previousVersion} = new Version();
     const pkg = packageMap.get(packageId);
     if (!pkg) {
         throw new Error(`Package ${packageId} not found`);
     }
 
-    if (fs.existsSync(archivedPackage) && currentVersion <= previousVersion) {
+    const archivedPackage = path.join(assets.ASSETS_PATH, `${pkg.name}.zip`);
+    console.log(`NukeTools: Downloading package: ${pkg.name}, ${pkg.destination}`);
+    // return
+
+    if (fs.existsSync(archivedPackage) && Version.currentVersion <= Version.previousVersion) {
         console.log("NukeTools: Package already downloaded");
         extractPackage(archivedPackage, pkg.destination);
-        return;
+        return pkg;
     }
 
     const filterRelease = (release: GithubRelease) => {
@@ -103,4 +114,6 @@ export function getPackage(packageId: PackageIds): void {
         .catch(function (err: { message: unknown }) {
             console.error("NukeTools: Failed to download package from GitHub: ", err.message);
         });
+
+    return pkg;
 }
