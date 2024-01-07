@@ -5,16 +5,6 @@ import * as vscode from "vscode";
 import { downloadStubs } from "./download_package";
 
 /**
- * Check whether the Python extension is installed, as attempting to add the stubs
- * to analysis.extraPaths will fail if Python is not installed.
- *
- * @returns true if extension is installed, false otherwise.
- */
-export function isPythonInstalled(): boolean {
-    return Boolean(vscode.extensions.getExtension("ms-python.python"));
-}
-
-/**
  * Determine the configuration for extraPaths based on the current Python server.
  *
  *  - Pylance:  `python.analysis`
@@ -53,7 +43,7 @@ function updatePythonExtraPaths(nukeToolsStubsPath: string) {
  * Add the stubs path to the python.analysis.extraPaths setting.
  */
 export function addStubs(): void {
-    if (!isPythonInstalled()) {
+    if (!vscode.extensions.getExtension("ms-python.python")) {
         vscode.window.showErrorMessage(
             "Python extension is not installed. Could not add stubs path."
         );
