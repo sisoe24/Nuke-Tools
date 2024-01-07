@@ -5,7 +5,6 @@ import * as cp from "child_process";
 
 import * as vscode from "vscode";
 
-import * as assets from "./assets";
 import * as nuke from "./nuke";
 import { getConfig } from "./config";
 import { PackageIds, addPackage, packageMap } from "./packages";
@@ -151,8 +150,7 @@ export async function createTemplate(): Promise<void> {
 
     await addPackage(PackageIds.pySide2Template);
 
-    const pythonFiles = osWalk(pkgData.destination);
-    substitutePlaceholders(pythonFiles, userData);
+    substitutePlaceholders(osWalk(pkgData.destination), userData);
 
     await importStatementMenu(userData.__projectSlug__);
     await openProjectFolder(vscode.Uri.file(pkgData.destination));
