@@ -152,17 +152,10 @@ export async function sendData(
                 client.write(text);
             });
         } catch (error) {
-            if (error instanceof RangeError) {
-                const msg = `Port is out of range. Value should be >= 49567 and < 65536. Received: ${port}`;
-                logDebugNetwork(msg);
-                client.destroy(new Error("Port out of range"));
-                status.errorMessage = "Port is out of range";
-            } else {
-                const msg = `Unknown exception. ${String(error)}`;
-                logDebugNetwork(msg);
-                client.destroy(new Error(msg));
-                status.errorMessage = msg;
-            }
+            const msg = `Unknown exception. ${String(error)}`;
+            logDebugNetwork(msg);
+            client.destroy(new Error(msg));
+            status.errorMessage = msg;
             status.error = true;
             reject(status);
         }
@@ -333,12 +326,17 @@ export function sendCommand(command: string): Promise<{
     return sendData(getHost(), getPort(), command);
 }
 
+/**
+ * Check if the socket is connected by sending a simple command.
+ *
+ * @returns A promise that resolves to true if the socket is connected, false otherwise.
+ */
 export function isConnected(): Promise<boolean> {
     return sendCommand(
         JSON.stringify({
             file: "tmp_file",
             text: "print('test')",
-            formatText: "0"
+            formatText: "0",
         })
     ).then(
         () => true,
