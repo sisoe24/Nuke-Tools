@@ -16,7 +16,7 @@ import { NukeCompletionProvider } from "./nuke/completitions";
 import { NukeNodesInspectorProvider } from "./nuke/nodes_tree";
 
 import { showNotification } from "./notification";
-import { PackageIds, addPackage } from "./packages";
+import { forceUpdatePackages } from "./packages";
 
 function registerNodesInspectorCommands(context: vscode.ExtensionContext): void {
     const nukeProvider = new NukeNodesInspectorProvider();
@@ -69,13 +69,12 @@ function registerBlinkScriptCommands(context: vscode.ExtensionContext): void {
 }
 
 function registerPackagesCommands(context: vscode.ExtensionContext): void {
-    // checkPackageUpdates(context);
 
-    // context.subscriptions.push(
-    //     vscode.commands.registerCommand("nuke-tools.forceUpdatePackages", () => {
-    //         checkPackageUpdates(context, true);
-    //     })
-    // );
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.forceUpdatePackages", () => {
+            forceUpdatePackages();
+        })
+    );
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.addPysideTemplate", () => {
