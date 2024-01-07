@@ -61,31 +61,34 @@ export const packageMap = new Map<PackageIds, PackageType>([
  * @param source Source zip file.
  * @param destination Destination folder.
  */
-function extractPackage(source: string, destination: string): void {
+function extractPackage(source: string, destination: string): Promise<void> {
     console.log(`NukeTools: Extracting package: ${source} to ${destination}`);
 
-    try {
-        extract(source, {
-            dir: destination + "-master",
-        })
-            .then(() => {
-                if (fs.existsSync(destination)) {
-                    fs.rmSync(destination, { recursive: true });
-                }
-                fs.renameSync(destination + "-master", destination);
-                vscode.window.showInformationMessage(`NukeTools: Package updated: ${source}`);
-            })
-            .catch((err) => {
-                vscode.window.showErrorMessage(
-                    `NukeTools: Failed to extract package: ${source}. ${err}`
-                );
-            });
-    } catch (err) {
-        vscode.window.showErrorMessage(err as string);
-    }
+    return new Promise((resolve, reject) => {
+        try {
+            extract(source, { dir: destination + "-master" })
+                .then(() => {
+                    if (fs.existsSync(destination)) {
+                        fs.rmSync(destination, { recursive: true });
+                    }
+                    fs.renameSync(destination + "-master", destination);
+                    vscode.window.showInformationMessage(`NukeTools: Package updated: ${source}`);
+                    resolve();
+                })
+                .catch((err) => {
+                    vscode.window.showErrorMessage(
+                        `NukeTools: Failed to extract package: ${source}. ${err}`
+                    );
+                    reject(err);
+                });
+        } catch (err) {
+            vscode.window.showErrorMessage(err as string);
+            reject(err);
+        }
+    });
 }
 
-export function addPackage(packageId: PackageIds): PackageType {
+export async function addPackage(packageId: PackageIds): Promise<PackageType | null> {
     const pkg = packageMap.get(packageId);
     if (!pkg) {
         throw new Error(`Package ${packageId} not found`);
@@ -94,7 +97,7 @@ export function addPackage(packageId: PackageIds): PackageType {
     const archivedPackage = path.join(assets.ASSETS_PATH, `${pkg.name}.zip`);
 
     if (fs.existsSync(archivedPackage) && Version.currentVersion <= Version.previousVersion) {
-        extractPackage(archivedPackage, pkg.destination);
+        await extractPackage(archivedPackage, pkg.destination);
         return pkg;
     }
 
@@ -102,15 +105,15 @@ export function addPackage(packageId: PackageIds): PackageType {
         return release.prerelease === false;
     };
 
-    downloadRelease("sisoe24", packageId, assets.ASSETS_PATH, filterRelease, undefined, true)
-        .then(function () {
-            extractPackage(archivedPackage, pkg.destination);
+    return downloadRelease("sisoe24", packageId, assets.ASSETS_PATH, filterRelease, undefined, true)
+        .then(async function () {
+            await extractPackage(archivedPackage, pkg.destination);
+            return pkg;
         })
         .catch(function (err: { message: unknown }) {
             vscode.window.showWarningMessage(
                 "NukeTools: Failed to download package from GitHub: " + err.message
             );
+            return null;
         });
-
-    return pkg;
 }
