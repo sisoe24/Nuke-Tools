@@ -4,13 +4,12 @@ import * as path from "path";
 
 import * as packages from "./packages";
 
-export const nukeDir = path.join(os.homedir(), ".nuke");
-export const nssConfigJSON = path.join(nukeDir, "nukeserversocket.json");
-export const nssConfigIni = path.join(nukeDir, "NukeServerSocket.ini");
-export const nukeToolsDir = path.join(nukeDir, "NukeTools");
-export const pythonStubsDir = path.join(nukeToolsDir, "stubs");
+const NUKE_DIR = path.join(os.homedir(), ".nuke");
 
 export function getNssConfig(value: string, defaultValue: string): string {
+    const nssConfigJSON = path.join(NUKE_DIR, "nukeserversocket.json");
+    const nssConfigIni = path.join(NUKE_DIR, "NukeServerSocket.ini");
+
     if (fs.existsSync(nssConfigJSON)) {
         const fileContent = fs.readFileSync(nssConfigJSON, "utf-8");
         return JSON.parse(fileContent)[value] || defaultValue;
@@ -29,7 +28,7 @@ export function getNssConfig(value: string, defaultValue: string): string {
 }
 
 export function addMenuImport(importText: string): void {
-    const menuPy = path.join(nukeDir, "menu.py");
+    const menuPy = path.join(NUKE_DIR, "menu.py");
 
     if (fs.existsSync(menuPy)) {
         const fileContent = fs.readFileSync(menuPy, "utf-8");
