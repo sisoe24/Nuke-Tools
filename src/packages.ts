@@ -62,16 +62,17 @@ export const packageMap = new Map<PackageIds, PackageType>([
  * @param destination Destination folder.
  */
 function extractPackage(source: string, destination: string): void {
-    destination += "-master";
 
     console.log(`NukeTools: Extracting package: ${source} to ${destination}`);
 
     try {
         extract(source, {
-            dir: destination,
+            dir: destination + "-master",
         })
             .then(() => {
-                fs.rmSync(destination, { recursive: true });
+                if (fs.existsSync(destination)) {
+                    fs.rmSync(destination, { recursive: true });
+                }
                 fs.renameSync(destination + "-master", destination);
                 vscode.window.showInformationMessage(`NukeTools: Package updated: ${source}`);
             })
