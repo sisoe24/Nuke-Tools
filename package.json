@@ -45,12 +45,7 @@
                 "command": "nuke-tools.deleteEntry",
                 "title": "Delete"
             },
-            {
-                "category": "Nuke",
-                "command": "nuke-tools.createPySide2Project",
-                "shortTitle": "Nuke",
-                "title": "Create a PySide2 plugin"
-            },
+    
             {
                 "category": "Nuke",
                 "command": "nuke-tools.launchNuke",
@@ -97,6 +92,12 @@
                 "category": "Nuke",
                 "command": "nuke-tools.addNukeServerSocket",
                 "title": "Add NukeServerSocket"
+            },
+            {
+                "category": "Nuke",
+                "command": "nuke-tools.addPysideTemplate",
+                "shortTitle": "Nuke",
+                "title": "Add PySide2 template"
             },
             {
                 "category": "Nuke",
