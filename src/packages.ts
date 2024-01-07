@@ -57,7 +57,7 @@ export const packageMap = new Map<PackageIds, PackageType>([
 
 /**
  * Extract a zip file to a destination.
- * 
+ *
  * Because the zip file will completely replace the destination folder,
  * the destination folder will be renamed to destination + "-master"
  * to prevent the destination folder from being replaced if something goes wrong during the extraction.
@@ -92,18 +92,21 @@ function extractPackage(source: string, destination: string): Promise<void> {
 
 /**
  * Add a package to the .nuke/NukeTools folder.
- * 
+ *
  * Adding a package can be done in two ways:
  *  - Download the latest release from GitHub
  *  - Extract the package from the assets folder
- * 
- * When the package is downloaded from GitHub, it will be extracted to the assets folder. 
+ *
+ * When the package is downloaded from GitHub, it will be extracted to the assets folder.
  * So the next time the package is added, it will be extracted from the assets folder.
- * 
+ *
  * @param packageId the package to add
- * @returns 
+ * @returns
  */
-export async function addPackage(packageId: PackageIds): Promise<PackageType | null> {
+export async function addPackage(
+    packageId: PackageIds,
+    force = false
+): Promise<PackageType | null> {
     const pkg = packageMap.get(packageId);
     if (!pkg) {
         throw new Error(`Package ${packageId} not found`);
@@ -111,7 +114,11 @@ export async function addPackage(packageId: PackageIds): Promise<PackageType | n
 
     const archivedPackage = path.join(assets.ASSETS_PATH, `${pkg.name}.zip`);
 
-    if (fs.existsSync(archivedPackage) && Version.currentVersion <= Version.previousVersion) {
+    if (
+        !force &&
+        fs.existsSync(archivedPackage) &&
+        Version.currentVersion <= Version.previousVersion
+    ) {
         await extractPackage(archivedPackage, pkg.destination);
         return pkg;
     }
@@ -131,4 +138,10 @@ export async function addPackage(packageId: PackageIds): Promise<PackageType | n
             );
             return null;
         });
+}
+
+export async function forceUpdatePackages(): Promise<void> {
+    for (const [packageId, pkg] of packageMap) {
+        await addPackage(packageId, true);
+    }
 }
