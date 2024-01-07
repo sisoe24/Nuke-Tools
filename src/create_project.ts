@@ -149,11 +149,7 @@ export async function createTemplate(): Promise<void> {
         return;
     }
 
-    console.log('installing')
     await addPackage(PackageIds.pySide2Template);
-    console.log('installed')
-    
-    console.log(`NukeTools: Installing package: ${pkgData.name} to ${pkgData.destination}`);
 
     const pythonFiles = osWalk(pkgData.destination);
     substitutePlaceholders(pythonFiles, userData);
