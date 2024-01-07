@@ -1,11 +1,14 @@
 import * as fs from "fs";
 import * as os from "os";
-import * as cp from "child_process";
 import * as path from "path";
-import * as nuke from "./nuke";
+import * as cp from "child_process";
+
 import * as vscode from "vscode";
+
 import * as assets from "./assets";
+import * as nuke from "./nuke";
 import { getConfig } from "./config";
+import { PackageIds, addPackage, packageMap } from "./packages";
 
 /**
  * The placeholders data.
@@ -28,11 +31,6 @@ export async function askUser(): Promise<PlaceHolders> {
         value: "Project Name",
     })) as string;
 
-    const projectDescription = (await vscode.window.showInputBox({
-        title: "Project Description",
-        value: "Project Description",
-    })) as string;
-
     const projectPython = (await vscode.window.showInputBox({
         title: "Python version",
         value: (getConfig("pysideTemplate.pythonVersion") as string) || "~3.7.7",
@@ -51,7 +49,6 @@ export async function askUser(): Promise<PlaceHolders> {
     const placeholders: PlaceHolders = {};
 
     placeholders.__projectName__ = projectName;
-    placeholders.__projectDescription__ = projectDescription;
     placeholders.__projectPython__ = projectPython;
     placeholders.__projectPySide__ = projectPySide;
     placeholders.__author__ = os.userInfo().username;
@@ -138,22 +135,38 @@ async function importStatementMenu(module: string): Promise<void> {
 export async function createTemplate(): Promise<void> {
     const userData = await askUser();
 
-    const destination = vscode.Uri.file(path.join(nuke.nukeToolsDir, userData.__projectSlug__));
-    if (fs.existsSync(destination.fsPath)) {
+    const pkgData = packageMap.get(PackageIds.pySide2Template);
+    if (!pkgData) {
+        vscode.window.showErrorMessage(`NukeTools: Package not found: ${pkgData}`);
+        return;
+    }
+
+    const originalDestination = pkgData.destination;
+    pkgData.destination = path.join(pkgData.destination, userData.__projectSlug__);
+
+    if (fs.existsSync(pkgData.destination)) {
         await vscode.window.showErrorMessage("Directory exists already.");
         return;
     }
 
-    await vscode.workspace.fs.copy(vscode.Uri.file(assets.pyside2Template), destination);
+    console.log('installing')
+    await addPackage(PackageIds.pySide2Template);
+    console.log('installed')
+    
+    console.log(`NukeTools: Installing package: ${pkgData.name} to ${pkgData.destination}`);
 
-    const pythonFiles = osWalk(destination.fsPath);
+    const pythonFiles = osWalk(pkgData.destination);
     substitutePlaceholders(pythonFiles, userData);
 
     await importStatementMenu(userData.__projectSlug__);
-    await openProjectFolder(destination);
+    await openProjectFolder(vscode.Uri.file(pkgData.destination));
 
     const msg = `Project creation completed. For more information, check 
     the official [README](https://github.com/sisoe24/pyside2-template#readme).
     `;
+
     vscode.window.showInformationMessage(msg);
+
+    pkgData.destination = originalDestination;
+
 }
