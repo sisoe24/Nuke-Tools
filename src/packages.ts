@@ -29,7 +29,7 @@ export const packageMap = new Map<PackageIds, PackageType>([
         PackageIds.nukeServerSocket,
         {
             name: "NukeServerSocket",
-            destination: NUKE_TOOLS_DIR,
+            destination: path.join(NUKE_TOOLS_DIR, "NukeServerSocket"),
         },
     ],
     [
@@ -50,7 +50,7 @@ export const packageMap = new Map<PackageIds, PackageType>([
         PackageIds.vimdcc,
         {
             name: "vimdcc",
-            destination: NUKE_TOOLS_DIR,
+            destination: path.join(NUKE_TOOLS_DIR, "vimdcc"),
         },
     ],
 ]);
@@ -62,7 +62,6 @@ export const packageMap = new Map<PackageIds, PackageType>([
  * @param destination Destination folder.
  */
 function extractPackage(source: string, destination: string): void {
-
     console.log(`NukeTools: Extracting package: ${source} to ${destination}`);
 
     try {
@@ -83,23 +82,18 @@ function extractPackage(source: string, destination: string): void {
             });
     } catch (err) {
         vscode.window.showErrorMessage(err as string);
-        false;
     }
 }
 
 export function addPackage(packageId: PackageIds): PackageType {
-    // const {currentVersion, previousVersion} = new Version();
     const pkg = packageMap.get(packageId);
     if (!pkg) {
         throw new Error(`Package ${packageId} not found`);
     }
 
     const archivedPackage = path.join(assets.ASSETS_PATH, `${pkg.name}.zip`);
-    console.log(`NukeTools: Downloading package: ${pkg.name}, ${pkg.destination}`);
-    // return
 
     if (fs.existsSync(archivedPackage) && Version.currentVersion <= Version.previousVersion) {
-        console.log("NukeTools: Package already downloaded");
         extractPackage(archivedPackage, pkg.destination);
         return pkg;
     }
@@ -113,7 +107,9 @@ export function addPackage(packageId: PackageIds): PackageType {
             extractPackage(archivedPackage, pkg.destination);
         })
         .catch(function (err: { message: unknown }) {
-            console.error("NukeTools: Failed to download package from GitHub: ", err.message);
+            vscode.window.showWarningMessage(
+                "NukeTools: Failed to download package from GitHub: " + err.message
+            );
         });
 
     return pkg;
