@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as nuke from "./nuke";
 import * as vscode from "vscode";
 
-import { downloadStubs } from "./download_package";
+import { PackageIds, getPackage } from "./packages";
 
 /**
  * Determine the configuration for extraPaths based on the current Python server.
@@ -54,7 +54,8 @@ export function addStubs(): void {
         fs.mkdirSync(nuke.pythonStubsDir);
     }
 
-    downloadStubs(nuke.pythonStubsDir);
+    getPackage(PackageIds.nukePythonStubs);
+
     updatePythonExtraPaths(nuke.pythonStubsDir);
 
     vscode.window.showInformationMessage("Python stubs added.");
