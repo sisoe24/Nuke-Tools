@@ -5,13 +5,12 @@ import * as vscode from "vscode";
 const rootExtensionPath = vscode.extensions.getExtension("virgilsisoe.nuke-tools")
     ?.extensionPath as string;
 
-export const PATH = path.join(rootExtensionPath, "assets");
-if (!fs.existsSync(PATH)) {
-    fs.mkdirSync(PATH);
+export const ASSETS_PATH = path.join(rootExtensionPath, "assets");
+if (!fs.existsSync(ASSETS_PATH)) {
+    fs.mkdirSync(ASSETS_PATH);
 }
-export const pyside2Template = path.join(PATH, "pyside2-template");
+export const pyside2Template = path.join(ASSETS_PATH, "pyside2-template");
 
-type Directories = "include" | "assets";
 
 /**
  * Get a path from the included directory.
@@ -19,12 +18,11 @@ type Directories = "include" | "assets";
  * @returns the path to the included directory
  * @throws an error if the path could not be resolved
  */
-export function getPath(directory: Directories, name: string): string {
-    const file = path.join(rootExtensionPath, directory, name);
+export function getAssetPath(name: string): string {
+    const file = path.join(rootExtensionPath, "assets", name);
 
     if (!fs.existsSync(file)) {
-        const msg = `Could not find ${name} path.`;
-        throw new Error(msg);
+        throw new Error(`Could not find ${name} path.`);
     }
 
     return file;
