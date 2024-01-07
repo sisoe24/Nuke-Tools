@@ -36,8 +36,8 @@ function addImport(name: string, text: string): void {
         fs.rmSync(destination, { recursive: true });
     }
 
-    fsExtra.copySync(assets.getPath("assets", name), destination, {});
-
+    fsExtra.copySync(assets.getAssetPath(name), destination, {});
+    
     const menuPy = path.join(nukeDir, "menu.py");
 
     if (fs.existsSync(menuPy)) {
