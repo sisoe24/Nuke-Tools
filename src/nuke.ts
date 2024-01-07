@@ -2,7 +2,6 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import * as vscode from "vscode";
-import * as fsExtra from "fs-extra";
 import * as assets from "./assets";
 
 export const nukeDir = path.join(os.homedir(), ".nuke");
@@ -10,7 +9,6 @@ export const nssConfigJSON = path.join(nukeDir, "nukeserversocket.json");
 export const nssConfigIni = path.join(nukeDir, "NukeServerSocket.ini");
 export const nukeToolsDir = path.join(nukeDir, "NukeTools");
 export const pythonStubsDir = path.join(nukeToolsDir, "stubs");
-
 
 export function getNssConfig(value: string, defaultValue: string): string {
     if (fs.existsSync(nssConfigJSON)) {
@@ -30,34 +28,39 @@ export function getNssConfig(value: string, defaultValue: string): string {
     return defaultValue;
 }
 
-function addImport(name: string, text: string): void {
-    const destination = path.join(nukeToolsDir, name);
-    if (fs.existsSync(destination)) {
-        fs.rmSync(destination, { recursive: true });
-    }
-
-    fsExtra.copySync(assets.getAssetPath(name), destination, {});
-    
+export function addMenuImport(importText: string): void {
     const menuPy = path.join(nukeDir, "menu.py");
 
     if (fs.existsSync(menuPy)) {
         const fileContent = fs.readFileSync(menuPy, "utf-8");
-        if (!fileContent.includes(text)) {
-            fs.appendFileSync(menuPy, `\n${text}\n`);
+        if (!fileContent.includes(importText)) {
+            fs.appendFileSync(menuPy, `\n${importText}\n`);
         }
     } else {
-        fs.writeFileSync(menuPy, text);
+        fs.writeFileSync(menuPy, importText);
+    }
+}
+
+async function addPackageToNukeTools(packageName: string): Promise<void> {
+    const destination = path.join(nukeToolsDir, packageName);
+    if (fs.existsSync(destination)) {
+        fs.rmSync(destination, { recursive: true });
     }
 
-    vscode.window.showInformationMessage(`Added/Updated ${name} in ~/.nuke/NukeTools.`);
+    await vscode.workspace.fs.copy(
+        vscode.Uri.file(assets.getAssetPath(packageName)),
+        vscode.Uri.file(path.join(nukeToolsDir, packageName))
+    );
+
+    vscode.window.showInformationMessage(`Added/Updated ${packageName} in ~/.nuke/NukeTools.`);
 }
 
 /**
  * Add NukeServerSocket to the .nuke folder and import it inside the menu.py
  */
 export function addNukeServerSocket(): void {
-    addImport(
-        "NukeServerSocket",
+    addPackageToNukeTools("NukeServerSocket");
+    addMenuImport(
         "from NukeTools.NukeServerSocket import nukeserversocket\nnukeserversocket.install_nuke()"
     );
 }
@@ -66,5 +69,6 @@ export function addNukeServerSocket(): void {
  * Add vimdcc to the .nuke folder and import it inside the menu.py
  */
 export function addVimDcc(): void {
-    addImport("vimdcc", "from NukeTools.vimdcc import vimdcc\nvimdcc.install_nuke()");
+    addPackageToNukeTools("vimdcc");
+    addMenuImport("from NukeTools.vimdcc import vimdcc\nvimdcc.install_nuke()");
 }
