@@ -41,12 +41,12 @@ export function addMenuImport(importText: string): void {
 }
 
 /**
- * Add NukeServerSocket to the .nuke folder and import it inside the menu.py
+ * Add nukeserversocket to the .nuke folder and import it inside the menu.py
  */
 export function addNukeServerSocket(): void {
     packages.addPackage(packages.PackageIds.nukeServerSocket);
     addMenuImport(
-        "from NukeTools.NukeServerSocket import nukeserversocket\nnukeserversocket.install_nuke()"
+        "from NukeTools.nukeserversocket import nukeserversocket\nnukeserversocket.install_nuke()"
     );
 }
 

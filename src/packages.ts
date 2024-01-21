@@ -18,7 +18,7 @@ type PackageType = {
 };
 
 export enum PackageIds {
-    nukeServerSocket = "NukeServerSocket",
+    nukeServerSocket = "nukeserversocket",
     nukePythonStubs = "nuke-python-stubs",
     pySide2Template = "pyside2-template",
     vimdcc = "vimdcc",
@@ -28,8 +28,8 @@ export const packageMap = new Map<PackageIds, PackageType>([
     [
         PackageIds.nukeServerSocket,
         {
-            name: "NukeServerSocket",
-            destination: path.join(NUKE_TOOLS_DIR, "NukeServerSocket"),
+            name: "nukeserversocket",
+            destination: path.join(NUKE_TOOLS_DIR, "nukeserversocket"),
         },
     ],
     [

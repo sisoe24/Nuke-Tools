@@ -269,7 +269,7 @@
         },
         "viewsWelcome": [
             {
-                "contents": "Nodes Panel is currently in beta. Some features may not work as expected.\nPlease connect NukeServerSocket and refresh. [Learn more](https://github.com/sisoe24/NukeServerSocket#141-execute-code).\n[Refresh](command:nuke-tools.refreshNodes)",
+                "contents": "Nodes Panel is currently in beta. Some features may not work as expected.\nPlease connect nukeserversocket and refresh. [Learn more](https://github.com/sisoe24/nukeserversocket#141-execute-code).\n[Refresh](command:nuke-tools.refreshNodes)",
                 "view": "nuke-tools"
             }
         ]

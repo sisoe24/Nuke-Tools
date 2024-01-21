@@ -10,7 +10,7 @@
 
 ### Changed
 
-- Update NukeServerSocket to version to latest
+- Update nukeserversocket to version to latest
 - Update socket debug functionallity.
 
 ## [0.12.0] - 09/23/2023
@@ -118,7 +118,7 @@
 
 ### Added
 
-- New command that adds NukeServerSocket plugin inside Nuke's directory (`.nuke`) & `menu.py`.
+- New command that adds nukeserversocket plugin inside Nuke's directory (`.nuke`) & `menu.py`.
 
 ## [0.4.5] 02/18/2022
 
@@ -206,7 +206,7 @@ Mostly code refactoring and test suite.
 
 ### Fixed
 
-- Fixed file name reference that didn't allow vscode to pick NukeServerSocket port settings automatically.
+- Fixed file name reference that didn't allow vscode to pick nukeserversocket port settings automatically.
 
 ## [0.0.2] - [0.0.8]
 

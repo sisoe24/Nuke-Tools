@@ -17,7 +17,7 @@
 
 Includes the following packages:
 
-[![nukeserversocket](https://img.shields.io/github/v/release/sisoe24/NukeServerSocket?label=NukeServerSocket)](https://github.com/sisoe24/NukeServerSocket/releases)
+[![nukeserversocket](https://img.shields.io/github/v/release/sisoe24/nukeserversocket?label=nukeserversocket)](https://github.com/sisoe24/nukeserversocket/releases)
 [![stubs](https://img.shields.io/github/v/release/sisoe24/nuke-python-stubs?label=nuke-python-stubs)](https://github.com/sisoe24/nuke-python-stubs/releases)
 [![pysidetemplate](https://img.shields.io/github/v/release/sisoe24/pyside2-template?label=pyside2-template)](https://github.com/sisoe24/pyside2-template/releases)
 [![vimdcc](https://img.shields.io/github/v/release/sisoe24/vimdcc?label=vimdcc)](https://github.com/sisoe24/vimdcc/releases)
@@ -31,7 +31,7 @@ Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to
   - [1.2. Requirements](#12-requirements)
   - [1.3. Execute code](#13-execute-code)
   - [1.4. Included packages](#14-included-packages)
-    - [1.4.0. NukeServerSocket](#140-nukeserversocket)
+    - [1.4.0. nukeserversocket](#140-nukeserversocket)
     - [1.4.1. Python stubs](#141-python-stubs)
       - [1.4.1.1. Stubs are not working?](#1411-stubs-are-not-working)
     - [1.4.2. PySide2 Template Project](#142-pyside2-template-project)
@@ -47,7 +47,7 @@ Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to
 
 ## 1.1. Features
 
-- Execute code and view Nuke execution output in Visual Studio Code! Just run NukeServerSocket within Nuke - no config needed on the same machine.
+- Execute code and view Nuke execution output in Visual Studio Code! Just run nukeserversocket within Nuke - no config needed on the same machine.
 - BlinkScript support.
 - Nuke/Hiero Python stubs for auto-complete suggestions.
 - Syntax highlighting for .nk and .gizmo files.
@@ -58,24 +58,24 @@ Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to
 
 ## 1.2. Requirements
 
-The interaction with Nuke is only possible when NukeServerSocket is up and running.
+The interaction with Nuke is only possible when nukeserversocket is up and running.
 
 ## 1.3. Execute code
 
-1. Download and install the companion plugin [NukeServerSocket](#140-nukeserversocket) via the command: `Nuke: Add NukeServerSocket`.
-2. Connect NukeServerSocket inside Nuke.
+1. Download and install the companion plugin [nukeserversocket](#140-nukeserversocket) via the command: `Nuke: Add nukeserversocket`.
+2. Connect nukeserversocket inside Nuke.
 3. With an active Python/BlinkScript file, use the command `Nuke: Run Inside Nuke` from the Command Palette or use the dedicated button in the editor's top right corner.
 
 ![CodeExecution](/resources/images/execute_code.gif)
 
 ## 1.4. Included packages
 
-### 1.4.0. NukeServerSocket
+### 1.4.0. nukeserversocket
 
 When you execute the command `Nuke: Add NukeServerSocket`, the extension will automatically download the latest version of the plugin from the GitHub repository, which is version 1.0.0 or higher. Please note that version 1.0.0 has some breaking changes, such as dropping support for Python 2.7 and changing the configuration file.
 
 However, the extension still supports the old configuration file (NukeServerSocket.ini), in case you still need to use any version <= 0.6.2.
-If you require a specific version, you can download it manually from the [releases page](https://github.com/sisoe24/NukeServerSocket/releases)) and install it yourself.
+If you require a specific version, you can download it manually from the [releases page](https://github.com/sisoe24/nukeserversocket/releases)) and install it yourself.
 
 ### 1.4.1. Python stubs
 
@@ -123,7 +123,7 @@ The nodes panel allows you to view and interact with nodes in the current DAG in
 
 ### 1.5.1. Usage
 
-To access the nodes panel, click on the Nuke icon in the Activity Bar. Connect to the NukeServerSocket and the panel will show nodes from the current DAG.
+To access the nodes panel, click on the Nuke icon in the Activity Bar. Connect to the nukeserversocket and the panel will show nodes from the current DAG.
 
 To assign a new knob to a node, click the `+` button on the node panel. Edit each knob's file reference and sync it with the knob using the "Send code to Knob" button. To use `knobChanged`, type its name into the input dialog when creating a new knob.
 
@@ -131,7 +131,7 @@ If you add a new knob, click "Refresh" to view it. If you change a node's name, 
 
 ### 1.5.2. Known Issues and Limitations
 
-- The panel only works with NukeServerSocket Scritp Editor engine (see [Known Issues](#19-known-issues)).
+- The panel only works with nukeserversocket Scritp Editor engine (see [Known Issues](#19-known-issues)).
 - Knob scripts are tied to the current Workspace, which means that once you create a knob file, it will be saved in the current `$workspace/.nuketools` directory. If you change the Workspace, the panel will not be able to find the knob files.
 - After syncing the knob's value, Nuke may not execute the code until you execute a command in the Script Editor. This is a Nuke-specific issue and not related to the extension. I am still trying to understand why this happens so if you have any ideas, let me know.
 - The knob name input prompt is not as restrictive as in Nuke. Use only letters, numbers, and underscores to avoid issues..
@@ -142,7 +142,7 @@ BlinkScript features are currently basic, but you can request more or contribute
 
 Features include code execution, syntax highlighting, formatting, simple code suggestion, and a startup saturation snippet. When using the extension, a blinkscript node will be created with the same name as the active file, and if the node already exists, the code will be updated and recompiled. Accepted file extensions are `.cpp` or `.blink` .
 
-To create a new BlinkScript node, make sure that the NukeServerSocket Code execution engine is set to the `Script Editor` (see [Known Issues](#19-known-issues)). Once done, create a new file with the `.cpp` or `.blink` extension, and run the code with the command `Nuke: Run code inside nuke`. The node will be created in the current DAG. If you want to update the code, simply run the code again.
+To create a new BlinkScript node, make sure that the nukeserversocket Code execution engine is set to the `Script Editor` (see [Known Issues](#19-known-issues)). Once done, create a new file with the `.cpp` or `.blink` extension, and run the code with the command `Nuke: Run code inside nuke`. The node will be created in the current DAG. If you want to update the code, simply run the code again.
 
 ## 1.7. Available Commands
 
@@ -159,7 +159,7 @@ To create a new BlinkScript node, make sure that the NukeServerSocket Code execu
 | `Nuke: Add VimDcc`                      | `nuke-tools.addVimDcc`  | Add VimDcc plugin to `.nuke` dir and `menu.py`                        |
 | `Nuke: Create a PySide2 plugin`                   | `nuke-tools.addPysideTemplate` | Create a PySide2 plugin from template                                           |
 | `Nuke: Show Network Addresses`                    | `nuke-tools.showNetworkAddresses` | Show network addresses                                                          |
-| `Nuke: Force Update packages`                     | `nuke-tools.forceUpdatePackages`  | Update the included packages (NukeServerSocket, Python stubs, pyside2-template) |
+| `Nuke: Force Update packages`                     | `nuke-tools.forceUpdatePackages`  | Update the included packages |
 
 NOTES:
 
@@ -195,7 +195,7 @@ NOTES:
     Command-line arguments you can add at when running the secondary executable.
 
 - `nukeTools.nukeExecutable.options.restartInstance`: `boolean`
-    Restart the terminal instance instead of creating new ones. **Use with caution**. This option will terminate every Nuke process spawned by the extension. Useful when rapid testing GUI plugins that don't need saving the composition.
+    Restart the terminal instance instead of creating new ones. **Use with caution**. This option will terminate every Nuke process spawned by the extension. Useful when rapid testing GUI plugins.
 
 - `nukeTools.other.clearPreviousOutput`: `boolean`
     Clear the previous console output text.
@@ -238,8 +238,8 @@ NOTES:
 
 ## 1.9. Known Issues
 
-- There is a bug in NukeServerSocket <= 0.6.1 that wrongly assumes the server is set on using the Script Editor engine. The NodesPanel and the BlinkScript features do not work with the Nuke Internal engine, so you'll need to switch to the Internal Engine and then back to the ScriptEditor engine. This will force NukeServerSocket to use the Script Editor engine. This issue is fixed in 0.6.2 and above.
-  - If you are using NukeServerSocket >= 1.0.0, you will not have this option. The extension uses the Script Editor engine by default.
+- There is a bug in nukeserversocket <= 0.6.1 that wrongly assumes the server is set on using the Script Editor engine. The NodesPanel and the BlinkScript features do not work with the Nuke Internal engine, so you'll need to switch to the Internal Engine and then back to the ScriptEditor engine. This will force nukeserversocket to use the Script Editor engine. This issue is fixed in 0.6.2 and above.
+  - If you are using nukeserversocket >= 1.0.0, you will not have this option. The extension uses the Script Editor engine by default.
 
 ## 1.10. Contributing
 
