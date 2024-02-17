@@ -7,10 +7,16 @@ import extract = require("extract-zip");
 import { GithubRelease } from "@terascope/fetch-github-release/dist/src/interfaces";
 import { downloadRelease } from "@terascope/fetch-github-release";
 
-import * as assets from "./assets";
 import { Version } from "./version";
 
 const NUKE_TOOLS_DIR = path.join(os.homedir(), ".nuke", "NukeTools");
+const rootExtensionPath = vscode.extensions.getExtension("virgilsisoe.nuke-tools")
+    ?.extensionPath as string;
+
+export const ASSETS_PATH = path.join(rootExtensionPath, "assets");
+if (!fs.existsSync(ASSETS_PATH)) {
+    fs.mkdirSync(ASSETS_PATH);
+}
 
 type PackageType = {
     name: string;
@@ -101,17 +107,23 @@ function extractPackage(source: string, destination: string): Promise<void> {
  * So the next time the package is added, it will be extracted from the assets folder.
  *
  * @param packageId the package to add
+ * @param destination the destination folder. If not provided, the package's default destination will be used.
+ * @ param force if true, the package will be downloaded from GitHub, even if it already exists in the assets folder.
  * @returns
  */
 export async function addPackage(
     packageId: PackageIds,
-    destination: string,
+    destination?: string,
     force = false,
     ): Promise<PackageType | null> {
         const pkg = packageMap.get(packageId);
         
     if (!pkg) {
         throw new Error(`Package ${packageId} not found`);
+    }
+
+    if (!destination) {
+        destination = pkg.destination;
     }
 
     const archivedPackage = path.join(assets.ASSETS_PATH, `${pkg.name}.zip`);
