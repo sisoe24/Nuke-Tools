@@ -1,11 +1,41 @@
+import * as fs from "fs";
 import * as os from "os";
-import * as nuke from "./nuke";
 import * as vscode from "vscode";
 import { getConfig } from "./config";
 
 import { Socket } from "net";
+import path = require("path");
 
 const outputWindow = vscode.window.createOutputChannel("Nuke Tools");
+
+/**
+ * Get the value from the nukeserversocket configuration.
+ * 
+ * @param value value to get from the configuration.
+ * @param defaultValue default value to fallback in case property is undefined.
+ * @returns 
+ */
+export function getNssConfig(value: string, defaultValue: string): string {
+    const nukeDir = path.join(os.homedir(), ".nuke");
+
+    const nssConfigJSON = path.join(nukeDir, "nukeserversocket.json");
+    if (fs.existsSync(nssConfigJSON)) {
+        const fileContent = fs.readFileSync(nssConfigJSON, "utf-8");
+        return JSON.parse(fileContent)[value] || defaultValue;
+    }
+
+    // Legacy support for NukeServerSocket < 1.0.0
+    const nssConfigIni = path.join(nukeDir, "NukeServerSocket.ini");
+    if (fs.existsSync(nssConfigIni)) {
+        const fileContent = fs.readFileSync(nssConfigIni, "utf-8");
+        const match = new RegExp(`${value}=(.+)`).exec(fileContent);
+        if (match) {
+            return match[1];
+        }
+    }
+
+    return defaultValue;
+}
 
 /**
  * Get the manual address by looking in the configuration network property.
@@ -32,7 +62,7 @@ export function getManualAddress(property: string, defaultValue: string): string
 }
 
 export function getPort(): number {
-    let port = nuke.getNssConfig("port", "54321");
+    let port = getNssConfig("port", "54321");
 
     if (getConfig("network.enableManualConnection")) {
         port = getManualAddress("port", port);

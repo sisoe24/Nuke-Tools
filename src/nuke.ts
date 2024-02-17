@@ -4,31 +4,8 @@ import * as path from "path";
 
 import * as packages from "./packages";
 
-const NUKE_DIR = path.join(os.homedir(), ".nuke");
-
-export function getNssConfig(value: string, defaultValue: string): string {
-    const nssConfigJSON = path.join(NUKE_DIR, "nukeserversocket.json");
-    const nssConfigIni = path.join(NUKE_DIR, "NukeServerSocket.ini");
-
-    if (fs.existsSync(nssConfigJSON)) {
-        const fileContent = fs.readFileSync(nssConfigJSON, "utf-8");
-        return JSON.parse(fileContent)[value] || defaultValue;
-    }
-
-    // Legacy support for NukeServerSocket.ini
-    if (fs.existsSync(nssConfigIni)) {
-        const fileContent = fs.readFileSync(nssConfigIni, "utf-8");
-        const match = new RegExp(`${value}=(.+)`).exec(fileContent);
-        if (match) {
-            return match[1];
-        }
-    }
-
-    return defaultValue;
-}
-
 export function addMenuImport(importText: string): void {
-    const menuPy = path.join(NUKE_DIR, "menu.py");
+    const menuPy = path.join(os.homedir(), ".nuke", "menu.py");
 
     if (fs.existsSync(menuPy)) {
         const fileContent = fs.readFileSync(menuPy, "utf-8");
