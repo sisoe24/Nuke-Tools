@@ -105,9 +105,11 @@ function extractPackage(source: string, destination: string): Promise<void> {
  */
 export async function addPackage(
     packageId: PackageIds,
-    force = false
-): Promise<PackageType | null> {
-    const pkg = packageMap.get(packageId);
+    destination: string,
+    force = false,
+    ): Promise<PackageType | null> {
+        const pkg = packageMap.get(packageId);
+        
     if (!pkg) {
         throw new Error(`Package ${packageId} not found`);
     }
@@ -119,7 +121,7 @@ export async function addPackage(
         fs.existsSync(archivedPackage) &&
         Version.currentVersion <= Version.previousVersion
     ) {
-        await extractPackage(archivedPackage, pkg.destination);
+        await extractPackage(archivedPackage, destination);
         return pkg;
     }
 
@@ -129,7 +131,7 @@ export async function addPackage(
 
     return downloadRelease("sisoe24", packageId, assets.ASSETS_PATH, filterRelease, undefined, true)
         .then(async function () {
-            await extractPackage(archivedPackage, pkg.destination);
+            await extractPackage(archivedPackage, destination);
             return pkg;
         })
         .catch(function (err: { message: unknown }) {
@@ -142,6 +144,6 @@ export async function addPackage(
 
 export async function forceUpdatePackages(): Promise<void> {
     for (const [packageId, pkg] of packageMap) {
-        await addPackage(packageId, true);
+        await addPackage(packageId, pkg.destination, true);
     }
 }
