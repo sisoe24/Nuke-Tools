@@ -10,10 +10,12 @@ import { downloadRelease } from "@terascope/fetch-github-release";
 import { Version } from "./version";
 
 const NUKE_TOOLS_DIR = path.join(os.homedir(), ".nuke", "NukeTools");
+
 const rootExtensionPath = vscode.extensions.getExtension("virgilsisoe.nuke-tools")
     ?.extensionPath as string;
 
-export const ASSETS_PATH = path.join(rootExtensionPath, "assets");
+export const ASSETS_PATH = path.join(rootExtensionPath, "resources", "assets");
+
 if (!fs.existsSync(ASSETS_PATH)) {
     fs.mkdirSync(ASSETS_PATH);
 }
@@ -80,7 +82,6 @@ function extractPackage(source: string, destination: string): Promise<void> {
                         fs.rmSync(destination, { recursive: true });
                     }
                     fs.renameSync(destination + "-master", destination);
-                    vscode.window.showInformationMessage(`NukeTools: Package updated: ${source}`);
                     resolve();
                 })
                 .catch((err) => {
@@ -105,6 +106,9 @@ function extractPackage(source: string, destination: string): Promise<void> {
  *
  * When the package is downloaded from GitHub, it will be extracted to the assets folder.
  * So the next time the package is added, it will be extracted from the assets folder.
+ * 
+ * If the package is already in the assets folder and the current version is not greater than the previous version,
+ * the package will be extracted from the assets folder.
  *
  * @param packageId the package to add
  * @param destination the destination folder. If not provided, the package's default destination will be used.
@@ -113,11 +117,10 @@ function extractPackage(source: string, destination: string): Promise<void> {
  */
 export async function addPackage(
     packageId: PackageIds,
-    destination?: string,
-    force = false,
-    ): Promise<PackageType | null> {
-        const pkg = packageMap.get(packageId);
-        
+    destination?: string
+): Promise<PackageType | null> {
+    const pkg = packageMap.get(packageId);
+
     if (!pkg) {
         throw new Error(`Package ${packageId} not found`);
     }
@@ -126,14 +129,12 @@ export async function addPackage(
         destination = pkg.destination;
     }
 
-    const archivedPackage = path.join(assets.ASSETS_PATH, `${pkg.name}.zip`);
+    const archivedPackage = path.join(ASSETS_PATH, `${pkg.name}.zip`);
 
-    if (
-        !force &&
-        fs.existsSync(archivedPackage) &&
-        Version.currentVersion <= Version.previousVersion
-    ) {
+    // every new version the package will be downloaded from GitHub
+    if (fs.existsSync(archivedPackage) && Version.currentVersion <= Version.previousVersion) {
         await extractPackage(archivedPackage, destination);
+        console.log(`NukeTools: Package added: ${pkg.name}`);
         return pkg;
     }
 
@@ -141,9 +142,10 @@ export async function addPackage(
         return release.prerelease === false;
     };
 
-    return downloadRelease("sisoe24", packageId, assets.ASSETS_PATH, filterRelease, undefined, true)
+    return downloadRelease("sisoe24", packageId, ASSETS_PATH, filterRelease, undefined, true)
         .then(async function () {
             await extractPackage(archivedPackage, destination);
+            vscode.window.showInformationMessage(`NukeTools: Package updated: ${pkg.name}`);
             return pkg;
         })
         .catch(function (err: { message: unknown }) {
@@ -152,10 +154,4 @@ export async function addPackage(
             );
             return null;
         });
-}
-
-export async function forceUpdatePackages(): Promise<void> {
-    for (const [packageId, pkg] of packageMap) {
-        await addPackage(packageId, pkg.destination, true);
-    }
 }
