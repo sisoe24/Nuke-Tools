@@ -166,16 +166,6 @@
                         "deprecationMessage": "This setting is deprecated. Use envVars instead.",
                         "description": "A list of paths to be added to NUKE_PATH before launching Nuke from NukeTools.",
                         "type": "array"
-                    },
-                    "nukeTools.pysideTemplate.pysideVersion": {
-                        "default": "5.12.2",
-                        "markdownDescription": "PySide2 version to be used in pyproject.toml and requirements.txt",
-                        "type": "string"
-                    },
-                    "nukeTools.pysideTemplate.pythonVersion": {
-                        "default": ">=3.6, <=3.7.7",
-                        "markdownDescription": "Python version to be used in pyproject.toml.",
-                        "type": "string"
                     }
                 },
                 "title": "Nuke Tools"
