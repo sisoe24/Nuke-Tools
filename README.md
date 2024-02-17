@@ -229,13 +229,6 @@ NOTES:
 
     Add system environment variables. When enabled, the extension will also add the corresponding system environment variables to the running Nuke instance.
 
-- `nukeTools.pysideTemplate.pythonVersion`: `string`
-    Set a default Python version to use in pyproject.toml. You can use
-    Poetry [version-constraints](https://python-poetry.org/docs/dependency-specification/#version-constraints) specification (e.g. `~3.7.7`)
-
-- `nukeTools.pysideTemplate.pysideVersion`: `string`
-    Set a default PySide2 version to use in pyproject.toml and requirements.txt. (e.g. `5.12.2`)
-
 ## 1.9. Known Issues
 
 - There is a bug in nukeserversocket <= 0.6.1 that wrongly assumes the server is set on using the Script Editor engine. The NodesPanel and the BlinkScript features do not work with the Nuke Internal engine, so you'll need to switch to the Internal Engine and then back to the ScriptEditor engine. This will force nukeserversocket to use the Script Editor engine. This issue is fixed in 0.6.2 and above.
