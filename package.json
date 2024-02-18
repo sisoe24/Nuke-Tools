@@ -105,8 +105,8 @@
             },
             {
                 "category": "Nuke",
-                "command": "nuke-tools.forceUpdatePackages",
-                "title": "Force Update packages"
+                "command": "nuke-tools.clearPackagesCache",
+                "title": "Clear Packages Cache"
             }
         ],
         "configuration": [
