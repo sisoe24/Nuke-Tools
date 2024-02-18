@@ -1,6 +1,5 @@
 import * as fs from "fs";
 import * as path from "path";
-import * as os from "os";
 
 import * as vscode from "vscode";
 import extract = require("extract-zip");
@@ -8,17 +7,8 @@ import { GithubRelease } from "@terascope/fetch-github-release/dist/src/interfac
 import { downloadRelease } from "@terascope/fetch-github-release";
 
 import { Version } from "./version";
+import { NUKE_TOOLS_DIR, ASSETS_PATH } from "./constants";
 
-const NUKE_TOOLS_DIR = path.join(os.homedir(), ".nuke", "NukeTools");
-
-const rootExtensionPath = vscode.extensions.getExtension("virgilsisoe.nuke-tools")
-    ?.extensionPath as string;
-
-export const ASSETS_PATH = path.join(rootExtensionPath, "resources", "assets");
-
-if (!fs.existsSync(ASSETS_PATH)) {
-    fs.mkdirSync(ASSETS_PATH);
-}
 
 type PackageType = {
     name: string;
@@ -97,6 +87,23 @@ function extractPackage(source: string, destination: string): Promise<void> {
     });
 }
 
+function shouldUpdate(packageName: string): boolean {
+    if (Version.extCurrentVersion > Version.extPreviousVersion) {
+        return true;
+    }
+
+    const expectedPackageVersion = Version.getPackageVersion(packageName);
+
+    const currentPackageVersion = "v0.0.0";
+
+    if (expectedPackageVersion > currentPackageVersion) {
+        return true;
+    }
+
+    return false;
+}
+
+
 /**
  * Add a package to the .nuke/NukeTools folder.
  *
@@ -106,7 +113,7 @@ function extractPackage(source: string, destination: string): Promise<void> {
  *
  * When the package is downloaded from GitHub, it will be extracted to the assets folder.
  * So the next time the package is added, it will be extracted from the assets folder.
- * 
+ *
  * If the package is already in the assets folder and the current version is not greater than the previous version,
  * the package will be extracted from the assets folder.
  *
@@ -132,9 +139,9 @@ export async function addPackage(
     const archivedPackage = path.join(ASSETS_PATH, `${pkg.name}.zip`);
 
     // every new version the package will be downloaded from GitHub
-    if (fs.existsSync(archivedPackage) && Version.currentVersion <= Version.previousVersion) {
+    if (fs.existsSync(archivedPackage) && !shouldUpdate(pkg.name)) {
         await extractPackage(archivedPackage, destination);
-        console.log(`NukeTools: Package added: ${pkg.name}`);
+        vscode.window.showInformationMessage(`NukeTools: Package added: ${pkg.name}`);
         return pkg;
     }
 
