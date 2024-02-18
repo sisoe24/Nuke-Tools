@@ -10,8 +10,7 @@
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
-				"--disable-extensions",
-				"${workspaceFolder}/demo",
+				// "--disable-extensions",
 				"--extensionDevelopmentPath=${workspaceFolder}"
 			],
 			"outFiles": [
