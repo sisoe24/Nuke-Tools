@@ -42,30 +42,37 @@ function getLatestRelease(repo: string): Promise<GithubRelease> {
     });
 }
 
-type GithubPackages = {
+type IncludedPackages = {
+    current: { [key: string]: string };
+    lastest: { [key: string]: string };
+};
+
+type IncludedPackagesLog = {
     lastCheck: string;
-    packages: { [key: string]: string };
+    packages: IncludedPackages;
 };
 
 /**
  * Fetch the latest release of a package from github api and save it to the log file.
  * 
- * @see GithubPackages
+ * @see IncludedPackagesLog
  * @param packages a list of packages to fetch the latest release
  */
-async function fetchLatestRelease(packages: string[]): Promise<void> {
-    console.log("fetching latest release");
+async function fetchLatestRelease(packages: IncludedPackages): Promise<void> {
 
     const fetch = async () => {
-        const versions: GithubPackages = {
+        const versions: IncludedPackagesLog = {
             lastCheck: new Date().toISOString(),
-            packages: {},
+            packages: {
+                current: packages.current,
+                lastest: {},
+            },
         };
 
-        for (const key of packages) {
+        for (const key of Object.keys(packages.current)) {
             try {
                 const releaseData = await getLatestRelease(key);
-                versions["packages"][key] = releaseData["tag_name"];
+                versions["packages"]["lastest"][key] = releaseData["tag_name"];
             } catch (err) {
                 vscode.window.showErrorMessage(err as string);
             }
@@ -87,25 +94,16 @@ const T = {
     month: 30 * DAY,
 };
 
-export function fetchPackagesLatestVersion(packages: string[], frequency: number = T.week): void {
-    console.log("try fetching packages");
+export function fetchPackagesLatestVersion(frequency: number = T.month): void {
 
-    if (!fs.existsSync(ASSETS_LOG_PATH)) {
-        console.log("no log file");
-        fetchLatestRelease(packages);
-        return;
-    }
+    const logData = JSON.parse(fs.readFileSync(ASSETS_LOG_PATH, "utf8")) as IncludedPackagesLog;
 
-    const timestamp = JSON.parse(fs.readFileSync(ASSETS_LOG_PATH, "utf8"))["lastCheck"];
-
-    const lastUpdated = new Date(timestamp).getTime();
-
+    const lastUpdated = new Date(logData["lastCheck"]).getTime();
     const now = new Date().getTime();
 
     if (now - lastUpdated > frequency) {
-        fetchLatestRelease(packages);
+        fetchLatestRelease(logData["packages"]);
         return;
     }
 
-    console.log("no need to fetch");
 }
