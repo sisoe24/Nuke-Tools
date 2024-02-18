@@ -81,7 +81,7 @@ The extension includes the following packages:
 
 NukeServerSocket has been updated to version 1.0.0. There are some breaking changes, such as dropping support for Python 2.7 and changing the configuration file. The extension still supports the old configuration file (NukeServerSocket.ini), in case you still need to use any version <= 0.6.2 but its up to you to download and install it since the extension will only download the latest version. Also the package name has been changed from `NukeServerSocket` to `nukeserversocket`.
 
-If you encounter any issues, please open an issue on the GitHub repository. Sorry for the inconvenience.
+If you encounter any issues, please open an issue on the GitHub repository.
 
 ### 1.4.1. Python stubs
 
