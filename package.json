@@ -45,7 +45,6 @@
                 "command": "nuke-tools.deleteEntry",
                 "title": "Delete"
             },
-    
             {
                 "category": "Nuke",
                 "command": "nuke-tools.launchNuke",
