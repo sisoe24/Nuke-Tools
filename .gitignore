@@ -1,6 +1,7 @@
 out
 assets
 .nuketools
+github_packages.json
 
 coverage
 .nyc_output

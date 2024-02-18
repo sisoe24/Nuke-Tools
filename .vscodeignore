@@ -11,6 +11,7 @@ tmp/
 
 .deepsource.toml
 .pre-commit-config.yaml
+github_packages.json
 
 src/**
 .gitignore
