@@ -17,7 +17,6 @@ import { NukeNodesInspectorProvider } from "./nuke/nodes_tree";
 
 import { showNotification } from "./notification";
 import { fetchPackagesLatestVersion } from "./fetch_packages";
-import { PackageIds } from "./packages";
 
 function registerNodesInspectorCommands(context: vscode.ExtensionContext): void {
     const nukeProvider = new NukeNodesInspectorProvider();
@@ -126,7 +125,7 @@ function registerExecutablesCommands(context: vscode.ExtensionContext): void {
 export function activate(context: vscode.ExtensionContext): void {
     Version.update(context);
 
-    fetchPackagesLatestVersion(Object.values(PackageIds));
+    fetchPackagesLatestVersion();
 
     showNotification(context);
 
