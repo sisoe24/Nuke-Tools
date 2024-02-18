@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.14.0] - 02/18/2024
+
+### Changed
+
+- Added a monthly check for the latest included packages.
+- Changed the command `Nuke: Add Pyside2 Plugin` functionality to reflect the new changes in the included template.
+
 ## [0.13.0] - 03/12/2023
 
 ### Added
