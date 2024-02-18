@@ -3,7 +3,7 @@
     "displayName": "Nuke Tools",
     "publisher": "virgilsisoe",
     "description": "A set of tools related to Nuke that simplify the process of writing code for it.",
-    "version": "0.14.0",
+    "version": "0.14.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/sisoe24/Nuke-Tools"
