@@ -1,7 +1,8 @@
 import * as fs from "fs";
 import * as https from "https";
-import path = require("path");
 import * as vscode from "vscode";
+
+import { ASSETS_LOG_PATH } from "./constants";
 
 interface GithubRelease {
     zipball_url?: string;
@@ -9,7 +10,6 @@ interface GithubRelease {
     name: string;
 }
 
-const PackagesLog = path.join(path.resolve(__dirname, ".."), "github_packages.json");
 
 function getLatestRelease(repo: string): Promise<GithubRelease> {
     return new Promise((resolve, reject) => {
@@ -47,6 +47,12 @@ type GithubPackages = {
     packages: { [key: string]: string };
 };
 
+/**
+ * Fetch the latest release of a package from github api and save it to the log file.
+ * 
+ * @see GithubPackages
+ * @param packages a list of packages to fetch the latest release
+ */
 async function fetchLatestRelease(packages: string[]): Promise<void> {
     console.log("fetching latest release");
 
@@ -69,7 +75,7 @@ async function fetchLatestRelease(packages: string[]): Promise<void> {
     };
 
     fetch().then((versions) => {
-        fs.writeFileSync(PackagesLog, JSON.stringify(versions, null, 4));
+        fs.writeFileSync(ASSETS_LOG_PATH, JSON.stringify(versions, null, 4));
     });
 }
 
@@ -84,13 +90,13 @@ const T = {
 export function fetchPackagesLatestVersion(packages: string[], frequency: number = T.week): void {
     console.log("try fetching packages");
 
-    if (!fs.existsSync(PackagesLog)) {
+    if (!fs.existsSync(ASSETS_LOG_PATH)) {
         console.log("no log file");
         fetchLatestRelease(packages);
         return;
     }
 
-    const timestamp = JSON.parse(fs.readFileSync(PackagesLog, "utf8"))["lastCheck"];
+    const timestamp = JSON.parse(fs.readFileSync(ASSETS_LOG_PATH, "utf8"))["lastCheck"];
 
     const lastUpdated = new Date(timestamp).getTime();
 
