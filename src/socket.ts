@@ -1,10 +1,11 @@
 import * as fs from "fs";
 import * as os from "os";
+import * as path from "path";
 import * as vscode from "vscode";
-import { getConfig } from "./config";
 
 import { Socket } from "net";
-import path = require("path");
+import { NUKE_DIR } from "./constants";
+import { getConfig } from "./config";
 
 const outputWindow = vscode.window.createOutputChannel("Nuke Tools");
 
@@ -16,16 +17,15 @@ const outputWindow = vscode.window.createOutputChannel("Nuke Tools");
  * @returns 
  */
 export function getNssConfig(value: string, defaultValue: string): string {
-    const nukeDir = path.join(os.homedir(), ".nuke");
 
-    const nssConfigJSON = path.join(nukeDir, "nukeserversocket.json");
+    const nssConfigJSON = path.join(NUKE_DIR, "nukeserversocket.json");
     if (fs.existsSync(nssConfigJSON)) {
         const fileContent = fs.readFileSync(nssConfigJSON, "utf-8");
         return JSON.parse(fileContent)[value] || defaultValue;
     }
 
     // Legacy support for NukeServerSocket < 1.0.0
-    const nssConfigIni = path.join(nukeDir, "NukeServerSocket.ini");
+    const nssConfigIni = path.join(NUKE_DIR, "NukeServerSocket.ini");
     if (fs.existsSync(nssConfigIni)) {
         const fileContent = fs.readFileSync(nssConfigIni, "utf-8");
         const match = new RegExp(`${value}=(.+)`).exec(fileContent);
