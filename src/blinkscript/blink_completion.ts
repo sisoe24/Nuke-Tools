@@ -2,13 +2,14 @@ import * as path from "path";
 import { readFileSync } from "fs";
 
 import * as vscode from "vscode";
+import { PACKAGE_RESOURCES_PATH } from "../constants";
 
 /**
  * The completion file for blinkscript.
  */
 export const completionFile = JSON.parse(
     readFileSync(
-        path.join(path.resolve(__dirname, "../.."), "language", "blinkscript_completion.json"),
+        path.join(PACKAGE_RESOURCES_PATH, "language", "blinkscript_completion.json"),
         "utf-8"
     )
 );
