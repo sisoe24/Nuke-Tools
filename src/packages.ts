@@ -181,7 +181,7 @@ export async function addPackage(
 
     return downloadRelease("sisoe24", packageId, ASSETS_PATH, filterRelease, undefined, true)
         .then(async function () {
-            await extractPackage(archivedPackage, destination);
+            await extractPackage(archivedPackage, destination as string);
             vscode.window.showInformationMessage(`NukeTools: Package updated: ${pkg.name}`);
 
             // update the package version in the log file
