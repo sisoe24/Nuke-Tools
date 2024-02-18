@@ -34,8 +34,6 @@ Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to
     - [1.4.0. nukeserversocket](#140-nukeserversocket)
     - [1.4.1. Python stubs](#141-python-stubs)
       - [1.4.1.1. Stubs are not working?](#1411-stubs-are-not-working)
-    - [1.4.2. PySide2 Template Project](#142-pyside2-template-project)
-    - [1.4.3. VimDcc](#143-vimdcc)
   - [1.5. Nodes Panel](#15-nodes-panel)
     - [1.5.1. Usage](#151-usage)
     - [1.5.2. Known Issues and Limitations](#152-known-issues-and-limitations)
@@ -47,7 +45,7 @@ Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to
 
 ## 1.1. Features
 
-- Execute code and view Nuke execution output in Visual Studio Code! Just run nukeserversocket within Nuke - no config needed on the same machine.
+- Execute code and view Nuke execution output in Visual Studio Code. Just run `nukeserversocket` within Nuke - no config needed on the same machine.
 - BlinkScript support.
 - Nuke/Hiero Python stubs for auto-complete suggestions.
 - Syntax highlighting for .nk and .gizmo files.
@@ -58,11 +56,11 @@ Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to
 
 ## 1.2. Requirements
 
-The interaction with Nuke is only possible when nukeserversocket is up and running.
+The interaction with Nuke is only possible when `nukeserversocket` is up and running.
 
 ## 1.3. Execute code
 
-1. Download and install the companion plugin [nukeserversocket](#140-nukeserversocket) via the command: `Nuke: Add nukeserversocket`.
+1. Download and install the companion plugin `nukeserversocket` via the command: `Nuke: Add nukeserversocket`.
 2. Connect nukeserversocket inside Nuke.
 3. With an active Python/BlinkScript file, use the command `Nuke: Run Inside Nuke` from the Command Palette or use the dedicated button in the editor's top right corner.
 
@@ -70,19 +68,25 @@ The interaction with Nuke is only possible when nukeserversocket is up and runni
 
 ## 1.4. Included packages
 
+The extension includes the following packages:
+
+- [nukeserversocket](https://github.com/sisoe24/nukeserversocket) - A Python plugin for Nuke that allows you to execute code from an external source.
+- [nuke-python-stubs](https://github.com/sisoe24/nuke-python-stubs) - Python stubs for Nuke and Hiero.
+- [pyside2-template](https://github.com/sisoe24/pyside2-template#readme) - A PySide2 template project for Nuke.
+- [vimdcc](https://github.com/sisoe24/vimdcc) - A Vim-like experience for Nuke's default Script Editor.
+
+> When you add any of these packages, the extension will automatically download the latest version from the GitHub repository, install it and cache it for you. Subsequent updates will also be handled by the extension automatically every month. If you notice and version discrepancies, you can use the command `Nuke: Clear Packages Cache` to clear the cache.
+
 ### 1.4.0. nukeserversocket
 
-When you execute the command `Nuke: Add NukeServerSocket`, the extension will automatically download the latest version of the plugin from the GitHub repository, which is version 1.0.0 or higher. Please note that version 1.0.0 has some breaking changes, such as dropping support for Python 2.7 and changing the configuration file.
+NukeServerSocket has been updated to version 1.0.0. There are some breaking changes, such as dropping support for Python 2.7 and changing the configuration file. The extension still supports the old configuration file (NukeServerSocket.ini), in case you still need to use any version <= 0.6.2 but its up to you to download and install it since the extension will only download the latest version. Also the package name has been changed from `NukeServerSocket` to `nukeserversocket`.
 
-However, the extension still supports the old configuration file (NukeServerSocket.ini), in case you still need to use any version <= 0.6.2.
-If you require a specific version, you can download it manually from the [releases page](https://github.com/sisoe24/nukeserversocket/releases)) and install it yourself.
+If you encounter any issues, please open an issue on the GitHub repository. Sorry for the inconvenience.
 
 ### 1.4.1. Python stubs
 
-> UPDATE: From NukeTools 0.12.0, the stubs are now added inside `~/.nuke/NukeTools/stubs` and are added to the user settings instead of workspace.
-
-1. Use the command `Nuke: Add Python Stubs` to add the stubs to your user `python.analysis.extraPaths` setting.
-2. Write `import nuke` into your script.
+1. Use the command `Nuke: Add Python Stubs` to add the stubs to your user `python.analysis.extraPaths` setting. The stubs will be located in the `~/.nuke/NukeTools/stubs` directory.
+2. Write `import nuke` into your script and you should see the auto-complete suggestions.
 
 ![PythonStubs](/resources/images/auto_complete.gif)
 
@@ -104,14 +108,6 @@ If you're experiencing issues with the stubs in the latest versions of VSCode, y
      },
 ]
 ```
-
-### 1.4.2. PySide2 Template Project
-
-Quickly create a PySide2 template project with the `Nuke: Create a PySide2` command. The plugin can be found in `~/.nuke/NukeTools` . For more information, refer to the project's GitHub README [https://github.com/sisoe24/pyside2-template#readme].
-
-### 1.4.3. VimDcc
-
-VimDcc offers a Vim-like experience for Nuke's default Script Editor. It's perfect for quick coding without an IDE. Check out the project's GitHub README [vimdcc](github.com/sisoe24/vimdcc) for more info. To install, use `Nuke: Install VimDcc`.
 
 ## 1.5. Nodes Panel
 
@@ -148,18 +144,18 @@ To create a new BlinkScript node, make sure that the nukeserversocket Code execu
 
 - All commands are available by opening the Command Palette (`Command+Shift+P` on macOS and `Ctrl+Shift+P` on Windows/Linux) and typing in one of the following Command Name:
 
-| Command Name                                      | Command ID                        | Description                                                                     |
-| ------------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------- |
-| `Nuke: Launch main executable`                    | `nuke-tools.launchNuke`           | Launch main executable                                                          |
-| `Nuke: Launch alternative executable`             | `nuke-tools.launchNukeAlt`        | Launch alternative executable                                                   |
-| `Nuke: Launch alternative executable with prompt` | `nuke-tools.launchNukeOptArgs`    | Launch alternative exec. with prompt for optional args                          |
-| `Nuke: Run Inside Nuke`                           | `nuke-tools.runCodeInsideNuke`    | Execute code inside Nuke                                                        |
-| `Nuke: Add Python Stubs`                    | `nuke-tools.addPythonStubs`       | Add stubs path to workspace settings                                            |
-| `Nuke: Add NukeServerSocket`                      | `nuke-tools.addNukeServerSocket`  | Add NukeServerSocket plugin to `.nuke` dir and `menu.py`                        |
-| `Nuke: Add VimDcc`                      | `nuke-tools.addVimDcc`  | Add VimDcc plugin to `.nuke` dir and `menu.py`                        |
-| `Nuke: Create a PySide2 plugin`                   | `nuke-tools.addPysideTemplate` | Create a PySide2 plugin from template                                           |
-| `Nuke: Show Network Addresses`                    | `nuke-tools.showNetworkAddresses` | Show network addresses                                                          |
-| `Nuke: Force Update packages`                     | `nuke-tools.forceUpdatePackages`  | Update the included packages |
+| Command Name                                      | Command ID                        | Description                                              |
+| ------------------------------------------------- | --------------------------------- | -------------------------------------------------------- |
+| `Nuke: Launch main executable`                    | `nuke-tools.launchNuke`           | Launch main executable                                   |
+| `Nuke: Launch alternative executable`             | `nuke-tools.launchNukeAlt`        | Launch alternative executable                            |
+| `Nuke: Launch alternative executable with prompt` | `nuke-tools.launchNukeOptArgs`    | Launch alternative exec. with prompt for optional args   |
+| `Nuke: Run Inside Nuke`                           | `nuke-tools.runCodeInsideNuke`    | Execute code inside Nuke                                 |
+| `Nuke: Add Python Stubs`                          | `nuke-tools.addPythonStubs`       | Add stubs path to workspace settings                     |
+| `Nuke: Add NukeServerSocket`                      | `nuke-tools.addNukeServerSocket`  | Add NukeServerSocket plugin to `.nuke` dir and `menu.py` |
+| `Nuke: Add VimDcc`                                | `nuke-tools.addVimDcc`            | Add VimDcc plugin to `.nuke` dir and `menu.py`           |
+| `Nuke: Create a PySide2 plugin`                   | `nuke-tools.addPysideTemplate`    | Create a PySide2 plugin from template                    |
+| `Nuke: Show Network Addresses`                    | `nuke-tools.showNetworkAddresses` | Show network addresses                                   |
+| `Nuke: Clear Packages Cache`                       | `nuke-tools.clearPackagesCache`   | Clear the packages cache                                 |
 
 NOTES:
 
