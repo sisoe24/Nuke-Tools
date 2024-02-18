@@ -1,11 +1,11 @@
 import * as fs from "fs";
-import * as os from "os";
 import * as path from "path";
 
 import * as packages from "./packages";
+import { NUKE_DIR } from "./constants";
 
 export function addMenuImport(importText: string): void {
-    const menuPy = path.join(os.homedir(), ".nuke", "menu.py");
+    const menuPy = path.join(NUKE_DIR, "menu.py");
 
     if (fs.existsSync(menuPy)) {
         const fileContent = fs.readFileSync(menuPy, "utf-8");
