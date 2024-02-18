@@ -21,7 +21,7 @@ export enum PackageIds {
     vimdcc = "vimdcc",
 }
 
-if (!fs.existsSync(ASSETS_LOG_PATH)) {
+export function initializePackageLog(): void {
     const keys = Object.values(PackageIds);
     const currentPackages = keys.reduce((obj, key) => ({ ...obj, [key]: "v0.0.0" }), {});
     const initial = {
@@ -32,6 +32,10 @@ if (!fs.existsSync(ASSETS_LOG_PATH)) {
         },
     };
     fs.writeFileSync(ASSETS_LOG_PATH, JSON.stringify(initial, null, 4));
+}
+
+if (!fs.existsSync(ASSETS_LOG_PATH)) {
+    initializePackageLog();
 }
 
 export const packageMap = new Map<PackageIds, PackageType>([

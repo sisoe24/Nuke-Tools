@@ -17,6 +17,7 @@ import { NukeNodesInspectorProvider } from "./nuke/nodes_tree";
 
 import { showNotification } from "./notification";
 import { fetchPackagesLatestVersion } from "./fetch_packages";
+import { initializePackageLog } from "./packages";
 
 function registerNodesInspectorCommands(context: vscode.ExtensionContext): void {
     const nukeProvider = new NukeNodesInspectorProvider();
@@ -71,9 +72,10 @@ function registerBlinkScriptCommands(context: vscode.ExtensionContext): void {
 function registerPackagesCommands(context: vscode.ExtensionContext): void {
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.forceUpdatePackages", () => {
-            console.log("force update");
-            // forceUpdatePackages();
+        vscode.commands.registerCommand("nuke-tools.clearPackagesCache", () => {
+            initializePackageLog();
+            fetchPackagesLatestVersion();
+            vscode.window.showInformationMessage("Packages cached cleared.");
         })
     );
 
