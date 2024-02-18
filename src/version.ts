@@ -1,6 +1,4 @@
 import * as vscode from "vscode";
-import * as fs from "fs";
-import { ASSETS_LOG_PATH } from "./constants";
 
 export class Version {
     private static _extPreviousVersion: string;
@@ -26,9 +24,4 @@ export class Version {
         Version._extCurrentVersion = cxt.extension.packageJSON.version;
     }
 
-    public static getPackageVersion(packageName: string): string {
-        const logFile = fs.readFileSync(ASSETS_LOG_PATH, "utf8");
-        const data = JSON.parse(logFile);
-        return data["packages"][packageName];
-    }
 }
