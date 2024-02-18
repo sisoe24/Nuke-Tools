@@ -7,8 +7,7 @@ import { GithubRelease } from "@terascope/fetch-github-release/dist/src/interfac
 import { downloadRelease } from "@terascope/fetch-github-release";
 
 import { Version } from "./version";
-import { NUKE_TOOLS_DIR, ASSETS_PATH } from "./constants";
-
+import { NUKE_TOOLS_DIR, ASSETS_PATH, ASSETS_LOG_PATH } from "./constants";
 
 type PackageType = {
     name: string;
@@ -20,6 +19,19 @@ export enum PackageIds {
     nukePythonStubs = "nuke-python-stubs",
     pySide2Template = "pyside2-template",
     vimdcc = "vimdcc",
+}
+
+if (!fs.existsSync(ASSETS_LOG_PATH)) {
+    const keys = Object.values(PackageIds);
+    const currentPackages = keys.reduce((obj, key) => ({ ...obj, [key]: "v0.0.0" }), {});
+    const initial = {
+        lastCheck: "2021-01-01T00:00:00.000Z",
+        packages: {
+            current: currentPackages,
+            lastest: {},
+        },
+    };
+    fs.writeFileSync(ASSETS_LOG_PATH, JSON.stringify(initial, null, 4));
 }
 
 export const packageMap = new Map<PackageIds, PackageType>([
@@ -87,22 +99,28 @@ function extractPackage(source: string, destination: string): Promise<void> {
     });
 }
 
+/**
+ * Check if the package should be updated.
+ *
+ * The package will be updated if the current extension version is greater than the previous version or
+ * if the latest version of the package is greater than the current version.
+ *
+ * @param packageName the package to check
+ * @returns
+ */
 function shouldUpdate(packageName: string): boolean {
     if (Version.extCurrentVersion > Version.extPreviousVersion) {
         return true;
     }
 
-    const expectedPackageVersion = Version.getPackageVersion(packageName);
+    const packages = JSON.parse(fs.readFileSync(ASSETS_LOG_PATH, "utf8"))["packages"];
 
-    const currentPackageVersion = "v0.0.0";
-
-    if (expectedPackageVersion > currentPackageVersion) {
+    if (packages["lastest"][packageName] > packages["current"][packageName]) {
         return true;
     }
 
     return false;
 }
-
 
 /**
  * Add a package to the .nuke/NukeTools folder.
@@ -145,14 +163,28 @@ export async function addPackage(
         return pkg;
     }
 
+    let tagName = "v0.0.0";
+
     const filterRelease = (release: GithubRelease) => {
-        return release.prerelease === false;
+        const isRelease = release.prerelease === false;
+
+        if (isRelease && tagName < release.tag_name) {
+            tagName = release.tag_name;
+        }
+
+        return isRelease;
     };
 
     return downloadRelease("sisoe24", packageId, ASSETS_PATH, filterRelease, undefined, true)
         .then(async function () {
             await extractPackage(archivedPackage, destination);
             vscode.window.showInformationMessage(`NukeTools: Package updated: ${pkg.name}`);
+
+            // update the package version in the log file
+            const packages = JSON.parse(fs.readFileSync(ASSETS_LOG_PATH, "utf8"));
+            packages["packages"]["current"][pkg.name] = tagName;
+            fs.writeFileSync(ASSETS_LOG_PATH, JSON.stringify(packages, null, 4));
+
             return pkg;
         })
         .catch(function (err: { message: unknown }) {
