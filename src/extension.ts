@@ -16,7 +16,8 @@ import { NukeCompletionProvider } from "./nuke/completitions";
 import { NukeNodesInspectorProvider } from "./nuke/nodes_tree";
 
 import { showNotification } from "./notification";
-import { forceUpdatePackages } from "./packages";
+import { fetchPackagesLatestVersion } from "./fetch_packages";
+import { PackageIds } from "./packages";
 
 function registerNodesInspectorCommands(context: vscode.ExtensionContext): void {
     const nukeProvider = new NukeNodesInspectorProvider();
@@ -72,7 +73,8 @@ function registerPackagesCommands(context: vscode.ExtensionContext): void {
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.forceUpdatePackages", () => {
-            forceUpdatePackages();
+            console.log("force update");
+            // forceUpdatePackages();
         })
     );
 
@@ -123,6 +125,8 @@ function registerExecutablesCommands(context: vscode.ExtensionContext): void {
 
 export function activate(context: vscode.ExtensionContext): void {
     Version.update(context);
+
+    fetchPackagesLatestVersion(Object.values(PackageIds));
 
     showNotification(context);
 
