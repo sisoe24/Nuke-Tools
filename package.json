@@ -3,7 +3,7 @@
     "displayName": "Nuke Tools",
     "publisher": "virgilsisoe",
     "description": "A set of tools related to Nuke that simplify the process of writing code for it.",
-    "version": "0.13.0",
+    "version": "0.14.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/sisoe24/Nuke-Tools"
@@ -44,12 +44,6 @@
             {
                 "command": "nuke-tools.deleteEntry",
                 "title": "Delete"
-            },
-            {
-                "category": "Nuke",
-                "command": "nuke-tools.createPySide2Project",
-                "shortTitle": "Nuke",
-                "title": "Create a PySide2 plugin"
             },
             {
                 "category": "Nuke",
@@ -100,13 +94,19 @@
             },
             {
                 "category": "Nuke",
+                "command": "nuke-tools.addPysideTemplate",
+                "shortTitle": "Nuke",
+                "title": "Add PySide2 template"
+            },
+            {
+                "category": "Nuke",
                 "command": "nuke-tools.addVimDcc",
                 "title": "Add VimDcc"
             },
             {
                 "category": "Nuke",
-                "command": "nuke-tools.forceUpdatePackages",
-                "title": "Force Update packages"
+                "command": "nuke-tools.clearPackagesCache",
+                "title": "Clear Packages Cache"
             }
         ],
         "configuration": [
@@ -165,16 +165,6 @@
                         "deprecationMessage": "This setting is deprecated. Use envVars instead.",
                         "description": "A list of paths to be added to NUKE_PATH before launching Nuke from NukeTools.",
                         "type": "array"
-                    },
-                    "nukeTools.pysideTemplate.pysideVersion": {
-                        "default": "5.12.2",
-                        "markdownDescription": "PySide2 version to be used in pyproject.toml and requirements.txt",
-                        "type": "string"
-                    },
-                    "nukeTools.pysideTemplate.pythonVersion": {
-                        "default": ">=3.6, <=3.7.7",
-                        "markdownDescription": "Python version to be used in pyproject.toml.",
-                        "type": "string"
                     }
                 },
                 "title": "Nuke Tools"
@@ -216,12 +206,6 @@
             }
         ],
         "menus": {
-            "commandPalette": [
-                {
-                    "command": "nuke-tools.testRunInsideNuke",
-                    "when": "false"
-                }
-            ],
             "editor/title": [
                 {
                     "command": "nuke-tools.runCodeInsideNuke",
@@ -274,20 +258,17 @@
         },
         "viewsWelcome": [
             {
-                "contents": "Nodes Panel is currently in beta. Some features may not work as expected.\nPlease connect NukeServerSocket and refresh. [Learn more](https://github.com/sisoe24/NukeServerSocket#141-execute-code).\n[Refresh](command:nuke-tools.refreshNodes)",
+                "contents": "Nodes Panel is currently in beta. Some features may not work as expected.\nPlease connect nukeserversocket and refresh. [Learn more](https://github.com/sisoe24/nukeserversocket#141-execute-code).\n[Refresh](command:nuke-tools.refreshNodes)",
                 "view": "nuke-tools"
             }
         ]
     },
     "dependencies": {
         "@terascope/fetch-github-release": "^0.8.7",
-        "@types/fs-extra": "^9.0.13",
         "extract-zip": "^2.0.1",
-        "fs-extra": "^10.0.1",
         "uuid": "^9.0.0"
     },
     "devDependencies": {
-        "@istanbuljs/nyc-config-typescript": "^1.0.1",
         "@types/glob": "^7.1.3",
         "@types/mocha": "^8.2.2",
         "@types/node": "14.x",
@@ -299,7 +280,6 @@
         "eslint": "^7.32.0",
         "glob": "^7.1.7",
         "mocha": "^10.2.0",
-        "nyc": "^15.1.0",
         "source-map-support": "^0.5.20",
         "ts-node": "^10.4.0",
         "typescript": "^4.3.2",
@@ -317,17 +297,17 @@
         "pyside"
     ],
     "license": "MIT",
-    "main": "./out/extension.js",
+    "main": "./out/main.js",
     "scripts": {
         "compile": "tsc -p ./",
         "esbuild": "npm run esbuild-base -- --sourcemap",
-        "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
+        "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --external:keyv --format=cjs --platform=node --log-level=debug",
         "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+        "test-compile": "tsc -p ./",
+        "vscode:prepublish": "npm run esbuild-base -- --minify",
         "lint": "eslint src --ext ts",
         "pretest": "npm run compile && npm run lint",
         "test": "node ./out/test/runTest.js",
-        "vscode:prepublish": "npm run compile",
-        "vscode:prepublishe": "npm run esbuild-base -- --minify",
         "watch": "tsc -watch -p ./"
     }
 }

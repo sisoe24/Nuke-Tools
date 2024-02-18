@@ -8,13 +8,7 @@ import * as vscode from "vscode";
  *
  * Example:
  * ```ts
- * // instead of this:
- * const config = vscode.workspace.getConfiguration("nukeTools");
- * const consoleConfig = config.get("console");
- * if (typeof consoleConfig === "undefined") { ... }
- *
- * // you can do this:
- * const config = getConfig("console");
+ * const config = getConfig("console"); 
  * ```
  *
  * @param property - name of the configuration property to get.

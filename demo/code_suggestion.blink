@@ -1,3 +1,0 @@
-kernel Sample : ImageComputationKernel<ePixelWise> {
-    Image<eRead>
-}

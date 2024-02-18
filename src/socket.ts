@@ -1,23 +1,40 @@
-import * as os from "os";
 import * as fs from "fs";
+import * as os from "os";
 import * as path from "path";
-import * as utils from "./utils";
 import * as vscode from "vscode";
-import { getConfig } from "./config";
 
 import { Socket } from "net";
+import { NUKE_DIR } from "./constants";
+import { getConfig } from "./config";
 
 const outputWindow = vscode.window.createOutputChannel("Nuke Tools");
 
 /**
- * Get the NukeServerSocket.ini file path.
- *
- * The path will be returned even if there is no file.
- *
- * @returns - path like string.
+ * Get the value from the nukeserversocket configuration.
+ * 
+ * @param value value to get from the configuration.
+ * @param defaultValue default value to fallback in case property is undefined.
+ * @returns 
  */
-export function getNukeIni(): string {
-    return path.join(utils.nukeDir, "NukeServerSocket.ini");
+export function getNssConfig(value: string, defaultValue: string): string {
+
+    const nssConfigJSON = path.join(NUKE_DIR, "nukeserversocket.json");
+    if (fs.existsSync(nssConfigJSON)) {
+        const fileContent = fs.readFileSync(nssConfigJSON, "utf-8");
+        return JSON.parse(fileContent)[value] || defaultValue;
+    }
+
+    // Legacy support for NukeServerSocket < 1.0.0
+    const nssConfigIni = path.join(NUKE_DIR, "NukeServerSocket.ini");
+    if (fs.existsSync(nssConfigIni)) {
+        const fileContent = fs.readFileSync(nssConfigIni, "utf-8");
+        const match = new RegExp(`${value}=(.+)`).exec(fileContent);
+        if (match) {
+            return match[1];
+        }
+    }
+
+    return defaultValue;
 }
 
 /**
@@ -44,51 +61,8 @@ export function getManualAddress(property: string, defaultValue: string): string
     return manualAddress;
 }
 
-/**
- * Get the port value from the NukeServerSocket.ini.
- *
- * If NukeServerSocket.ini has a wrong value, will default back on `defaultPort`.
- *
- * @param configIni - path of the NukeServerSocket.ini.
- * @param defaultPort - default port value if ini file had no valid value.
- * @returns - the port value.
- */
-export function getPortFromIni(configIni: string, defaultPort: string): string {
-    const fileContent = fs.readFileSync(configIni, "utf-8");
-    const match = fileContent.match(/port=(\d{5})(\b|\n)/);
-
-    if (!match) {
-        const msg = `
-            The configuration for the server/port appears to be invalid.
-            Falling back on port 54321 for now.
-            Try disconnecting and connecting back the server inside Nuke.
-            `;
-        vscode.window.showErrorMessage(msg);
-        return defaultPort;
-    }
-
-    return match[1];
-}
-
-/**
- * Get the port configuration value.
- *
- * The order of which the port value is taken is as follows:
- *  1. Create a default port value of: 54321
- *  2. If NukeServerSocket.ini has a valid port value, will be taken instead.
- *  3. If manual configuration is enabled, will be taken instead.
- *
- * If step 2 or 3 will fail, will default back on step 1.
- *
- * @returns - port value for the connection.
- */
 export function getPort(): number {
-    let port = "54321";
-
-    const configIni = getNukeIni();
-    if (fs.existsSync(configIni)) {
-        port = getPortFromIni(configIni, port);
-    }
+    let port = getNssConfig("port", "54321");
 
     if (getConfig("network.enableManualConnection")) {
         port = getManualAddress("port", port);
@@ -208,17 +182,10 @@ export async function sendData(
                 client.write(text);
             });
         } catch (error) {
-            if (error instanceof RangeError) {
-                const msg = `Port is out of range. Value should be >= 49567 and < 65536. Received: ${port}`;
-                logDebugNetwork(msg);
-                client.destroy(new Error("Port out of range"));
-                status.errorMessage = "Port is out of range";
-            } else {
-                const msg = `Unknown exception. ${String(error)}`;
-                logDebugNetwork(msg);
-                client.destroy(new Error(msg));
-                status.errorMessage = msg;
-            }
+            const msg = `Unknown exception. ${String(error)}`;
+            logDebugNetwork(msg);
+            client.destroy(new Error(msg));
+            status.errorMessage = msg;
             status.error = true;
             reject(status);
         }
@@ -258,7 +225,6 @@ export async function sendData(
                     status.errorMessage = error.message;
                     reject(status);
                 }
-
             }
         );
 
@@ -269,7 +235,7 @@ export async function sendData(
          */
         client.on("error", function (error: Error) {
             const msg = `
-            Couldn't connect to NukeServerSocket. Check the plugin and try again. 
+            Couldn't connect to nukeserversocket. Check the plugin and try again. 
             If manual connection is enable, verify that the port and host address are correct. 
             ${error.message}`;
             vscode.window.showErrorMessage(msg);
@@ -301,7 +267,6 @@ export async function sendData(
         client.on("end", function () {
             logDebugNetwork("Connection ended.");
         });
-
     });
 }
 
@@ -317,22 +282,17 @@ export function prepareDebugMsg(): { text: string; file: string } {
     const r1 = random();
     const r2 = random();
 
-    let code = `
+    const code = `
     from __future__ import print_function
     print("Hostname: ${os.hostname() as string} User: ${os.userInfo()["username"] as string}")
     print("Connected to ${getAddresses()}")
     print("${r1} * ${r2} =", ${r1 * r2})
     `;
 
-    // make everything a single line python command
-    code = code.trim().replace(/\n/g, ";");
-
-    const data = {
-        text: code,
+    return {
+        text: code.trim().replace(/\n/g, ";"),
         file: "tmp_file",
     };
-
-    return data;
 }
 
 /**
@@ -347,23 +307,7 @@ export async function sendDebugMessage(): Promise<{
 }
 
 /**
- * Prepare the message to be sent to the socket.
- *
- * If editor has no selected text, the whole file will be sent. Otherwise only
- * the selected text.
- *
- * @param editor - vscode TextEditor instance.
- * @returns a stringified object with the data to be sent.
- */
-export function composeMessage(editor: vscode.TextEditor): { text: string; file: string } {
-    return {
-        file: editor.document.fileName,
-        text: editor.document.getText(editor.selection) || editor.document.getText(),
-    };
-}
-
-/**
- * Send data over TCP connection.
+ * Send the current active file to the socket.
  *
  * The data to be sent over will the current active file name and its content.
  * Data will be wrapped inside a stringified object before being sent.
@@ -378,14 +322,11 @@ export async function sendMessage(): Promise<
     | undefined
 > {
     const editor = vscode.window.activeTextEditor;
-
     if (!editor) {
         return;
     }
 
-    // the output window is treated as an active text editor, so if it has the
-    // focus and user tries to execute the command, the text from the output window
-    // window will be sent instead.
+    // for some reason, the output window is considered as an active editor.
     if (editor.document.uri.scheme === "output") {
         vscode.window.showInformationMessage(
             "You currently have the Output window in focus. Return the focus on the text editor."
@@ -393,13 +334,42 @@ export async function sendMessage(): Promise<
         return;
     }
 
-    return await sendData(getHost(), getPort(), JSON.stringify(composeMessage(editor)));
+    const data = {
+        file: editor.document.fileName,
+        text: editor.document.getText(editor.selection) || editor.document.getText(),
+    };
+
+    return await sendData(getHost(), getPort(), JSON.stringify(data));
 }
 
+/**
+ * Send an arbitrary command to the socket.
+ *
+ * @param command a stringified command to be sent to the socket.
+ * @returns
+ */
 export function sendCommand(command: string): Promise<{
     message: string;
     error: boolean;
     errorMessage: string;
 }> {
     return sendData(getHost(), getPort(), command);
+}
+
+/**
+ * Check if the socket is connected by sending a simple command.
+ *
+ * @returns A promise that resolves to true if the socket is connected, false otherwise.
+ */
+export function isConnected(): Promise<boolean> {
+    return sendCommand(
+        JSON.stringify({
+            file: "tmp_file",
+            text: "print('test')",
+            formatText: "0",
+        })
+    ).then(
+        () => true,
+        () => false
+    );
 }

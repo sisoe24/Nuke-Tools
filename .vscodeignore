@@ -2,6 +2,13 @@
 .vscode-test/**
 out/test/**
 
+node_modules/**
+!node_modules/keyv
+!node_modules/json-buffer
+
+out/
+!out/main.js
+
 other/
 .pytest_cache/
 .nyc_output/
@@ -11,6 +18,9 @@ tmp/
 
 .deepsource.toml
 .pre-commit-config.yaml
+
+resources/included_assets.json
+resources/assets
 
 src/**
 .gitignore

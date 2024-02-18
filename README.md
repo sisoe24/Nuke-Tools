@@ -1,8 +1,8 @@
 # 1. Nuke Tools README
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b4124a14ccb4467b89ec8cd607b0d16f)](https://www.codacy.com/gh/sisoe24/Nuke-Tools/dashboard?utm_source=github.com&utm_medium=referral&utm_content=sisoe24/Nuke-Tools&utm_campaign=Badge_Grade)
+<!-- [![Codacy Badge](https://app.codacy.com/project/badge/Grade/b4124a14ccb4467b89ec8cd607b0d16f)](https://www.codacy.com/gh/sisoe24/Nuke-Tools/dashboard?utm_source=github.com&utm_medium=referral&utm_content=sisoe24/Nuke-Tools&utm_campaign=Badge_Grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/b4124a14ccb4467b89ec8cd607b0d16f)](https://www.codacy.com/gh/sisoe24/Nuke-Tools/dashboard?utm_source=github.com&utm_medium=referral&utm_content=sisoe24/Nuke-Tools&utm_campaign=Badge_Coverage)
-[![DeepSource](https://deepsource.io/gh/sisoe24/Nuke-Tools.svg/?label=active+issues&show_trend=true&token=HEB3mg6EWSs71ckagYV0_P2u)](https://deepsource.io/gh/sisoe24/Nuke-Tools/?ref=repository-badge)
+[![DeepSource](https://deepsource.io/gh/sisoe24/Nuke-Tools.svg/?label=active+issues&show_trend=true&token=HEB3mg6EWSs71ckagYV0_P2u)](https://deepsource.io/gh/sisoe24/Nuke-Tools/?ref=repository-badge) -->
 
 [![vscode-marketplace](https://img.shields.io/badge/vscode-marketplace-blue)](https://marketplace.visualstudio.com/items?itemName=virgilsisoe.nuke-tools)
 [![vscode-version](https://img.shields.io/visual-studio-marketplace/v/virgilsisoe.nuke-tools)](https://marketplace.visualstudio.com/items?itemName=virgilsisoe.nuke-tools&ssr=false#version-history)
@@ -17,10 +17,10 @@
 
 Includes the following packages:
 
-[![Main Build](https://img.shields.io/github/v/release/sisoe24/NukeServerSocket?label=NukeServerSocket)](https://github.com/sisoe24/NukeServerSocket/releases)
-[![Main Build](https://img.shields.io/github/v/release/sisoe24/nuke-python-stubs?label=nuke-python-stubs)](https://github.com/sisoe24/nuke-python-stubs/releases)
-[![Main Build](https://img.shields.io/github/v/release/sisoe24/pyside2-template?label=pyside2-template)](https://github.com/sisoe24/pyside2-template/releases)
-[![Main Build](https://img.shields.io/github/v/release/sisoe24/vimdcc?label=vimdcc)](https://github.com/sisoe24/vimdcc/releases)
+[![nukeserversocket](https://img.shields.io/github/v/release/sisoe24/nukeserversocket?label=nukeserversocket)](https://github.com/sisoe24/nukeserversocket/releases)
+[![stubs](https://img.shields.io/github/v/release/sisoe24/nuke-python-stubs?label=nuke-python-stubs)](https://github.com/sisoe24/nuke-python-stubs/releases)
+[![pysidetemplate](https://img.shields.io/github/v/release/sisoe24/pyside2-template?label=pyside2-template)](https://github.com/sisoe24/pyside2-template/releases)
+[![vimdcc](https://img.shields.io/github/v/release/sisoe24/vimdcc?label=vimdcc)](https://github.com/sisoe24/vimdcc/releases)
 
 ---
 
@@ -31,10 +31,9 @@ Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to
   - [1.2. Requirements](#12-requirements)
   - [1.3. Execute code](#13-execute-code)
   - [1.4. Included packages](#14-included-packages)
+    - [1.4.0. nukeserversocket](#140-nukeserversocket)
     - [1.4.1. Python stubs](#141-python-stubs)
       - [1.4.1.1. Stubs are not working?](#1411-stubs-are-not-working)
-    - [1.4.2. PySide2 Template Project](#142-pyside2-template-project)
-    - [1.4.3. VimDcc](#143-vimdcc)
   - [1.5. Nodes Panel](#15-nodes-panel)
     - [1.5.1. Usage](#151-usage)
     - [1.5.2. Known Issues and Limitations](#152-known-issues-and-limitations)
@@ -46,39 +45,48 @@ Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to
 
 ## 1.1. Features
 
-- Execute code and view the Nuke execution output in Visual Studio Code
-- No configuration is required when using the extension on the same machine. Simply run NukeServerSocket within Nuke.
-- Provides BlinkScript support.
-- Provides Nuke/Hiero Python stubs for auto-complete suggestions.
-- Adds syntax highlighting for .nk and .gizmo files.
-- Includes a PySide2 plugin template.
-- Provides commands for launching Nuke instances with default or optional arguments via the terminal.
-- Enables adding environment variables to running Nuke instances.
+- Execute code and view Nuke execution output in Visual Studio Code. Just run `nukeserversocket` within Nuke - no config needed on the same machine.
+- BlinkScript support.
+- Nuke/Hiero Python stubs for auto-complete suggestions.
+- Syntax highlighting for .nk and .gizmo files.
+- PySide2 plugin template.
+- Commands for launching Nuke with default or optional arguments via the terminal.
+- Add environment variables to running Nuke instances.
 - A node panel that allows you to view and interact with the nodes from Nuke current DAG.
 
 ## 1.2. Requirements
 
-The interaction with Nuke is only possible when NukeServerSocket is up and running.
+The interaction with Nuke is only possible when `nukeserversocket` is up and running.
 
 ## 1.3. Execute code
 
-1. Download and install the companion plugin NukeServerSocket:
-    - Via the Command Palette: `Nuke: Add NukeServerSocket` (more info on [Available Commands](#17-available-commands)).
-    - [Github](https://github.com/sisoe24/NukeServerSocket/releases)
-    - [Nukepedia](http://www.nukepedia.com/python/misc/nukeserversocket)
-2. Connect NukeServerSocket inside Nuke.
+1. Download and install the companion plugin `nukeserversocket` via the command: `Nuke: Add nukeserversocket`.
+2. Connect nukeserversocket inside Nuke.
 3. With an active Python/BlinkScript file, use the command `Nuke: Run Inside Nuke` from the Command Palette or use the dedicated button in the editor's top right corner.
 
 ![CodeExecution](/resources/images/execute_code.gif)
 
 ## 1.4. Included packages
 
+The extension includes the following packages:
+
+- [nukeserversocket](https://github.com/sisoe24/nukeserversocket) - A Python plugin for Nuke that allows you to execute code from an external source.
+- [nuke-python-stubs](https://github.com/sisoe24/nuke-python-stubs) - Python stubs for Nuke and Hiero.
+- [pyside2-template](https://github.com/sisoe24/pyside2-template#readme) - A PySide2 template project for Nuke.
+- [vimdcc](https://github.com/sisoe24/vimdcc) - A Vim-like experience for Nuke's default Script Editor.
+
+> When you add any of these packages, the extension will automatically download the latest version from the GitHub repository, install it and cache it for you. Subsequent updates will also be handled by the extension automatically every month. If you notice and version discrepancies, you can use the command `Nuke: Clear Packages Cache` to clear the cache.
+
+### 1.4.0. nukeserversocket
+
+NukeServerSocket has been updated to version 1.0.0. There are some breaking changes, such as dropping support for Python 2.7 and changing the configuration file. The extension still supports the old configuration file (NukeServerSocket.ini), in case you still need to use any version <= 0.6.2 but its up to you to download and install it since the extension will only download the latest version. Also the package name has been changed from `NukeServerSocket` to `nukeserversocket`.
+
+If you encounter any issues, please open an issue on the GitHub repository.
+
 ### 1.4.1. Python stubs
 
-> UPDATE: From NukeTools 0.12.0, the stubs are now added inside `~/.nuke/NukeTools/stubs` and are added to the user settings instead of workspace.
-
-1. Use the command `Nuke: Add Python Stubs` to add the stubs to your user `python.analysis.extraPaths` setting.
-2. Write `import nuke` into your script.
+1. Use the command `Nuke: Add Python Stubs` to add the stubs to your user `python.analysis.extraPaths` setting. The stubs will be located in the `~/.nuke/NukeTools/stubs` directory.
+2. Write `import nuke` into your script and you should see the auto-complete suggestions.
 
 ![PythonStubs](/resources/images/auto_complete.gif)
 
@@ -101,14 +109,6 @@ If you're experiencing issues with the stubs in the latest versions of VSCode, y
 ]
 ```
 
-### 1.4.2. PySide2 Template Project
-
-Quickly create a PySide2 template project with the `Nuke: Create a PySide2` command. The plugin can be found in `~/.nuke/NukeTools` . For more information, refer to the project's GitHub README [https://github.com/sisoe24/pyside2-template#readme].
-
-### 1.4.3. VimDcc
-
-VimDcc offers a Vim-like experience for Nuke's default Script Editor. It's perfect for quick coding without an IDE. Check out the project's GitHub README [vimdcc](github.com/sisoe24/vimdcc) for more info. To install, use `Nuke: Install VimDcc`.
-
 ## 1.5. Nodes Panel
 
 > The nodes panel is currently in Preview and may not work as expected. If you encounter any issues, please open an issue on the GitHub repository. You can also request new features or contribute by opening a PR.
@@ -119,19 +119,18 @@ The nodes panel allows you to view and interact with nodes in the current DAG in
 
 ### 1.5.1. Usage
 
-Access the nodes panel by clicking on the Nuke icon in the Activity Bar. The panel will be empty until you connect [NukeServerSocket](https://github.com/sisoe24/NukeServerSocket) and make sure that the Code Execution Engine is set to `Script Editor`. Once connected, the panel will be populated with nodes from the current DAG.
-After adding a new knob in Nuke, you'll need to refresh with the "Refresh" button to see the new knob.
+To access the nodes panel, click on the Nuke icon in the Activity Bar. Connect to the nukeserversocket and the panel will show nodes from the current DAG.
 
-Click the `+` button on a node in the panel to assign it a new knob. Each knob has a file reference which you can edit. Once you save the file, you can sync the file content with the knob by clicking the "Send code to Knob" button. To use the `knobChanged`, type its name into the input dialog when creatin a new knob.
+To assign a new knob to a node, click the `+` button on the node panel. Edit each knob's file reference and sync it with the knob using the "Send code to Knob" button. To use `knobChanged`, type its name into the input dialog when creating a new knob.
 
-If you change a node's name in Nuke, you'll need to sync it with the panel by clicking the Sync Nodes button which can be found in the panel's top right corner.
+If you add a new knob, click "Refresh" to view it. If you change a node's name, click "Sync Nodes" to sync it with the panel.
 
 ### 1.5.2. Known Issues and Limitations
 
-- The panel only works with NukeServerSocket Scritp Editor engine (see [Known Issues](#19-known-issues)).
+- The panel only works with nukeserversocket Scritp Editor engine (see [Known Issues](#19-known-issues)).
 - Knob scripts are tied to the current Workspace, which means that once you create a knob file, it will be saved in the current `$workspace/.nuketools` directory. If you change the Workspace, the panel will not be able to find the knob files.
 - After syncing the knob's value, Nuke may not execute the code until you execute a command in the Script Editor. This is a Nuke-specific issue and not related to the extension. I am still trying to understand why this happens so if you have any ideas, let me know.
-- When creatin a new knob, the input prompt for the name is not restrictive as the one in Nuke. This means that you can enter any character, including invalid ones, and the panel will not be able to detect it. Please keep this in mind and use only letters, numbers, and underscores.
+- The knob name input prompt is not as restrictive as in Nuke. Use only letters, numbers, and underscores to avoid issues..
 
 ## 1.6. BlinkScript
 
@@ -139,24 +138,24 @@ BlinkScript features are currently basic, but you can request more or contribute
 
 Features include code execution, syntax highlighting, formatting, simple code suggestion, and a startup saturation snippet. When using the extension, a blinkscript node will be created with the same name as the active file, and if the node already exists, the code will be updated and recompiled. Accepted file extensions are `.cpp` or `.blink` .
 
-To create a new BlinkScript node, make sure that the NukeServerSocket Code execution engine is set to the `Script Editor` (see [Known Issues](#19-known-issues)). Once done, create a new file with the `.cpp` or `.blink` extension, and run the code with the command `Nuke: Run code inside nuke`. The node will be created in the current DAG. If you want to update the code, simply run the code again.
+To create a new BlinkScript node, make sure that the nukeserversocket Code execution engine is set to the `Script Editor` (see [Known Issues](#19-known-issues)). Once done, create a new file with the `.cpp` or `.blink` extension, and run the code with the command `Nuke: Run code inside nuke`. The node will be created in the current DAG. If you want to update the code, simply run the code again.
 
 ## 1.7. Available Commands
 
 - All commands are available by opening the Command Palette (`Command+Shift+P` on macOS and `Ctrl+Shift+P` on Windows/Linux) and typing in one of the following Command Name:
 
-| Command Name                                      | Command ID                        | Description                                                                     |
-| ------------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------- |
-| `Nuke: Launch main executable`                    | `nuke-tools.launchNuke`           | Launch main executable                                                          |
-| `Nuke: Launch alternative executable`             | `nuke-tools.launchNukeAlt`        | Launch alternative executable                                                   |
-| `Nuke: Launch alternative executable with prompt` | `nuke-tools.launchNukeOptArgs`    | Launch alternative exec. with prompt for optional args                          |
-| `Nuke: Run Inside Nuke`                           | `nuke-tools.runCodeInsideNuke`    | Execute code inside Nuke                                                        |
-| `Nuke: Add Python Stubs`                    | `nuke-tools.addPythonStubs`       | Add stubs path to workspace settings                                            |
-| `Nuke: Add NukeServerSocket`                      | `nuke-tools.addNukeServerSocket`  | Add NukeServerSocket plugin to `.nuke` dir and `menu.py`                        |
-| `Nuke: Add VimDcc`                      | `nuke-tools.addVimDcc`  | Add VimDcc plugin to `.nuke` dir and `menu.py`                        |
-| `Nuke: Create a PySide2 plugin`                   | `nuke-tools.createPySide2Project` | Create a PySide2 plugin from template                                           |
-| `Nuke: Show Network Addresses`                    | `nuke-tools.showNetworkAddresses` | Show network addresses                                                          |
-| `Nuke: Force Update packages`                     | `nuke-tools.forceUpdatePackages`  | Update the included packages (NukeServerSocket, Python stubs, pyside2-template) |
+| Command Name                                      | Command ID                        | Description                                              |
+| ------------------------------------------------- | --------------------------------- | -------------------------------------------------------- |
+| `Nuke: Launch main executable`                    | `nuke-tools.launchNuke`           | Launch main executable                                   |
+| `Nuke: Launch alternative executable`             | `nuke-tools.launchNukeAlt`        | Launch alternative executable                            |
+| `Nuke: Launch alternative executable with prompt` | `nuke-tools.launchNukeOptArgs`    | Launch alternative exec. with prompt for optional args   |
+| `Nuke: Run Inside Nuke`                           | `nuke-tools.runCodeInsideNuke`    | Execute code inside Nuke                                 |
+| `Nuke: Add Python Stubs`                          | `nuke-tools.addPythonStubs`       | Add stubs path to workspace settings                     |
+| `Nuke: Add NukeServerSocket`                      | `nuke-tools.addNukeServerSocket`  | Add NukeServerSocket plugin to `.nuke` dir and `menu.py` |
+| `Nuke: Add VimDcc`                                | `nuke-tools.addVimDcc`            | Add VimDcc plugin to `.nuke` dir and `menu.py`           |
+| `Nuke: Create a PySide2 plugin`                   | `nuke-tools.addPysideTemplate`    | Create a PySide2 plugin from template                    |
+| `Nuke: Show Network Addresses`                    | `nuke-tools.showNetworkAddresses` | Show network addresses                                   |
+| `Nuke: Clear Packages Cache`                       | `nuke-tools.clearPackagesCache`   | Clear the packages cache                                 |
 
 NOTES:
 
@@ -164,19 +163,19 @@ NOTES:
 - By default, the extension does not provide any shortcut. But you can assign each command to one. (see [Key Bindings for Visual Studio Code](https://code.visualstudio.com/docs/getstarted/keybindings) for more information).
     Example `keybindings.json` :
 
-```json
-[
-    {
-        "key": "alt+shift+n",
-        "command": "nuke-tools.launchNuke"
-    },
-    {
-        "key": "alt+shift+r",
-        "command": "nuke-tools.runCodeInsideNuke",
-        "when": "editorTextFocus"
-    }
-]
-```
+    ```json
+    [
+        {
+            "key": "alt+shift+n",
+            "command": "nuke-tools.launchNuke"
+        },
+        {
+            "key": "alt+shift+r",
+            "command": "nuke-tools.runCodeInsideNuke",
+            "when": "editorTextFocus"
+        }
+    ]
+    ```
 
 ## 1.8. Extension Settings
 
@@ -192,7 +191,7 @@ NOTES:
     Command-line arguments you can add at when running the secondary executable.
 
 - `nukeTools.nukeExecutable.options.restartInstance`: `boolean`
-    Restart the terminal instance instead of creating new ones. **Use with caution**. This option will terminate every Nuke process spawned by the extension. Useful when rapid testing GUI plugins that don't need saving the composition.
+    Restart the terminal instance instead of creating new ones. **Use with caution**. This option will terminate every Nuke process spawned by the extension. Useful when rapid testing GUI plugins.
 
 - `nukeTools.other.clearPreviousOutput`: `boolean`
     Clear the previous console output text.
@@ -211,7 +210,7 @@ NOTES:
 
     **NOTE**: Currently not working on Windows.
 
-    Add environment variables the current running Nuke instance. At the moment, it does not take in account the system environment variables.
+    Add environment variables the current running Nuke instance.
 
     ```json
     {
@@ -226,16 +225,10 @@ NOTES:
 
     Add system environment variables. When enabled, the extension will also add the corresponding system environment variables to the running Nuke instance.
 
-- `nukeTools.pysideTemplate.pythonVersion`: `string`
-    Set a default Python version to use in pyproject.toml. You can use
-    Poetry [version-constraints](https://python-poetry.org/docs/dependency-specification/#version-constraints) specification (e.g. `~3.7.7`)
-
-- `nukeTools.pysideTemplate.pysideVersion`: `string`
-    Set a default PySide2 version to use in pyproject.toml and requirements.txt. (e.g. `5.12.2`)
-
 ## 1.9. Known Issues
 
-- There is a bug in NukeServerSocket <= 0.6.1 that wrongly assumes the server is set on using the Script Editor engine. The NodesPanel and the BlinkScript features do not work with the Nuke Internal engine, so you'll need to switch to the Internal Engine and then back to the ScriptEditor engine. This will force NukeServerSocket to use the Script Editor engine. This issue is fixed in 0.6.2.
+- There is a bug in nukeserversocket <= 0.6.1 that wrongly assumes the server is set on using the Script Editor engine. The NodesPanel and the BlinkScript features do not work with the Nuke Internal engine, so you'll need to switch to the Internal Engine and then back to the ScriptEditor engine. This will force nukeserversocket to use the Script Editor engine. This issue is fixed in 0.6.2 and above.
+  - If you are using nukeserversocket >= 1.0.0, you will not have this option. The extension uses the Script Editor engine by default.
 
 ## 1.10. Contributing
 
