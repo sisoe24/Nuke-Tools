@@ -12,6 +12,7 @@ tmp/
 .deepsource.toml
 .pre-commit-config.yaml
 included_assets.json
+node_modules/
 
 src/**
 .gitignore
