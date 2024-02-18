@@ -116,7 +116,7 @@ export async function createTemplate(): Promise<void> {
     await openProjectFolder(vscode.Uri.file(destination));
 
     vscode.window.showInformationMessage(
-        `Project creation completed. For more information, check 
+        `Project ${projectSlug} created. For more information, please read
         the official [README](https://github.com/sisoe24/pyside2-template#readme).`
     );
 }
