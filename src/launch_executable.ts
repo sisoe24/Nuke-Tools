@@ -55,13 +55,7 @@ export class ExecutablePath {
      * @returns  - string like command for the terminal.
      */
     cliCmd(): string {
-        let path = `"${this.execPath}"`;
-
-        if (os.type() === "Windows_NT") {
-            path = `& ${path}`;
-        }
-
-        return `${path} ${this.args}`.trim();
+        return `${this.execPath} ${this.args}`.trim();
     }
 }
 
