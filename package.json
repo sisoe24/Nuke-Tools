@@ -64,6 +64,18 @@
             },
             {
                 "category": "Nuke",
+                "command": "nuke-tools.addExtras",
+                "shortTitle": "Add Extras",
+                "title": "Add Extras"
+            },
+            {
+                "category": "Nuke",
+                "command": "nuke-tools.showExecutables",
+                "shortTitle": "Show Executables",
+                "title": "Show Executables"
+            },
+            {
+                "category": "Nuke",
                 "command": "nuke-tools.runCodeInsideNuke",
                 "enablement": "resourceLangId =~ /python|cpp/ || resourceExtname == .blink || resourceScheme == untitled",
                 "icon": {
@@ -136,11 +148,11 @@
                         "default": {
                             "MainNuke": {
                                 "path": "/usr/local/Nuke15.0v4/Nuke15.0",
-                                "commandLineArguments": ""
+                                "commandArgs": ""
                             },
                             "NukeX": {
                                 "path": "/usr/local/Nuke15.0v4/Nuke15.0",
-                                "commandLineArguments": "--nukex"
+                                "commandArgs": "--nukex"
                             }
                         }
                     },
@@ -157,10 +169,6 @@
                         "description": "Path to Nuke executable file.",
                         "type": "string"
                     },
-                    "nukeTools.nukeExecutable.secondaryExecutablePath": {
-                        "description": "Path to alternative Nuke executable file.",
-                        "type": "string"
-                    },
                     "nukeTools.other.clearPreviousOutput": {
                         "default": false,
                         "description": "Clear previous console output before next execution.",
@@ -169,17 +177,8 @@
                     "nukeTools.other.envVars": {
                         "description": "A list of environment variable to be added before launching Nuke from NukeTools.",
                         "type": "object"
-                    },
-                    "nukeTools.other.useSystemEnvVars": {
-                        "description": "Use system environment variables. This will add the system environment variables to the environment variables list.",
-                        "type": "boolean",
-                        "default": false
-                    },
-                    "nukeTools.other.nukePaths": {
-                        "deprecationMessage": "This setting is deprecated. Use envVars instead.",
-                        "description": "A list of paths to be added to NUKE_PATH before launching Nuke from NukeTools.",
-                        "type": "array"
                     }
+
                 },
                 "title": "Nuke Tools"
             }
