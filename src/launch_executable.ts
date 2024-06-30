@@ -85,7 +85,7 @@ function concatEnv(userEnvironmentVars: EnvVars): EnvVars {
 
     let workspaceFolder = vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
 
-    // on windows we need to convert the path to a unix-like path 
+    // on windows we need to convert the path to a unix-like path
     if (IS_WINDOWS && isUnixShell()) {
         workspaceFolder = workspaceFolder.replace(/\\/g, "/");
         workspaceFolder = workspaceFolder.replace(/^([a-zA-Z]):/, (_, driveLetter) => {
@@ -101,7 +101,7 @@ function concatEnv(userEnvironmentVars: EnvVars): EnvVars {
         env[k] = env[k].replace(/\${workspaceFolder}/g, workspaceFolder);
 
         // Clean up the path separator in the beginning and end of the string
-        env[k] = env[k].replace(/^[\s:;]+|[\s:;]+$/g, '');
+        env[k] = env[k].replace(/^[\s:;]+|[\s:;]+$/g, "");
     }
 
     return env;
@@ -119,8 +119,11 @@ function stringifyEnv(env: EnvVars): string {
     for (const [k, v] of Object.entries(env)) {
         if (isPowerShell()) {
             envString += `$env:${k}="${v}"; `;
-        } else {
+        } else if (isUnixShell()) {
             envString += `${k}=${v} `;
+        } else {
+            // cmd
+            envString += `set ${k}=${v}&&`;
         }
     }
 
