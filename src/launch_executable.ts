@@ -6,13 +6,21 @@ import * as vscode from "vscode";
 import { getConfig, EnvVars, ExecutableConfig } from "./config";
 const IS_WINDOWS = os.type() === "Windows_NT";
 
-const _isWindowsPowerShell = () => {
-    return (
-        IS_WINDOWS &&
-        vscode.workspace.getConfiguration("terminal.integrated.defaultProfile")["windows"] ===
-            "PowerShell"
-    );
+const isPowerShell = () => {
+    const {shell} = vscode.env;
+    if (shell.includes("powershell") || shell.includes("pwsh") ) {
+        return true;
+    }
+    return false;
 };
+
+const isUnix = () => {
+    const {shell} = vscode.env;
+    if (!isPowerShell() && !shell.includes("cmd")) {
+        return true;
+    }
+    return false;
+}
 
 const isWindowsPowerShell = () => {
     return (
@@ -21,6 +29,7 @@ const isWindowsPowerShell = () => {
             "pwsh"
     );
 };
+
 /**
  * ExecutablePath object class.
  */
@@ -40,6 +49,7 @@ export class ExecutablePath {
         this.name = name;
         this.path = path;
         this.args = args;
+
     }
 
     /**
@@ -63,9 +73,7 @@ export class ExecutablePath {
     buildExecutableCommand(): string {
         let cmd = `"${this.path}" ${this.args}`;
 
-        // we only do this for PowerShell on Windows. Hard to believe that someone would use
-        // PowerShell on Linux or MacOS, but if they do... shame on them.
-        if (isWindowsPowerShell()) {
+        if (isPowerShell()) {
             cmd = `& ${cmd}`;
         }
 
@@ -83,7 +91,13 @@ function concatEnv(userEnvironmentVars: EnvVars): EnvVars {
     const env: EnvVars = {};
 
     const pathSep = IS_WINDOWS ? ";" : ":";
-    const workspaceFolder = vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
+
+    let workspaceFolder = vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
+
+    // force unix path separator even when on windows but using unix shell
+    if (isUnix()) {
+        workspaceFolder = workspaceFolder.replace(/\\/g, "/");
+    }
 
     for (const [k, v] of Object.entries(userEnvironmentVars)) {
         // Replace all instances of $envVar with the system environment variable
@@ -93,7 +107,7 @@ function concatEnv(userEnvironmentVars: EnvVars): EnvVars {
         env[k] = env[k].replace(/\${workspaceFolder}/g, workspaceFolder);
 
         // Clean up the path separator
-        env[k] = env[k].replace(/(;|:)+/g, pathSep);
+        // env[k] = env[k].replace(/(;|:)+/g, pathSep);
     }
 
     return env;
@@ -109,7 +123,7 @@ function stringifyEnv(env: EnvVars): string {
     let envString = "";
 
     for (const [k, v] of Object.entries(env)) {
-        if (isWindowsPowerShell()) {
+        if (isPowerShell()) {
             envString += `$env:${k}="${v}"; `;
         } else {
             envString += `${k}=${v} `;
@@ -141,7 +155,7 @@ export function execCommand(execPath: ExecutablePath): void {
     console.log("Command: ", command);
 
     const terminal = vscode.window.createTerminal(terminalName);
-    terminal.sendText(command);
+    // terminal.sendText(command);
     terminal.show(true);
 }
 
