@@ -59,9 +59,9 @@
             },
             {
                 "category": "Nuke",
-                "command": "nuke-tools.addExtras",
-                "shortTitle": "Add Extras",
-                "title": "Add Extras"
+                "command": "nuke-tools.addPackages",
+                "shortTitle": "Add Packages",
+                "title": "Add Packages"
             },
             {
                 "category": "Nuke",

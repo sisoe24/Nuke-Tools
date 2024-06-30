@@ -79,27 +79,31 @@ function registerPackagesCommands(context: vscode.ExtensionContext): void {
         })
     );
 
-    context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.addPysideTemplate", () => {
-            void nukeTemplate.createTemplate();
-        })
-    );
+    const addExtras: Record<string, () => void> = {
+        pysideTemplate: nukeTemplate.createTemplate,
+        pythonStubs: stubs.addStubs,
+        nukeServerSocket: nuke.addNukeServerSocket,
+        vimDcc: nuke.addVimDcc,
+    };
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.addPythonStubs", () => {
-            stubs.addStubs();
-        })
-    );
+        vscode.commands.registerCommand("nuke-tools.addPackages", () => {
+            const picker = vscode.window.createQuickPick();
+            picker.items = Object.keys(addExtras).map((key) => {
+                return {
+                    label: key,
+                };
+            });
 
-    context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.addNukeServerSocket", () => {
-            nuke.addNukeServerSocket();
-        })
-    );
+            picker.onDidChangeSelection((selection) => {
+                if (selection[0]) {
+                    addExtras[selection[0].label]();
+                    picker.hide();
+                }
+            });
 
-    context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.addVimDcc", () => {
-            nuke.addVimDcc();
+            picker.onDidHide(() => picker.dispose());
+            picker.show();
         })
     );
 }
