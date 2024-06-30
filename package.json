@@ -65,6 +65,12 @@
             },
             {
                 "category": "Nuke",
+                "command": "nuke-tools.extras",
+                "shortTitle": "Extras",
+                "title": "Extras"
+            },
+            {
+                "category": "Nuke",
                 "command": "nuke-tools.showExecutables",
                 "shortTitle": "Show Executables",
                 "title": "Show Executables"
@@ -78,21 +84,6 @@
                     "light": "resources/icons/light/run_code.svg"
                 },
                 "title": "Run Code Inside Nuke"
-            },
-            {
-                "category": "Nuke",
-                "command": "nuke-tools.showNetworkAddresses",
-                "title": "Show Network addresses"
-            },
-            {
-                "category": "Nuke",
-                "command": "nuke-tools.testRunInsideNuke",
-                "title": "Debug Message"
-            },
-            {
-                "category": "Nuke",
-                "command": "nuke-tools.clearPackagesCache",
-                "title": "Clear Packages Cache"
             }
         ],
         "configuration": [
