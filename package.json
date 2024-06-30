@@ -130,6 +130,20 @@
                         "markdownDescription": "Specify a different port for the connection. This will work only if `#nukeTools.network.enableManualConnection#` is enabled. Port value should be in range `49512` - `65535`",
                         "type": "string"
                     },
+                    "nukeTools.executables": {
+                        "description": "A list of executables to register as commands.",
+                        "type": "object",
+                        "default": {
+                            "MainNuke": {
+                                "path": "/usr/local/Nuke15.0v4/Nuke15.0",
+                                "commandLineArguments": ""
+                            },
+                            "NukeX": {
+                                "path": "/usr/local/Nuke15.0v4/Nuke15.0",
+                                "commandLineArguments": "--nukex"
+                            }
+                        }
+                    },
                     "nukeTools.nukeExecutable.options.defaultCommandLineArguments": {
                         "markdownDescription": "Command line arguments to be added when launching `#nukeTools.nukeExecutable.secondaryExecutablePath#`. [Nuke documentation](https://learn.foundry.com/nuke/content/comp_environment/configuring_nuke/command_line_operations.html)",
                         "type": "string"
