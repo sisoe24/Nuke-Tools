@@ -4,6 +4,7 @@ import * as path from "path";
 import * as vscode from "vscode";
 
 import { getConfig, EnvVars, ExecutableConfig } from "./config";
+const IS_WINDOWS =  os.type() === "Windows_NT";
 
 /**
  * ExecutablePath object class.
@@ -13,8 +14,6 @@ export class ExecutablePath {
     path: string;
     args: string;
 
-    powerShell: boolean;
-
     /**
      * Init method for the ExecutablePath object.
      *
@@ -22,25 +21,10 @@ export class ExecutablePath {
      * @param path - The path for the executable file.
      * @param args - Optional arguments for the command line
      */
-    constructor(name: string, path: string, args?: string) {
-        const currentShell = vscode.env.shell;
-        const currentShellProfile = vscode.workspace.getConfiguration(
-            "terminal.integrated.defaultProfile"
-        );
-
-        // console.log("Current shell profile: ", currentShellProfile.get);
-        // console.log("Current shell: ", currentShell);
-
-        if (path.startsWith("&")) {
-            this.path = path.split(" ")[1];
-            this.powerShell = true;
-        } else {
-            this.path = path;
-            this.powerShell = false;
-        }
-
+    constructor(name: string, path: string, args = "") {
         this.name = name;
-        this.args = args || "";
+        this.path = path;
+        this.args = args;
     }
 
     /**
@@ -62,7 +46,19 @@ export class ExecutablePath {
      * @returns  - string like command for the terminal.
      */
     buildExecutableCommand(): string {
-        return `${this.path} ${this.args}`.trim();
+        const currentShellProfile = vscode.workspace.getConfiguration(
+            "terminal.integrated.defaultProfile"
+        );
+
+        let cmd = `"${this.path}" ${this.args}`;
+
+        // we only do this for PowerShell on Windows. Hard to believe that someone would use
+        // PowerShell on Linux or MacOS, but if they do... shame on them.
+        if (IS_WINDOWS && currentShellProfile["windows"] === "PowerShell") {
+            cmd = `& ${cmd}`;
+        }
+
+        return cmd.trim();
     }
 }
 
@@ -75,7 +71,7 @@ export class ExecutablePath {
 function concatEnv(userEnvironmentVars: EnvVars): EnvVars {
     const env: EnvVars = {};
 
-    const pathSep = os.type() === "Windows_NT" ? ";" : ":";
+    const pathSep = IS_WINDOWS  ? ";" : ":";
     const workspaceFolder = vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
 
     for (const [k, v] of Object.entries(userEnvironmentVars)) {
@@ -130,7 +126,7 @@ export function execCommand(execPath: ExecutablePath): void {
     console.log("Command: ", command);
 
     const terminal = vscode.window.createTerminal(terminalName);
-    // terminal.sendText(command);
+    terminal.sendText(command);
     terminal.show(true);
 }
 
