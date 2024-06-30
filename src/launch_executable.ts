@@ -128,10 +128,8 @@ export function execCommand(execPath: ExecutablePath): void {
     const env = stringifyEnv(concatEnv(getConfig("other.envVars")));
     const command = `${env} ${execPath.buildExecutableCommand()}`.trim();
 
-    console.log("Command: ", command);
-
     const terminal = vscode.window.createTerminal(terminalName);
-    // terminal.sendText(getCliCmd(execPath));
+    terminal.sendText(command);
     terminal.show(true);
 }
 
