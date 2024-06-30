@@ -17,8 +17,14 @@ type StringConfig =
     | "nukeExecutable.options.defaultCommandLineArguments"
     | "nukeExecutable.secondaryExecutablePath"
     | "nukeExecutable.primaryExecutablePath";
+
 type ObjectConfig = "other.envVars";
-type BooleanConfig = "nukeExecutable.options.restartInstance" | "other.useSystemEnvVars";
+type BooleanConfig =
+    | "nukeExecutable.options.restartInstance"
+    | "other.useSystemEnvVars"
+    | "network.enableManualConnection"
+    | "other.clearPreviousOutput"
+    | "network.debug";
 type ConfigProperty = StringConfig | BooleanConfig | Executables | ObjectConfig;
 
 /**
