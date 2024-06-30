@@ -81,8 +81,6 @@ export class ExecutablePath {
 function concatEnv(userEnvironmentVars: EnvVars): EnvVars {
     const env: EnvVars = {};
 
-    const pathSep = IS_WINDOWS ? ";" : ":";
-
     let workspaceFolder = vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
 
     // on windows we need to convert the path to a unix-like path
@@ -149,10 +147,9 @@ export function execCommand(execPath: ExecutablePath): void {
 
     const env = stringifyEnv(concatEnv(getConfig("nukeExecutable.envVars")));
     const command = `${env} ${execPath.buildExecutableCommand()}`.trim();
-    console.log("Command: ", command);
 
     const terminal = vscode.window.createTerminal(terminalName);
-    // terminal.sendText(command);
+    terminal.sendText(command);
     terminal.show(true);
 }
 
