@@ -112,12 +112,6 @@ function registerExecutablesCommands(context: vscode.ExtensionContext): void {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.launchNukeAlt", () => {
-            executables.launchSecondaryExecutable();
-        })
-    );
-
-    context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.launchNukeOptArgs", () => {
             void executables.launchPromptExecutable();
         })
