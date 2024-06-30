@@ -7,27 +7,19 @@ import { getConfig, EnvVars, ExecutableConfig } from "./config";
 const IS_WINDOWS = os.type() === "Windows_NT";
 
 const isPowerShell = () => {
-    const {shell} = vscode.env;
-    if (shell.includes("powershell") || shell.includes("pwsh") ) {
+    const { shell } = vscode.env;
+    if (shell.includes("powershell") || shell.includes("pwsh")) {
         return true;
     }
     return false;
 };
 
-const isUnix = () => {
-    const {shell} = vscode.env;
+const isUnixShell = () => {
+    const { shell } = vscode.env;
     if (!isPowerShell() && !shell.includes("cmd")) {
         return true;
     }
     return false;
-}
-
-const isWindowsPowerShell = () => {
-    return (
-        os.type() === "Darwin" &&
-        vscode.workspace.getConfiguration("terminal.integrated.defaultProfile")["osx"] ===
-            "pwsh"
-    );
 };
 
 /**
@@ -49,7 +41,6 @@ export class ExecutablePath {
         this.name = name;
         this.path = path;
         this.args = args;
-
     }
 
     /**
@@ -94,9 +85,12 @@ function concatEnv(userEnvironmentVars: EnvVars): EnvVars {
 
     let workspaceFolder = vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
 
-    // force unix path separator even when on windows but using unix shell
-    if (isUnix()) {
+    // on windows we need to convert the path to a unix-like path 
+    if (IS_WINDOWS && isUnixShell()) {
         workspaceFolder = workspaceFolder.replace(/\\/g, "/");
+        workspaceFolder = workspaceFolder.replace(/^([a-zA-Z]):/, (_, driveLetter) => {
+            return `/${driveLetter.toLowerCase()}`;
+        });
     }
 
     for (const [k, v] of Object.entries(userEnvironmentVars)) {
@@ -106,8 +100,8 @@ function concatEnv(userEnvironmentVars: EnvVars): EnvVars {
         // Replace all instances of ${workspaceFolder} with the workspace folder path
         env[k] = env[k].replace(/\${workspaceFolder}/g, workspaceFolder);
 
-        // Clean up the path separator
-        // env[k] = env[k].replace(/(;|:)+/g, pathSep);
+        // Clean up the path separator in the beginning and end of the string
+        env[k] = env[k].replace(new RegExp(`^${pathSep}|${pathSep}$`, "g"), "");
     }
 
     return env;
