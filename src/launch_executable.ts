@@ -134,7 +134,7 @@ function stringifyEnv(env: EnvVars): string {
  *
  * @param execPath - ExecutablePath object.
  */
-export function execCommand(execPath: ExecutablePath): void {
+function execCommand(execPath: ExecutablePath): void {
     const terminalName = `${path.basename(execPath.path)} ${execPath.name}`;
 
     if (getConfig("nukeExecutable.restartInstance")) {
