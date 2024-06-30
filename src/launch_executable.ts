@@ -117,7 +117,7 @@ function stringifyEnv(env: EnvVars): string {
 export function execCommand(execPath: ExecutablePath): void {
     const terminalName = `${path.basename(execPath.path)} ${execPath.name}`;
 
-    if (getConfig("nukeExecutable.options.restartInstance")) {
+    if (getConfig("nukeExecutable.restartInstance")) {
         vscode.window.terminals.forEach((terminal) => {
             if (terminal.name === terminalName) {
                 terminal.dispose();
@@ -125,7 +125,7 @@ export function execCommand(execPath: ExecutablePath): void {
         });
     }
 
-    const env = stringifyEnv(concatEnv(getConfig("other.envVars")));
+    const env = stringifyEnv(concatEnv(getConfig("nukeExecutable.envVars")));
     const command = `${env} ${execPath.buildExecutableCommand()}`.trim();
 
     const terminal = vscode.window.createTerminal(terminalName);
@@ -142,7 +142,7 @@ export function launchPrimaryExecutable(): ExecutablePath {
     const execObj = new ExecutablePath(
         "Main",
         getConfig("nukeExecutable.primaryExecutablePath"),
-        getConfig("nukeExecutable.options.defaultCommandLineArguments")
+        getConfig("nukeExecutable.commandLineArguments")
     );
 
     if (execObj.exists()) {

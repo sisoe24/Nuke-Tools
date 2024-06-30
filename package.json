@@ -169,16 +169,15 @@
                         "markdownDescription": "Restart the terminal instance instead of creating new ones. Note: This will force close the terminal instance.",
                         "type": "boolean"
                     },
+                    "nukeTools.nukeExecutable.envVars": {
+                        "description": "A list of environment variable to be added before launching Nuke from NukeTools.",
+                        "type": "object"
+                    },
                     "nukeTools.other.clearPreviousOutput": {
                         "default": false,
                         "description": "Clear previous console output before next execution.",
                         "type": "boolean"
-                    },
-                    "nukeTools.other.envVars": {
-                        "description": "A list of environment variable to be added before launching Nuke from NukeTools.",
-                        "type": "object"
                     }
-
                 },
                 "title": "Nuke Tools"
             }

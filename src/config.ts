@@ -14,14 +14,13 @@ type Executables = "nukeExecutable.executables";
 type StringConfig =
     | "pythonPath"
     | "pythonStubsPath"
-    | "nukeExecutable.options.defaultCommandLineArguments"
+    | "nukeExecutable.commandLineArguments"
     | "nukeExecutable.secondaryExecutablePath"
     | "nukeExecutable.primaryExecutablePath";
 
-type ObjectConfig = "other.envVars";
+type ObjectConfig = "nukeExecutable.envVars";
 type BooleanConfig =
-    | "nukeExecutable.options.restartInstance"
-    | "other.useSystemEnvVars"
+    | "nukeExecutable.restartInstance"
     | "network.enableManualConnection"
     | "other.clearPreviousOutput"
     | "network.debug";
