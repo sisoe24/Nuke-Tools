@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
 
-type ExecutablesConfig = {
+export type ExecutableConfig = {
     path: string;
     commandArgs: string;
 };
 
 type ExecutableMap = {
-    [key: string]: ExecutablesConfig;
+    [key: string]: ExecutableConfig;
 };
 
 export type EnvVars = { [key: string]: string };
