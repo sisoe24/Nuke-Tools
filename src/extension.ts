@@ -18,6 +18,7 @@ import { NukeNodesInspectorProvider } from "./nuke/nodes_tree";
 import { showNotification } from "./notification";
 import { fetchPackagesLatestVersion } from "./fetch_packages";
 import { initializePackageLog } from "./packages";
+import { getConfig } from "./config";
 
 function registerNodesInspectorCommands(context: vscode.ExtensionContext): void {
     const nukeProvider = new NukeNodesInspectorProvider();
@@ -135,6 +136,17 @@ export function activate(context: vscode.ExtensionContext): void {
     registerBlinkScriptCommands(context);
     registerPackagesCommands(context);
     registerExecutablesCommands(context);
+
+    const nukeExecutables = getConfig("executables");
+    if (nukeExecutables) {
+        for (const [key, value] of Object.entries(nukeExecutables)) {
+            context.subscriptions.push(
+                vscode.commands.registerCommand(`nuke-tools.${key}`, () => {
+                    executables.launchExecutable(key, value);
+                })
+            );
+        }
+    }
 
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider("python", new NukeCompletionProvider(), "(")
