@@ -32,11 +32,6 @@ type ConfigProperty = StringConfig | BooleanConfig | Executables | ObjectConfig;
  * This is a wrapper around vscode.workspace.getConfiguration to avoid having some
  * boilerplate code. It calls the root configuration and then get the property.
  *
- * Example:
- * ```ts
- * const config = getConfig("console");
- * ```
- *
  * @param property - name of the configuration property to get.
  * @returns - the value of the property.
  * @throws Error if the property doesn't exist.
