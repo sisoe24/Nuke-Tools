@@ -101,7 +101,7 @@ function concatEnv(userEnvironmentVars: EnvVars): EnvVars {
         env[k] = env[k].replace(/\${workspaceFolder}/g, workspaceFolder);
 
         // Clean up the path separator in the beginning and end of the string
-        env[k] = env[k].replace(new RegExp(`^${pathSep}|${pathSep}$`, "g"), "");
+        env[k] = env[k].replace(/^[\s:;]+|[\s:;]+$/g, '');
     }
 
     return env;
