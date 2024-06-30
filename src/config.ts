@@ -10,7 +10,7 @@ type ExecutableMap = {
 };
 
 export type EnvVars = { [key: string]: string };
-type Executables = "executables";
+type Executables = "nukeExecutable.executables";
 type StringConfig =
     | "pythonPath"
     | "pythonStubsPath"

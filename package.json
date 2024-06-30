@@ -142,7 +142,6 @@
                         "markdownDescription": "Specify a different port for the connection. This will work only if `#nukeTools.network.enableManualConnection#` is enabled. Port value should be in range `49512` - `65535`",
                         "type": "string"
                     },
-
                     "nukeTools.nukeExecutable.primaryExecutablePath": {
                         "description": "Path to Nuke executable file.",
                         "type": "string"
