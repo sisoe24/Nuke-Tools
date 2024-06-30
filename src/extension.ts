@@ -18,6 +18,7 @@ import { NukeNodesInspectorProvider } from "./nuke/nodes_tree";
 import { showNotification } from "./notification";
 import { fetchPackagesLatestVersion } from "./fetch_packages";
 import { initializePackageLog } from "./packages";
+import { getConfig } from "./config";
 
 function registerNodesInspectorCommands(context: vscode.ExtensionContext): void {
     const nukeProvider = new NukeNodesInspectorProvider();
@@ -70,7 +71,6 @@ function registerBlinkScriptCommands(context: vscode.ExtensionContext): void {
 }
 
 function registerPackagesCommands(context: vscode.ExtensionContext): void {
-
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.clearPackagesCache", () => {
             initializePackageLog();
@@ -112,14 +112,48 @@ function registerExecutablesCommands(context: vscode.ExtensionContext): void {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.launchNukeAlt", () => {
-            executables.launchSecondaryExecutable();
+        vscode.commands.registerCommand("nuke-tools.launchNukeOptArgs", () => {
+            void executables.launchPromptExecutable();
         })
     );
 
+    const nukeExecutables = getConfig("nukeExecutable.executables");
+
+    if (nukeExecutables) {
+        for (const [name, config] of Object.entries(nukeExecutables)) {
+            context.subscriptions.push(
+                vscode.commands.registerCommand(`nuke-tools.${name}`, () => {
+                    executables.launchExecutable(name, config);
+                })
+            );
+        }
+    }
+
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.launchNukeOptArgs", () => {
-            void executables.launchPromptExecutable();
+        vscode.commands.registerCommand("nuke-tools.showExecutables", () => {
+            const picker = vscode.window.createQuickPick();
+
+            picker.items = Object.keys(nukeExecutables).map((key) => {
+                const executable = nukeExecutables[key];
+                return {
+                    label: key,
+                    description: executable.args,
+                    detail: executable.bin,
+                };
+            });
+
+            picker.onDidChangeSelection((selection) => {
+                if (selection[0]) {
+                    executables.launchExecutable(
+                        selection[0].label,
+                        nukeExecutables[selection[0].label]
+                    );
+                    picker.hide();
+                }
+            });
+
+            picker.onDidHide(() => picker.dispose());
+            picker.show();
         })
     );
 }

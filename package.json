@@ -53,14 +53,21 @@
             },
             {
                 "category": "Nuke",
-                "command": "nuke-tools.launchNukeAlt",
-                "title": "Launch alternative executable"
-            },
-            {
-                "category": "Nuke",
                 "command": "nuke-tools.launchNukeOptArgs",
                 "shortTitle": "Launch Nuke",
                 "title": "Launch main executable with prompt"
+            },
+            {
+                "category": "Nuke",
+                "command": "nuke-tools.addExtras",
+                "shortTitle": "Add Extras",
+                "title": "Add Extras"
+            },
+            {
+                "category": "Nuke",
+                "command": "nuke-tools.showExecutables",
+                "shortTitle": "Show Executables",
+                "title": "Show Executables"
             },
             {
                 "category": "Nuke",
@@ -124,47 +131,58 @@
                     },
                     "nukeTools.network.host": {
                         "markdownDescription": "Specify a different host/ip for the connection. This will work only if `#nukeTools.network.enableManualConnection#` is enabled.",
-                        "type": "string"
+                        "type": "string",
+                        "examples": [
+                            "localhost",
+                            "192.168.1.99"
+                        ]
                     },
                     "nukeTools.network.port": {
                         "markdownDescription": "Specify a different port for the connection. This will work only if `#nukeTools.network.enableManualConnection#` is enabled. Port value should be in range `49512` - `65535`",
                         "type": "string"
                     },
-                    "nukeTools.nukeExecutable.options.defaultCommandLineArguments": {
-                        "markdownDescription": "Command line arguments to be added when launching `#nukeTools.nukeExecutable.secondaryExecutablePath#`. [Nuke documentation](https://learn.foundry.com/nuke/content/comp_environment/configuring_nuke/command_line_operations.html)",
-                        "type": "string"
-                    },
-                    "nukeTools.nukeExecutable.options.restartInstance": {
-                        "default": false,
-                        "markdownDescription": "**Use with caution**. Restart the terminal instance instead of creating new ones.",
-                        "type": "boolean"
-                    },
                     "nukeTools.nukeExecutable.primaryExecutablePath": {
                         "description": "Path to Nuke executable file.",
                         "type": "string"
                     },
-                    "nukeTools.nukeExecutable.secondaryExecutablePath": {
-                        "description": "Path to alternative Nuke executable file.",
+                    "nukeTools.nukeExecutable.commandLineArguments": {
+                        "markdownDescription": "Command line arguments to be added when launching `#nukeTools.nukeExecutable.primaryExecutablePath#`. [Nuke documentation](https://learn.foundry.com/nuke/content/comp_environment/configuring_nuke/command_line_operations.html). (e.g. `--nukex`)",
                         "type": "string"
+                    },
+                    "nukeTools.nukeExecutable.executables": {
+                        "description": "A list of executables to register as commands.",
+                        "type": "object",
+                        "examples": [
+                            {
+                                "Nuke": {
+                                    "bin": "/usr/local/Nuke15.0v4/Nuke15.0",
+                                    "args": ""
+                                },
+                                "NukeX": {
+                                    "bin": "/usr/local/Nuke15.0v4/Nuke15.0",
+                                    "args": "--nukex"
+                                }
+                            }
+                        ]
+                    },
+                    "nukeTools.nukeExecutable.restartInstance": {
+                        "default": false,
+                        "markdownDescription": "Restart the terminal instance instead of creating new ones. Note: This will force close the terminal instance.",
+                        "type": "boolean"
+                    },
+                    "nukeTools.nukeExecutable.envVars": {
+                        "description": "A list of environment variable to be added before launching Nuke from NukeTools.",
+                        "type": "object",
+                        "examples": [
+                            {
+                                "NUKE_PATH": "${workspaceFolder}/gizmos:$NUKE_PATH"
+                            }
+                        ]
                     },
                     "nukeTools.other.clearPreviousOutput": {
                         "default": false,
                         "description": "Clear previous console output before next execution.",
                         "type": "boolean"
-                    },
-                    "nukeTools.other.envVars": {
-                        "description": "A list of environment variable to be added before launching Nuke from NukeTools.",
-                        "type": "object"
-                    },
-                    "nukeTools.other.useSystemEnvVars": {
-                        "description": "Use system environment variables. This will add the system environment variables to the environment variables list.",
-                        "type": "boolean",
-                        "default": false
-                    },
-                    "nukeTools.other.nukePaths": {
-                        "deprecationMessage": "This setting is deprecated. Use envVars instead.",
-                        "description": "A list of paths to be added to NUKE_PATH before launching Nuke from NukeTools.",
-                        "type": "array"
                     }
                 },
                 "title": "Nuke Tools"
