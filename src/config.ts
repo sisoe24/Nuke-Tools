@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 
 export type ExecutableConfig = {
-    path: string;
-    commandArgs: string;
+    bin: string;
+    args: string;
 };
 
 type ExecutableMap = {

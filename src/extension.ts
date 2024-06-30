@@ -135,8 +135,8 @@ function registerExecutablesCommands(context: vscode.ExtensionContext): void {
 
             picker.items = Object.keys(nukeExecutables).map((key) => ({
                 label: key,
-                description: nukeExecutables[key].commandArgs,
-                detail: nukeExecutables[key].path,
+                description: nukeExecutables[key].args,
+                detail: nukeExecutables[key].bin,
             }));
 
             picker.onDidChangeSelection((selection) => {

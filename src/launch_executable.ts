@@ -127,9 +127,10 @@ export function execCommand(execPath: ExecutablePath): void {
 
     const env = stringifyEnv(concatEnv(getConfig("nukeExecutable.envVars")));
     const command = `${env} ${execPath.buildExecutableCommand()}`.trim();
+    console.log("Command: ", command);
 
     const terminal = vscode.window.createTerminal(terminalName);
-    terminal.sendText(command);
+    // terminal.sendText(command);
     terminal.show(true);
 }
 
@@ -178,7 +179,7 @@ export async function launchPromptExecutable(): Promise<ExecutablePath> {
 }
 
 export function launchExecutable(name: string, executableConfig: ExecutableConfig): void {
-    const execObj = new ExecutablePath(name, executableConfig.path, executableConfig.commandArgs);
+    const execObj = new ExecutablePath(name, executableConfig.bin, executableConfig.args);
 
     if (execObj.exists()) {
         execCommand(execObj);
