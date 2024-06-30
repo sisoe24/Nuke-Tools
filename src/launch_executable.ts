@@ -4,8 +4,23 @@ import * as path from "path";
 import * as vscode from "vscode";
 
 import { getConfig, EnvVars, ExecutableConfig } from "./config";
-const IS_WINDOWS =  os.type() === "Windows_NT";
+const IS_WINDOWS = os.type() === "Windows_NT";
 
+const _isWindowsPowerShell = () => {
+    return (
+        IS_WINDOWS &&
+        vscode.workspace.getConfiguration("terminal.integrated.defaultProfile")["windows"] ===
+            "PowerShell"
+    );
+};
+
+const isWindowsPowerShell = () => {
+    return (
+        os.type() === "Darwin" &&
+        vscode.workspace.getConfiguration("terminal.integrated.defaultProfile")["osx"] ===
+            "pwsh"
+    );
+};
 /**
  * ExecutablePath object class.
  */
@@ -46,15 +61,11 @@ export class ExecutablePath {
      * @returns  - string like command for the terminal.
      */
     buildExecutableCommand(): string {
-        const currentShellProfile = vscode.workspace.getConfiguration(
-            "terminal.integrated.defaultProfile"
-        );
-
         let cmd = `"${this.path}" ${this.args}`;
 
         // we only do this for PowerShell on Windows. Hard to believe that someone would use
         // PowerShell on Linux or MacOS, but if they do... shame on them.
-        if (IS_WINDOWS && currentShellProfile["windows"] === "PowerShell") {
+        if (isWindowsPowerShell()) {
             cmd = `& ${cmd}`;
         }
 
@@ -71,7 +82,7 @@ export class ExecutablePath {
 function concatEnv(userEnvironmentVars: EnvVars): EnvVars {
     const env: EnvVars = {};
 
-    const pathSep = IS_WINDOWS  ? ";" : ":";
+    const pathSep = IS_WINDOWS ? ";" : ":";
     const workspaceFolder = vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
 
     for (const [k, v] of Object.entries(userEnvironmentVars)) {
@@ -98,7 +109,11 @@ function stringifyEnv(env: EnvVars): string {
     let envString = "";
 
     for (const [k, v] of Object.entries(env)) {
-        envString += `${k}=${v} `;
+        if (isWindowsPowerShell()) {
+            envString += `$env:${k}="${v}"; `;
+        } else {
+            envString += `${k}=${v} `;
+        }
     }
 
     return envString;
