@@ -71,7 +71,6 @@ function registerBlinkScriptCommands(context: vscode.ExtensionContext): void {
 }
 
 function registerPackagesCommands(context: vscode.ExtensionContext): void {
-
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.clearPackagesCache", () => {
             initializePackageLog();
@@ -123,6 +122,43 @@ function registerExecutablesCommands(context: vscode.ExtensionContext): void {
             void executables.launchPromptExecutable();
         })
     );
+
+    const nukeExecutables = getConfig("executables");
+
+    if (nukeExecutables) {
+        for (const [name, config] of Object.entries(nukeExecutables)) {
+            context.subscriptions.push(
+                vscode.commands.registerCommand(`nuke-tools.${name}`, () => {
+                    executables.launchExecutable(name, config);
+                })
+            );
+        }
+    }
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.showExecutables", () => {
+            const picker = vscode.window.createQuickPick();
+
+            picker.items = Object.keys(nukeExecutables).map((key) => ({
+                label: key,
+                description: nukeExecutables[key].commandArgs,
+                detail: nukeExecutables[key].path,
+            }));
+
+            picker.onDidChangeSelection((selection) => {
+                if (selection[0]) {
+                    executables.launchExecutable(
+                        selection[0].label,
+                        nukeExecutables[selection[0].label]
+                    );
+                    picker.hide();
+                }
+            });
+
+            picker.onDidHide(() => picker.dispose());
+            picker.show();
+        })
+    );
 }
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -136,17 +172,6 @@ export function activate(context: vscode.ExtensionContext): void {
     registerBlinkScriptCommands(context);
     registerPackagesCommands(context);
     registerExecutablesCommands(context);
-
-    const nukeExecutables = getConfig("executables");
-    if (nukeExecutables) {
-        for (const [key, value] of Object.entries(nukeExecutables)) {
-            context.subscriptions.push(
-                vscode.commands.registerCommand(`nuke-tools.${key}`, () => {
-                    executables.launchExecutable(key, value);
-                })
-            );
-        }
-    }
 
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider("python", new NukeCompletionProvider(), "(")
