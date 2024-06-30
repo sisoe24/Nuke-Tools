@@ -53,11 +53,6 @@
             },
             {
                 "category": "Nuke",
-                "command": "nuke-tools.launchNukeAlt",
-                "title": "Launch alternative executable"
-            },
-            {
-                "category": "Nuke",
                 "command": "nuke-tools.launchNukeOptArgs",
                 "shortTitle": "Launch Nuke",
                 "title": "Launch main executable with prompt"
@@ -160,12 +155,12 @@
                         "examples": [
                             {
                                 "Nuke": {
-                                    "path": "/usr/local/Nuke15.0v4/Nuke15.0",
-                                    "commandArgs": ""
+                                    "bin": "/usr/local/Nuke15.0v4/Nuke15.0",
+                                    "args": ""
                                 },
                                 "NukeX": {
-                                    "path": "/usr/local/Nuke15.0v4/Nuke15.0",
-                                    "commandArgs": "--nukex"
+                                    "bin": "/usr/local/Nuke15.0v4/Nuke15.0",
+                                    "args": "--nukex"
                                 }
                             }
                         ]
