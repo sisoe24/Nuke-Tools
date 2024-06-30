@@ -283,8 +283,7 @@
     },
     "dependencies": {
         "@terascope/fetch-github-release": "^0.8.7",
-        "extract-zip": "^2.0.1",
-        "uuid": "^9.0.0"
+        "extract-zip": "^2.0.1"
     },
     "devDependencies": {
         "@types/glob": "^7.1.3",
