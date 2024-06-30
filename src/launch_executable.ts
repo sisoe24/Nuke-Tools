@@ -8,18 +8,11 @@ const IS_WINDOWS = os.type() === "Windows_NT";
 
 const isPowerShell = () => {
     const { shell } = vscode.env;
-    if (shell.includes("powershell") || shell.includes("pwsh")) {
-        return true;
-    }
-    return false;
+    return shell.includes("powershell") || shell.includes("pwsh");
 };
 
 const isUnixShell = () => {
-    const { shell } = vscode.env;
-    if (!isPowerShell() && !shell.includes("cmd")) {
-        return true;
-    }
-    return false;
+    return !isPowerShell() && !vscode.env.shell.includes("cmd");
 };
 
 /**
