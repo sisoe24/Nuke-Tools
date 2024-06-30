@@ -133,11 +133,14 @@ function registerExecutablesCommands(context: vscode.ExtensionContext): void {
         vscode.commands.registerCommand("nuke-tools.showExecutables", () => {
             const picker = vscode.window.createQuickPick();
 
-            picker.items = Object.keys(nukeExecutables).map((key) => ({
-                label: key,
-                description: nukeExecutables[key].args,
-                detail: nukeExecutables[key].bin,
-            }));
+            picker.items = Object.keys(nukeExecutables).map((key) => {
+                const executable = nukeExecutables[key];
+                return {
+                    label: key,
+                    description: executable.args,
+                    detail: executable.bin,
+                };
+            });
 
             picker.onDidChangeSelection((selection) => {
                 if (selection[0]) {
