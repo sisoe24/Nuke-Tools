@@ -11,13 +11,12 @@ const outputWindow = vscode.window.createOutputChannel("Nuke Tools");
 
 /**
  * Get the value from the nukeserversocket configuration.
- * 
+ *
  * @param value value to get from the configuration.
  * @param defaultValue default value to fallback in case property is undefined.
- * @returns 
+ * @returns
  */
 export function getNssConfig(value: string, defaultValue: string): string {
-
     const nssConfigJSON = path.join(NUKE_DIR, "nukeserversocket.json");
     if (fs.existsSync(nssConfigJSON)) {
         const fileContent = fs.readFileSync(nssConfigJSON, "utf-8");
@@ -38,35 +37,21 @@ export function getNssConfig(value: string, defaultValue: string): string {
 }
 
 /**
- * Get the manual address by looking in the configuration network property.
+ * Get the port address.
  *
- * Enable manual address could be enabled, but property could be empty, in that
- * case will show an error message to user and return the `defaultValue`.
+ * Default port address will be 54321. If manual connection is enabled
+ * value will be taken from the settings.
  *
- * @param property - property name (port, host) to get from the configuration.
- * @param defaultValue - a default value to fallback in case property is undefined.
- * @returns - the property value.
+ * @returns - port address
  */
-export function getManualAddress(property: string, defaultValue: string): string {
-    const manualAddress = getConfig(`network.${property}`) as string;
-
-    if (!manualAddress) {
-        const manualErrorMsg = `
-        You have enabled Manual Connection but "Network: #"
-        configuration appears to be empty. Falling back on default.
-        `;
-        vscode.window.showErrorMessage(manualErrorMsg.replace("#", property));
-        return defaultValue;
-    }
-    return manualAddress;
-}
-
 export function getPort(): number {
     let port = getNssConfig("port", "54321");
 
-    if (getConfig("network.enableManualConnection")) {
-        port = getManualAddress("port", port);
+    const userConfig = getConfig("network.manualConnection");
+    if (userConfig.active) {
+        port = userConfig.port;
     }
+
     return parseInt(port);
 }
 
@@ -74,15 +59,16 @@ export function getPort(): number {
  * Get the host address.
  *
  * Default host address will be local: 127.0.0.1. If manual connection is enabled
- * value will be updated from the configuration value.
+ * value will be taken from the settings.
  *
  * @returns - host address
  */
 function getHost(): string {
     let host = "127.0.0.1";
 
-    if (getConfig("network.enableManualConnection")) {
-        host = getManualAddress("host", host);
+    const userConfig = getConfig("network.manualConnection");
+    if (userConfig.active) {
+        host = userConfig.host;
     }
 
     return host;

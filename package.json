@@ -100,22 +100,14 @@
                         "markdownDescription": "Show debugging information the in output window.",
                         "type": "boolean"
                     },
-                    "nukeTools.network.enableManualConnection": {
-                        "default": false,
-                        "markdownDescription": "If enabled, `#nukeTools.network.port#` and `#nukeTools.network.host#` will override the default settings.",
-                        "type": "boolean"
-                    },
-                    "nukeTools.network.host": {
-                        "markdownDescription": "Specify a different host/ip for the connection. This will work only if `#nukeTools.network.enableManualConnection#` is enabled.",
-                        "type": "string",
-                        "examples": [
-                            "localhost",
-                            "192.168.1.99"
-                        ]
-                    },
-                    "nukeTools.network.port": {
-                        "markdownDescription": "Specify a different port for the connection. This will work only if `#nukeTools.network.enableManualConnection#` is enabled. Port value should be in range `49512` - `65535`",
-                        "type": "string"
+                    "nukeTools.network.manualConnection": {
+                        "markdownDescription": "Specify the host and port manually. If active is set to false, the extension will try to connect to the default host and port.",
+                        "type": "object",
+                        "default": {
+                            "active": false,
+                            "host": "localhost",
+                            "port": "49512"
+                        }
                     },
                     "nukeTools.nukeExecutable.primaryExecutablePath": {
                         "description": "Path to Nuke executable file.",

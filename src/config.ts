@@ -10,7 +10,9 @@ type ExecutableMap = {
 };
 
 export type EnvVars = { [key: string]: string };
+
 type Executables = "nukeExecutable.executables";
+
 type StringConfig =
     | "pythonPath"
     | "pythonStubsPath"
@@ -19,12 +21,27 @@ type StringConfig =
     | "nukeExecutable.primaryExecutablePath";
 
 type ObjectConfig = "nukeExecutable.envVars";
+
 type BooleanConfig =
     | "nukeExecutable.restartInstance"
     | "network.enableManualConnection"
     | "other.clearPreviousOutput"
     | "network.debug";
-type ConfigProperty = StringConfig | BooleanConfig | Executables | ObjectConfig;
+
+export type ManualConnection = {
+    active: boolean;
+    host: string;
+    port: string;
+};
+
+type ManualConnectionConfig = "network.manualConnection";
+
+type ConfigProperty =
+    | StringConfig
+    | BooleanConfig
+    | Executables
+    | ObjectConfig
+    | ManualConnectionConfig;
 
 /**
  * Get a configuration property.
@@ -40,6 +57,7 @@ export function getConfig(property: ObjectConfig): EnvVars;
 export function getConfig(property: BooleanConfig): boolean;
 export function getConfig(property: StringConfig): string;
 export function getConfig(property: Executables): ExecutableMap;
+export function getConfig(property: ManualConnectionConfig): ManualConnection;
 export function getConfig(property: ConfigProperty): unknown {
     const config = vscode.workspace.getConfiguration("nukeTools");
     const subConfig = config.get(property);
