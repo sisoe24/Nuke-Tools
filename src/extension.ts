@@ -1,12 +1,14 @@
+import * as path from "path";
+
 import * as vscode from "vscode";
 
 import * as stubs from "./stubs";
 import * as nuke from "./nuke";
 import * as socket from "./socket";
-import { Version } from "./version";
-
 import * as executables from "./launch_executable";
 import * as nukeTemplate from "./create_project";
+
+import { Version } from "./version";
 
 import { BlinkSnippets } from "./blinkscript/blink_snippet";
 import { BlinkScriptFormat } from "./blinkscript/blink_format";
@@ -19,7 +21,6 @@ import { showNotification } from "./notification";
 import { fetchPackagesLatestVersion } from "./fetch_packages";
 import { initializePackageLog } from "./packages";
 import { getConfig } from "./config";
-import { off } from "process";
 
 function registerNodesInspectorCommands(context: vscode.ExtensionContext): void {
     const nukeProvider = new NukeNodesInspectorProvider();
@@ -102,7 +103,6 @@ function registerPackagesCommands(context: vscode.ExtensionContext): void {
 }
 
 function registerExtraCommands(context: vscode.ExtensionContext): void {
-
     const extras: Record<string, () => void> = {
         clearPackagesCache: () => {
             initializePackageLog();
@@ -213,6 +213,26 @@ export function activate(context: vscode.ExtensionContext): void {
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.runCodeInsideNuke", () => {
             void socket.sendMessage();
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.openNukeScript", () => {
+            const editor = vscode.window.activeTextEditor;
+            if (!editor) {
+                return null;
+            }
+            const file = editor.document.fileName;
+
+            if (file === null || !file.endsWith(".nk")) {
+                vscode.window.showWarningMessage("Not a Nuke script (.nk)");
+                return;
+            }
+
+            executables.launchExecutable(path.basename(file), {
+                bin: getConfig("nukeExecutable.primaryExecutablePath"),
+                args: file,
+            });
         })
     );
 }

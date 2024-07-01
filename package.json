@@ -71,6 +71,12 @@
             },
             {
                 "category": "Nuke",
+                "command": "nuke-tools.openNukeScript",
+                "shortTitle": "Open Script in Nuke",
+                "title": "Open Script in Nuke"
+            },
+            {
+                "category": "Nuke",
                 "command": "nuke-tools.showExecutables",
                 "shortTitle": "Show Executables",
                 "title": "Show Executables"
