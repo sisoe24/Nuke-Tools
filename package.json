@@ -109,16 +109,16 @@
                             "port": "49512"
                         }
                     },
-                    "nukeTools.nukeExecutable.primaryExecutablePath": {
+                    "nukeTools.executable.primaryExecutablePath": {
                         "description": "Path to Nuke executable file.",
                         "type": "string"
                     },
-                    "nukeTools.nukeExecutable.commandLineArguments": {
-                        "markdownDescription": "Command line arguments to be added when launching `#nukeTools.nukeExecutable.primaryExecutablePath#`. [Nuke documentation](https://learn.foundry.com/nuke/content/comp_environment/configuring_nuke/command_line_operations.html). (e.g. `--nukex`)",
+                    "nukeTools.executable.primaryExecutableArgs": {
+                        "markdownDescription": "Command line arguments to be added when launching `#nukeTools.executable.primaryExecutablePath#`. [Nuke documentation](https://learn.foundry.com/nuke/content/comp_environment/configuring_nuke/command_line_operations.html). (e.g. `--nukex`)",
                         "type": "string"
                     },
-                    "nukeTools.nukeExecutable.executables": {
-                        "description": "A list of executables to register as commands.",
+                    "nukeTools.executable.executablesMap": {
+                        "description": "A map of executables to be used by the command `Nuke: Show Executables`.",
                         "type": "object",
                         "examples": [
                             {
@@ -129,16 +129,20 @@
                                 "NukeX": {
                                     "bin": "/usr/local/Nuke15.0v4/Nuke15.0",
                                     "args": "--nukex"
+                                },
+                                "Maya20": {
+                                    "bin": "/usr/autodesk/maya2020/bin/maya",
+                                    "args": ""
                                 }
                             }
                         ]
                     },
-                    "nukeTools.nukeExecutable.restartInstance": {
+                    "nukeTools.executable.restartInstance": {
                         "default": false,
                         "markdownDescription": "Restart the terminal instance instead of creating new ones. Note: This will force close the terminal instance.",
                         "type": "boolean"
                     },
-                    "nukeTools.nukeExecutable.envVars": {
+                    "nukeTools.executable.envVars": {
                         "description": "A list of environment variable to be added before launching Nuke from NukeTools.",
                         "type": "object",
                         "examples": [
@@ -147,7 +151,7 @@
                             }
                         ]
                     },
-                    "nukeTools.other.clearPreviousOutput": {
+                    "nukeTools.clearPreviousOutput": {
                         "default": false,
                         "description": "Clear previous console output before next execution.",
                         "type": "boolean"
