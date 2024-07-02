@@ -1,5 +1,55 @@
 # Change Log
 
+## [0.15.0] - TBD
+
+Introduced some breaking changes in the way the extension handles the executables.
+Mainly, the secondary executable command was replaced by a new command that in combination with the new settings
+`nukeTools.other.executables` allows the user to add multiple executables to the extension. Other commands
+have also updated they namespace to reflect the new changes.
+
+### Added
+
+- `NukeTools: Open Script in Nuke`: A new command that opens the current active Nuke script with the main executable.
+- `NukeTools: Show Executables`: A new command that shows the list of executables added to the extension.
+- `NukeTools: Add Packages`: Show the list of packages available to add to the extension.
+- `NukeTools: Extras`: Show the list of extra commands available in the extension.
+
+### Changed
+
+- The packages commands (Stubs, NukeServerSocket, etc.) are now part of the `NukeTools: Add Packages` command.
+- Some extras commands are now part of the `NukeTools: Extras` command.
+- Many settings names were changed to reflect the new changes in the extension.
+
+### Removed
+
+Commands:
+
+- `NukeTools: Launch Alternative Executable`
+
+Settings:
+
+- Network settings (`host`, `port` and `enable manual connection`) were merged into the new settings `nukeTools.network.manualConnection`.
+
+```json
+{
+    "nukeTools.network.manualConnection": {
+        "active": false,
+        "host": "localhost",
+        "port": "49512"
+    }
+}
+```
+
+- `nukeTools.other.UseSystemEnvVars`: Removed the setting that allows the use of system environment variables. The new settings `nukeTools.executable.envVars` now allows the use of the system environment variables directly in the executable settings.
+
+```json
+{
+    "nukeTools.executable.envVars": {
+        "NUKE_PATH": "${workspaceFolder}/bin:$NUKE_PATH",
+    }
+}
+```
+
 ## [0.14.0] - 02/18/2024
 
 ### Changed
