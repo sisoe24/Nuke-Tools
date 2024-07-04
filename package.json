@@ -97,7 +97,7 @@
                 "properties": {
                     "nukeTools.network.debug": {
                         "default": false,
-                        "markdownDescription": "Show debugging information the in output window.",
+                        "markdownDescription": "Show network debug information in the output window. Enabling this option will not clean the console output after code execution.",
                         "type": "boolean"
                     },
                     "nukeTools.network.manualConnection": {
@@ -110,7 +110,7 @@
                         }
                     },
                     "nukeTools.executable.primaryExecutablePath": {
-                        "description": "Path to Nuke executable file.",
+                        "description": "A path to an executable file.",
                         "type": "string"
                     },
                     "nukeTools.executable.primaryExecutableArgs": {
@@ -139,7 +139,7 @@
                     },
                     "nukeTools.executable.restartInstance": {
                         "default": false,
-                        "markdownDescription": "Restart the terminal instance instead of creating new ones. Note: This will force close the terminal instance.",
+                        "markdownDescription": "Restart the terminal instead of creating new instances. **NOTE:** This will terminate all Nuke processes spawned by the extension, helpful for quick GUI plugin testing.",
                         "type": "boolean"
                     },
                     "nukeTools.executable.envVars": {
@@ -153,7 +153,7 @@
                     },
                     "nukeTools.clearPreviousOutput": {
                         "default": false,
-                        "description": "Clear previous console output before next execution.",
+                        "description": "Clear previous console output before next code execution.",
                         "type": "boolean"
                     }
                 },
