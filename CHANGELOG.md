@@ -2,20 +2,37 @@
 
 ## [0.15.0] - TBD
 
-Introduced some breaking changes in the way the extension handles the executables.
-Mainly, the secondary executable command was replaced by a new command that in combination with the new settings
-`nukeTools.other.executables` allows the user to add multiple executables to the extension. Other commands
-have also updated they namespace to reflect the new changes.
+The main goal of this release is to simplify the extension commands and settings, making it easier to use and understand. This caused some breaking changes, but the extension is now more user-friendly.
 
 ### Added
 
+Commands:
+
 - `NukeTools: Open Script in Nuke`: A new command that opens the current active Nuke script with the main executable.
-- `NukeTools: Show Executables`: A new command that shows the list of executables added to the extension.
+- `NukeTools: Show Executables`: A new command that shows the list of executables added to the extension. via the new setting `nukeTools.executable.executables`.
 - `NukeTools: Add Packages`: Show the list of packages available to add to the extension.
 - `NukeTools: Extras`: Show the list of extra commands available in the extension.
 
+Settings:
+
+- `nukeTools.executable.executablesMap`: A new setting that allows the user to add multiple executables to the extension.
+
+    ```json
+    {
+        "nuke": {
+            "path": "/path/to/nuke",
+            "args": "-t",
+        },
+        "nukex": {
+            "path": "/path/to/nuke",
+            "args": "--nukex",
+        }
+    }
+    ```
+
 ### Changed
 
+- All the settings namespaces have been updated thus breaking the previous saved ones.
 - The packages commands (Stubs, NukeServerSocket, etc.) are now part of the `NukeTools: Add Packages` command.
 - Some extras commands are now part of the `NukeTools: Extras` command.
 - Many settings names were changed to reflect the new changes in the extension.
