@@ -11,7 +11,7 @@ type ExecutableMap = {
 
 export type EnvVars = { [key: string]: string };
 
-type CommandMappings = "executableMaps";
+type CommandMappings = "executablesMap";
 
 type StringConfig =
     | "executablePath"

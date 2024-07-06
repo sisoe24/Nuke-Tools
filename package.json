@@ -117,7 +117,7 @@
                         "markdownDescription": "Command line arguments to be added when launching `#nukeTools.executablePath#`. [Nuke documentation](https://learn.foundry.com/nuke/content/comp_environment/configuring_nuke/command_line_operations.html). (e.g. `--nukex`)",
                         "type": "string"
                     },
-                    "nukeTools.executableMaps": {
+                    "nukeTools.executablesMap": {
                         "description": "A map of executables to be used by the command `Nuke: Show Executables`.",
                         "type": "object",
                         "examples": [

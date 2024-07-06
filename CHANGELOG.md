@@ -9,13 +9,13 @@ The main goal of this release is to simplify the extension commands and settings
 Commands:
 
 - `NukeTools: Open Script in Nuke`: A new command that opens the current active Nuke script with the main executable.
-- `NukeTools: Show Executables`: A new command that shows the list of executables added to the extension. via the new setting `nukeTools.executableMaps`.
+- `NukeTools: Show Executables`: A new command that shows the list of executables added to the extension. via the new setting `nukeTools.executablesMap`.
 - `NukeTools: Add Packages`: Show the list of packages available to add to the extension.
 - `NukeTools: Extras`: Show the list of extra commands available in the extension.
 
 Settings:
 
-- `nukeTools.executableMaps`: A new setting that allows the user to add multiple executables to the extension.
+- `nukeTools.executablesMap`: A new setting that allows the user to add multiple executables to the extension.
 
     ```json
     {

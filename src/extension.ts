@@ -154,7 +154,7 @@ function registerExecutablesCommands(context: vscode.ExtensionContext): void {
         })
     );
 
-    const nukeExecutables = getConfig("executableMaps");
+    const nukeExecutables = getConfig("executablesMap");
 
     if (nukeExecutables) {
         for (const [name, config] of Object.entries(nukeExecutables)) {

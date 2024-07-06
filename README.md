@@ -175,13 +175,15 @@ Add environment variables to the terminal instance with `$VAR_NAME` for system v
 }
 ```
 
+> Note: From my testing it seems that you can use the ':' separator for multiple paths even on Windows.
+
 ## 1.9.1. Additional Settings
 
 You can define multiple executables for the extension by specifying their names, paths (bin), and command-line arguments (args).
 
 ```json
 {
-  "nukeTools.executableMaps": {
+  "nukeTools.executablesMap": {
     "NukeX": {
         "bin": "/usr/local/Nuke15.0v4/Nuke15.0",
         "args": "--nukex"
