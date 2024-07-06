@@ -11,9 +11,14 @@ const isPowerShell = () => {
     return shell.includes("powershell") || shell.includes("pwsh");
 };
 
-const isUnixShell = () => {
-    return !isPowerShell() && !vscode.env.shell.includes("cmd");
+const isCmdShell = () => {
+    return vscode.env.shell.includes("cmd");
 };
+
+const isUnixShell = () => {
+    return !isPowerShell() && !isCmdShell();
+};
+
 
 /**
  * ExecutablePath object class.
@@ -108,14 +113,17 @@ function stringifyEnv(env: EnvVars): string {
     let envString = "";
 
     for (const [k, v] of Object.entries(env)) {
-        // TODO: else should raise an error and cmd should have its own implementation
         if (isPowerShell()) {
             envString += `$env:${k}="${v}"; `;
         } else if (isUnixShell()) {
             envString += `${k}=${v} `;
-        } else {
-            // cmd
+        } else if (isCmdShell()) {
             envString += `set ${k}=${v}&&`;
+        } else {
+            envString += `${k}=${v} `;
+            vscode.window.showWarningMessage(
+                `Unknown shell detected ${vscode.env.shell}. Environment variables may not be set correctly.`
+            );
         }
     }
 
