@@ -1,9 +1,11 @@
 import * as vscode from "vscode";
 
 const _msg = `
-NukeServerSocket has been updated to version 1.0.0. There are some breaking changes in the API.
-If you encounter any issues, please open an issue on GitHub. Sorry for the inconvenience.
+0.15.0 Introduces some breaking changes in the settings. 
+Please review the settings and update them accordingly. 
+See the changelog for more information.
 `;
+
 
 /**
  * Show update message box if version is newer or update message is different.
