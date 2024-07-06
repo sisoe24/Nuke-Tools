@@ -1,20 +1,23 @@
 import * as vscode from "vscode";
 
-import * as nuke from "./add_package";
 import * as stubs from "./stubs";
+import * as nuke from "./nuke";
 import * as socket from "./socket";
+import { Version } from "./version";
+
 import * as executables from "./launch_executable";
 import * as nukeTemplate from "./create_project";
 
 import { BlinkSnippets } from "./blinkscript/blink_snippet";
 import { BlinkScriptFormat } from "./blinkscript/blink_format";
 import { BlinkScriptCompletionProvider } from "./blinkscript/blink_completion";
-import { checkPackageUpdates } from "./download_package";
 
 import { NukeCompletionProvider } from "./nuke/completitions";
 import { NukeNodesInspectorProvider } from "./nuke/nodes_tree";
 
 import { showNotification } from "./notification";
+import { fetchPackagesLatestVersion } from "./fetch_packages";
+import { initializePackageLog } from "./packages";
 
 function registerNodesInspectorCommands(context: vscode.ExtensionContext): void {
     const nukeProvider = new NukeNodesInspectorProvider();
@@ -67,16 +70,17 @@ function registerBlinkScriptCommands(context: vscode.ExtensionContext): void {
 }
 
 function registerPackagesCommands(context: vscode.ExtensionContext): void {
-    checkPackageUpdates(context);
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.forceUpdatePackages", () => {
-            checkPackageUpdates(context, true);
+        vscode.commands.registerCommand("nuke-tools.clearPackagesCache", () => {
+            initializePackageLog();
+            fetchPackagesLatestVersion();
+            vscode.window.showInformationMessage("Packages cached cleared.");
         })
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.createPySide2Project", () => {
+        vscode.commands.registerCommand("nuke-tools.addPysideTemplate", () => {
             void nukeTemplate.createTemplate();
         })
     );
@@ -121,6 +125,10 @@ function registerExecutablesCommands(context: vscode.ExtensionContext): void {
 }
 
 export function activate(context: vscode.ExtensionContext): void {
+    Version.update(context);
+
+    fetchPackagesLatestVersion();
+
     showNotification(context);
 
     registerNodesInspectorCommands(context);
@@ -149,9 +157,4 @@ export function activate(context: vscode.ExtensionContext): void {
             vscode.window.showInformationMessage(socket.getAddresses());
         })
     );
-}
-
-// this method is called when your extension is deactivated
-export function deactivate(): void {
-    // XXX: how to force closing connection?
 }

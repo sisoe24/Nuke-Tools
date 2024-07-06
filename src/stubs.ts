@@ -1,19 +1,6 @@
-import * as fs from "fs";
-import * as path from "path";
-import * as utils from "./utils";
 import * as vscode from "vscode";
 
-import { downloadStubs } from "./download_package";
-
-/**
- * Check whether the Python extension is installed, as attempting to add the stubs
- * to analysis.extraPaths will fail if Python is not installed.
- *
- * @returns true if extension is installed, false otherwise.
- */
-export function isPythonInstalled(): boolean {
-    return Boolean(vscode.extensions.getExtension("ms-python.python"));
-}
+import { PackageIds, addPackage } from "./packages";
 
 /**
  * Determine the configuration for extraPaths based on the current Python server.
@@ -53,24 +40,21 @@ function updatePythonExtraPaths(nukeToolsStubsPath: string) {
 /**
  * Add the stubs path to the python.analysis.extraPaths setting.
  */
-export function addStubs(): void {
-    if (!isPythonInstalled()) {
+export async function addStubs(): Promise<void> {
+    if (!vscode.extensions.getExtension("ms-python.python")) {
         vscode.window.showErrorMessage(
             "Python extension is not installed. Could not add stubs path."
         );
         return;
     }
 
-    const nukeToolsStubsPath = path.join(utils.nukeToolsDir, "stubs");
-
-    if (!fs.existsSync(nukeToolsStubsPath)) {
-        fs.mkdirSync(nukeToolsStubsPath);
+    const pkg = await addPackage(PackageIds.nukePythonStubs);
+    if (!pkg) {
+        vscode.window.showErrorMessage("Could not add stubs path.");
+        return;
     }
 
-    downloadStubs(nukeToolsStubsPath);
-
-    // Add the stubs path to the python.analysis.extraPaths setting at user level
-    updatePythonExtraPaths(nukeToolsStubsPath);
+    updatePythonExtraPaths(pkg.destination);
 
     vscode.window.showInformationMessage("Python stubs added.");
 }

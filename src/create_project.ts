@@ -1,23 +1,10 @@
 import * as fs from "fs";
-import * as os from "os";
-import * as cp from "child_process";
 import * as path from "path";
-import * as utils from "./utils";
+
 import * as vscode from "vscode";
-import { getConfig } from "./config";
 
-/**
- * The placeholders data.
- *
- * All placeholders should start and end with double underscore: __value__
- */
-export type PlaceHolders = {
-    [key: string]: string;
-};
-
-function getGithubUser(): string {
-    return cp.execSync("git config user.name").toString().trim();
-}
+import * as nuke from "./nuke";
+import { PackageIds, addPackage, packageMap } from "./packages";
 
 /**
  * Ask user to fill the data that we are going to use to replace the placeholders
@@ -25,50 +12,13 @@ function getGithubUser(): string {
  *
  * @returns a placeholders object.
  */
-export async function askUser(): Promise<PlaceHolders> {
+export async function askUser(): Promise<string> {
     const projectName = (await vscode.window.showInputBox({
         title: "Project Name",
         value: "Project Name",
     })) as string;
 
-    const projectDescription = (await vscode.window.showInputBox({
-        title: "Project Description",
-        value: "Project Description",
-    })) as string;
-
-    const projectPython = (await vscode.window.showInputBox({
-        title: "Python version",
-        value: (getConfig("pysideTemplate.pythonVersion") as string) || "~3.7.7",
-    })) as string;
-
-    const projectPySide = (await vscode.window.showInputBox({
-        title: "PySide2 Version",
-        placeHolder: "Version of PySide2",
-        value: (getConfig("pysideTemplate.pysideVersion") as string) || "5.12.2",
-    })) as string;
-
-    const projectAuthor = (await vscode.window.showInputBox({
-        title: "Project Author",
-        value: os.userInfo().username,
-    })) as string;
-
-    const slug = (name: string) => {
-        return name.replace(/\s/g, "").toLowerCase();
-    };
-
-    const placeholders: PlaceHolders = {};
-
-    placeholders.__projectName__ = projectName;
-    placeholders.__projectDescription__ = projectDescription;
-    placeholders.__projectPython__ = projectPython;
-    placeholders.__projectPySide__ = projectPySide;
-    placeholders.__author__ = projectAuthor;
-    placeholders.__projectSlug__ = slug(placeholders.__projectName__);
-    placeholders.__authorSlug__ = slug(placeholders.__author__);
-    placeholders.__githubUser__ = getGithubUser();
-    placeholders.__email__ = placeholders.__author__ + "@email.com";
-
-    return placeholders;
+    return projectName.replace(/\s/g, "").toLowerCase();
 }
 
 /**
@@ -97,15 +47,12 @@ const osWalk = function (dir: string): string[] {
  * Substitute placeholders values.
  *
  * @param files a list of files to apply substitution
- * @param placeholders placeholders object to replace
+ * @param projectSlug the name of the project to use as substitution
  */
-export function substitutePlaceholders(files: string[], placeholders: PlaceHolders): void {
+export function substitutePlaceholders(files: string[], projectSlug: string): void {
     for (const file of files) {
         let fileContent = fs.readFileSync(file, "utf-8");
-
-        for (const [key, value] of Object.entries(placeholders)) {
-            fileContent = fileContent.replace(RegExp(key, "g"), value);
-        }
+        fileContent = fileContent.replace(RegExp("projectslug", "g"), projectSlug);
         fs.writeFileSync(file, fileContent);
     }
 }
@@ -136,36 +83,40 @@ async function importStatementMenu(module: string): Promise<void> {
     })) as string;
 
     if (loadNukeInit === "Yes") {
-        utils.writeImport(`from NukeTools import ${module}`);
+        nuke.addMenuImport(`from NukeTools import ${module}`);
     }
 }
 
 /**
  * Create a PySide2 template Nuke plugin.
- *
- * @returns Promise<void>
  */
 export async function createTemplate(): Promise<void> {
-    const userData = await askUser();
+    const projectSlug = await askUser();
 
-    const destination = vscode.Uri.file(path.join(utils.nukeToolsDir, userData.__projectSlug__));
+    const pkgData = packageMap.get(PackageIds.pySide2Template);
+    if (!pkgData) {
+        vscode.window.showErrorMessage(`NukeTools: Package not found: ${pkgData}`);
+        return;
+    }
 
-    if (fs.existsSync(destination.fsPath)) {
+    const destination = path.join(pkgData.destination, projectSlug);
+
+    if (fs.existsSync(destination)) {
         await vscode.window.showErrorMessage("Directory exists already.");
         return;
     }
 
-    const source = vscode.Uri.file(utils.getPath("assets", "pyside2-template"));
-    await vscode.workspace.fs.copy(source, destination);
+    await addPackage(PackageIds.pySide2Template, destination);
 
-    const pythonFiles = osWalk(destination.fsPath);
-    substitutePlaceholders(pythonFiles, userData);
+    substitutePlaceholders(osWalk(destination), projectSlug);
 
-    await importStatementMenu(userData.__projectSlug__);
-    await openProjectFolder(destination);
+    fs.renameSync(path.join(destination, "projectslug"), path.join(destination, projectSlug));
 
-    const msg = `Project creation completed. For more information, check 
-    the official [README](https://github.com/sisoe24/pyside2-template#readme).
-    `;
-    vscode.window.showInformationMessage(msg);
+    await importStatementMenu(projectSlug);
+    await openProjectFolder(vscode.Uri.file(destination));
+
+    vscode.window.showInformationMessage(
+        `Project ${projectSlug} created. For more information, please read
+        the official [README](https://github.com/sisoe24/pyside2-template#readme).`
+    );
 }

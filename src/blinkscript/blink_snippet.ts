@@ -2,12 +2,14 @@ import * as path from "path";
 import * as vscode from "vscode";
 
 import { readFileSync } from "fs";
+import { PACKAGE_RESOURCES_PATH } from "../constants";
+
 
 /**
  * Sample blinkscript file. same as Nuke default blinkscript node.
  */
 export const saturationTemplate = readFileSync(
-    path.join(path.resolve(__dirname, "../.."), "language/saturation_sample.blink"),
+    path.join(PACKAGE_RESOURCES_PATH, "language", "saturation_sample.blink"),
     "utf-8"
 );
 

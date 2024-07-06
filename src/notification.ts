@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 
 const _msg = `
-VimDcc is now part of NukeTools. A Vim-like experience for Nuke's default Script Editor. Use the command \`NukeTools: Add VimDcc\` to install it.
-More information on the official github (github.com/sisoe24/vimdcc) page.
+NukeServerSocket has been updated to version 1.0.0. There are some breaking changes in the API.
+If you encounter any issues, please open an issue on GitHub. Sorry for the inconvenience.
 `;
 
 /**
@@ -15,22 +15,16 @@ export function showNotification(context: vscode.ExtensionContext, msg: string =
 
     // get the value stored inside the global state key: _value['extension.version']
     const extVersion = extensionId + ".version";
-    const previousVersion = context.globalState.get<string>(extVersion) as string;
+    const previousVersion = context.globalState.get(extVersion) as string;
 
-    // get the value stored inside the global key: _value['extension.updateMsg']
+    // update the value stored inside the global state key: _value['extension.updateMsg']
     const extUpdateMsg = extensionId + ".updateMsg";
-    const previousMsg = context.globalState.get<string>(extUpdateMsg) as string;
-
-    // get the package.json version
-    // if it cannot resolve the version will return 0.0.0
-    const currentVersion =
-        (vscode.extensions.getExtension(extensionId)?.packageJSON.version as string) ?? "0.0.0";
-
-    // store the current version in the global state key _value['extension.version']
-    context.globalState.update(extVersion, currentVersion);
-
-    // store the current update message in the global state key _value['extension.updateMsg']
+    const previousMsg = context.globalState.get(extUpdateMsg) as string;
     context.globalState.update(extUpdateMsg, msg);
+
+    // get the package.json version and store in the global state key _value['extensionId.version']
+    const currentVersion = context.extension.packageJSON.version;
+    context.globalState.update(extVersion, currentVersion);
 
     if (currentVersion > previousVersion && msg !== previousMsg) {
         vscode.window.showInformationMessage(msg);

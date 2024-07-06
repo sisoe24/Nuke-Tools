@@ -21,43 +21,10 @@ export class ExecutablePath {
      * executable.
      */
     constructor(execPath: string, terminalSuffix: string) {
-        this.terminalSuffix = terminalSuffix;
         this.execPath = execPath;
+        this.terminalSuffix = terminalSuffix;
+
         this.args = "";
-    }
-
-    /**
-     * Quote path in case it has spaces.
-     *
-     * @param path - path like string to quote.
-     * @returns - the quoted path.
-     */
-    quotePath(path: string): string {
-        return `"${path}"`;
-    }
-
-    /**
-     * If system is Windows should require the & operator.
-     *
-     * eg. `& '/path/app name/bin'`
-     *
-     * @param path - path like string to insert the `&` operator.
-     * @returns - string like path.
-     */
-    verifyWindowsPath(path: string): string {
-        if (os.type() === "Windows_NT") {
-            path = `& ${path}`;
-        }
-        return path;
-    }
-
-    /**
-     * Get the basename of the executable path.
-     *
-     * @returns  - base name of the executable path.
-     */
-    basename(): string {
-        return path.basename(this.execPath);
     }
 
     /**
@@ -66,7 +33,7 @@ export class ExecutablePath {
      * @returns the terminal name.
      */
     terminalName(): string {
-        return `${this.basename()} ${this.terminalSuffix}`;
+        return `${path.basename(this.execPath)} ${this.terminalSuffix}`;
     }
 
     /**
@@ -74,7 +41,7 @@ export class ExecutablePath {
      *
      * @returns - True if does, False otherwise
      */
-    isValid(): boolean {
+    exists(): boolean {
         if (!fs.existsSync(this.execPath)) {
             vscode.window.showErrorMessage(`Cannot find path: ${this.execPath}.`);
             return false;
@@ -88,22 +55,14 @@ export class ExecutablePath {
      * @returns  - string like command for the terminal.
      */
     cliCmd(): string {
-        const path = this.verifyWindowsPath(this.quotePath(this.execPath));
+        let path = `"${this.execPath}"`;
+
+        if (os.type() === "Windows_NT") {
+            path = `& ${path}`;
+        }
+
         return `${path} ${this.args}`.trim();
     }
-}
-
-/**
- * Restart the terminal instance instead of creating new ones.
- *
- * @param name - name of the terminal to dispose.
- */
-export function restartInstance(name: string): void {
-    vscode.window.terminals.forEach((terminal) => {
-        if (terminal.name === name) {
-            terminal.dispose();
-        }
-    });
 }
 
 type EnvVars = { [key: string]: string };
@@ -170,9 +129,7 @@ export function getCliCmd(execPath: ExecutablePath): string {
         env = concatEnv(env);
     }
 
-    const envString = stringifyEnv(env);
-
-    return `${envString} ${cliCmd}`;
+    return `${stringifyEnv(env)} ${cliCmd}`;
 }
 
 /**
@@ -184,28 +141,18 @@ export function getCliCmd(execPath: ExecutablePath): string {
 export function execCommand(execPath: ExecutablePath): void {
     const terminalName = execPath.terminalName();
 
-    const shouldRestart = getConfig("nukeExecutable.options.restartInstance");
-    if (shouldRestart) {
-        restartInstance(terminalName);
+    if (getConfig("nukeExecutable.options.restartInstance")) {
+        vscode.window.terminals.forEach((terminal) => {
+            if (terminal.name === terminalName) {
+                terminal.dispose();
+            }
+        });
     }
 
     const terminal = vscode.window.createTerminal(terminalName);
 
     terminal.sendText(getCliCmd(execPath));
     terminal.show(true);
-}
-
-/**
- * Launch executable. If executable path is not valid will do nothing.
- *
- * @param execObj - the executable path object to launch.
- * @returns - the executable path object created.
- */
-export function launchExecutable(execObj: ExecutablePath): ExecutablePath {
-    if (execObj.isValid()) {
-        execCommand(execObj);
-    }
-    return execObj;
 }
 
 /**
@@ -218,7 +165,11 @@ export function launchPrimaryExecutable(): ExecutablePath {
         getConfig("nukeExecutable.primaryExecutablePath") as string,
         "Main"
     );
-    launchExecutable(execObj);
+
+    if (execObj.exists()) {
+        execCommand(execObj);
+    }
+
     return execObj;
 }
 
@@ -237,7 +188,11 @@ export function launchSecondaryExecutable(): ExecutablePath {
     if (defaultArgs) {
         execObj.args = defaultArgs;
     }
-    launchExecutable(execObj);
+
+    if (execObj.exists()) {
+        execCommand(execObj);
+    }
+
     return execObj;
 }
 
@@ -252,7 +207,7 @@ export async function launchPromptExecutable(): Promise<ExecutablePath> {
         "Main Prompt"
     );
 
-    if (execObj.isValid()) {
+    if (execObj.exists()) {
         const optArgs = await vscode.window.showInputBox({
             ignoreFocusOut: true,
             placeHolder: "Optional arguments for current instance",
