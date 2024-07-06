@@ -5,6 +5,8 @@ import * as vscode from "vscode";
 import * as stubs from "./stubs";
 import * as nuke from "./nuke";
 import * as socket from "./socket";
+import { Version } from "./version";
+
 import * as executables from "./launch_executable";
 import * as nukeTemplate from "./create_project";
 

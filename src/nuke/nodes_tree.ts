@@ -393,24 +393,12 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
     }
 
     getChildren(element?: Dependency): Thenable<Dependency[]> {
-        return isConnected()
-            .then((connected) => {
-                if (!connected) {
-                    return Promise.resolve([]);
-                }
-
-                if (!fs.existsSync(KNOBS_DIR)) {
-                    fs.mkdirSync(KNOBS_DIR);
-                }
-                if (element) {
-                    return Promise.resolve(this.getKnobs(element));
-                }
-
-                return Promise.resolve(this.getNodes());
-            })
-            .catch((err) => {
-                vscode.window.showErrorMessage(`Failed to get nodes: ${err}`);
-                return Promise.resolve([]);
-            });
+        if (!fs.existsSync(KNOBS_DIR)) {
+            fs.mkdirSync(KNOBS_DIR);
+        }
+        if (element) {
+            return Promise.resolve(this.getKnobs(element));
+        }
+        return Promise.resolve(this.getNodes());
     }
 }
