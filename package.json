@@ -101,23 +101,23 @@
                         "type": "boolean"
                     },
                     "nukeTools.network.manualConnection": {
-                        "markdownDescription": "Specify the host and port manually. If active is set to false, the extension will try to connect to the default host and port.",
+                        "markdownDescription": "Connect to a different NukeServerSocket instance (not your computer).",
                         "type": "object",
                         "default": {
                             "active": false,
                             "host": "localhost",
-                            "port": "49512"
+                            "port": "54321"
                         }
                     },
-                    "nukeTools.executable.primaryExecutablePath": {
-                        "description": "A path to an executable file.",
+                    "nukeTools.executablePath": {
+                        "description": "A path to an executable to be used by the command `Nuke: Launch main executable`.",
                         "type": "string"
                     },
-                    "nukeTools.executable.primaryExecutableArgs": {
-                        "markdownDescription": "Command line arguments to be added when launching `#nukeTools.executable.primaryExecutablePath#`. [Nuke documentation](https://learn.foundry.com/nuke/content/comp_environment/configuring_nuke/command_line_operations.html). (e.g. `--nukex`)",
+                    "nukeTools.executableArgs": {
+                        "markdownDescription": "Command line arguments to be added when launching `#nukeTools.executablePath#`. [Nuke documentation](https://learn.foundry.com/nuke/content/comp_environment/configuring_nuke/command_line_operations.html). (e.g. `--nukex`)",
                         "type": "string"
                     },
-                    "nukeTools.executable.executablesMap": {
+                    "nukeTools.executableMaps": {
                         "description": "A map of executables to be used by the command `Nuke: Show Executables`.",
                         "type": "object",
                         "examples": [
@@ -137,13 +137,13 @@
                             }
                         ]
                     },
-                    "nukeTools.executable.restartInstance": {
+                    "nukeTools.restartTerminalInstance": {
                         "default": false,
-                        "markdownDescription": "Restart the terminal instead of creating new instances. **NOTE:** This will terminate all Nuke processes spawned by the extension, helpful for quick GUI plugin testing.",
+                        "markdownDescription": "Restart the terminal instance instead of creating new one. **NOTE:** This will terminate all Nuke processes spawned by the extension (helpful for quick GUI plugin testing).",
                         "type": "boolean"
                     },
-                    "nukeTools.executable.envVars": {
-                        "description": "A list of environment variable to be added before launching Nuke from NukeTools.",
+                    "nukeTools.environmentVariables": {
+                        "description": "Environment variables that will be added when running an executable.",
                         "type": "object",
                         "examples": [
                             {

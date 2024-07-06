@@ -93,7 +93,7 @@ export function getAddresses(): string {
  * @param showDebug if true, the output window will not be cleared despite the settings.
  */
 export function writeToOutputWindow(data: string, filePath: string): string {
-    if (getConfig("other.clearPreviousOutput") && !getConfig("network.debug")) {
+    if (getConfig("clearPreviousOutput") && !getConfig("network.debug")) {
         outputWindow.clear();
     }
 

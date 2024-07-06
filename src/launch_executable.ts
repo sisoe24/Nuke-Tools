@@ -79,6 +79,7 @@ function concatEnv(userEnvironmentVars: EnvVars): EnvVars {
     // on windows we need to convert the path to a unix-like path
     if (IS_WINDOWS && isUnixShell()) {
         workspaceFolder = workspaceFolder.replace(/\\/g, "/");
+        // Convert the drive letter to lowercase and add a leading slash (e.g. C: -> /c)
         workspaceFolder = workspaceFolder.replace(/^([a-zA-Z]):/, (_, driveLetter) => {
             return `/${driveLetter.toLowerCase()}`;
         });
@@ -88,7 +89,6 @@ function concatEnv(userEnvironmentVars: EnvVars): EnvVars {
         // Replace all instances of $envVar with the system environment variable
         env[k] = v.replace(new RegExp(`\\$${k}`, "g"), process.env[k] || "");
 
-        // Replace all instances of ${workspaceFolder} with the workspace folder path
         env[k] = env[k].replace(/\${workspaceFolder}/g, workspaceFolder);
 
         // Clean up the path separator in the beginning and end of the string
@@ -108,6 +108,7 @@ function stringifyEnv(env: EnvVars): string {
     let envString = "";
 
     for (const [k, v] of Object.entries(env)) {
+        // TODO: else should raise an error and cmd should have its own implementation
         if (isPowerShell()) {
             envString += `$env:${k}="${v}"; `;
         } else if (isUnixShell()) {
@@ -130,7 +131,7 @@ function stringifyEnv(env: EnvVars): string {
 function execCommand(execPath: ExecutablePath): void {
     const terminalName = `${path.basename(execPath.path)} ${execPath.name}`;
 
-    if (getConfig("nukeExecutable.restartInstance")) {
+    if (getConfig("restartTerminalInstance")) {
         vscode.window.terminals.forEach((terminal) => {
             if (terminal.name === terminalName) {
                 terminal.dispose();
@@ -138,7 +139,7 @@ function execCommand(execPath: ExecutablePath): void {
         });
     }
 
-    const env = stringifyEnv(concatEnv(getConfig("nukeExecutable.envVars")));
+    const env = stringifyEnv(concatEnv(getConfig("environmentVariables")));
     const command = `${env} ${execPath.buildExecutableCommand()}`.trim();
 
     const terminal = vscode.window.createTerminal(terminalName);
@@ -154,8 +155,8 @@ function execCommand(execPath: ExecutablePath): void {
 export function launchPrimaryExecutable(): ExecutablePath {
     const execObj = new ExecutablePath(
         "Main",
-        getConfig("nukeExecutable.primaryExecutablePath"),
-        getConfig("nukeExecutable.commandLineArguments")
+        getConfig("executablePath"),
+        getConfig("executableArgs")
     );
 
     if (execObj.exists()) {
@@ -171,10 +172,7 @@ export function launchPrimaryExecutable(): ExecutablePath {
  * @returns - the executable path object created.
  */
 export async function launchPromptExecutable(): Promise<ExecutablePath> {
-    const execObj = new ExecutablePath(
-        "Main Prompt",
-        getConfig("nukeExecutable.primaryExecutablePath")
-    );
+    const execObj = new ExecutablePath("Main Prompt", getConfig("executablePath"));
 
     if (execObj.exists()) {
         const optArgs = await vscode.window.showInputBox({

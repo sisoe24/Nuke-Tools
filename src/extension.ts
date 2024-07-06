@@ -152,7 +152,7 @@ function registerExecutablesCommands(context: vscode.ExtensionContext): void {
         })
     );
 
-    const nukeExecutables = getConfig("nukeExecutable.executables");
+    const nukeExecutables = getConfig("executableMaps");
 
     if (nukeExecutables) {
         for (const [name, config] of Object.entries(nukeExecutables)) {
@@ -230,7 +230,7 @@ export function activate(context: vscode.ExtensionContext): void {
             }
 
             executables.launchExecutable(path.basename(file), {
-                bin: getConfig("nukeExecutable.primaryExecutablePath"),
+                bin: getConfig("executablePath"),
                 args: file,
             });
         })
