@@ -2,7 +2,6 @@ import * as vscode from "vscode";
 
 import * as fs from "fs";
 import * as path from "path";
-import * as uuid from "uuid";
 
 import { isConnected, sendCommand } from "../socket";
 
@@ -122,7 +121,12 @@ class KnobFile {
      * @returns A new knob file.
      */
     static create(item: { node: string; class: string }, knobName: string) {
-        const fileSignature = KnobFile.fileSignature(item.node, item.class, knobName, uuid.v4());
+        const fileSignature = KnobFile.fileSignature(
+            item.node,
+            item.class,
+            knobName,
+            Date.now().toString()
+        );
 
         const filePath = path.join(KNOBS_DIR, `${fileSignature}.py`);
         return new KnobFile(filePath);
@@ -389,25 +393,12 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
     }
 
     getChildren(element?: Dependency): Thenable<Dependency[]> {
-        return isConnected()
-            .then((connected) => {
-
-                if (!connected) {
-                    return Promise.resolve([]);
-                }
-
-                if (!fs.existsSync(KNOBS_DIR)) {
-                    fs.mkdirSync(KNOBS_DIR);
-                }
-                if (element) {
-                    return Promise.resolve(this.getKnobs(element));
-                }
-
-                return Promise.resolve(this.getNodes());
-            })
-            .catch((err) => {
-                vscode.window.showErrorMessage(`Failed to get nodes: ${err}`);
-                return Promise.resolve([]);
-            });
+        if (!fs.existsSync(KNOBS_DIR)) {
+            fs.mkdirSync(KNOBS_DIR);
+        }
+        if (element) {
+            return Promise.resolve(this.getKnobs(element));
+        }
+        return Promise.resolve(this.getNodes());
     }
 }
