@@ -1,3 +1,5 @@
+import * as path from "path";
+
 import * as vscode from "vscode";
 
 import * as stubs from "./stubs";
@@ -7,6 +9,8 @@ import { Version } from "./version";
 
 import * as executables from "./launch_executable";
 import * as nukeTemplate from "./create_project";
+
+import { Version } from "./version";
 
 import { BlinkSnippets } from "./blinkscript/blink_snippet";
 import { BlinkScriptFormat } from "./blinkscript/blink_format";
@@ -18,6 +22,7 @@ import { NukeNodesInspectorProvider } from "./nuke/nodes_tree";
 import { showNotification } from "./notification";
 import { fetchPackagesLatestVersion } from "./fetch_packages";
 import { initializePackageLog } from "./packages";
+import { getConfig } from "./config";
 
 function registerNodesInspectorCommands(context: vscode.ExtensionContext): void {
     const nukeProvider = new NukeNodesInspectorProvider();
@@ -70,36 +75,68 @@ function registerBlinkScriptCommands(context: vscode.ExtensionContext): void {
 }
 
 function registerPackagesCommands(context: vscode.ExtensionContext): void {
+    const addExtras: Record<string, () => void> = {
+        pysideTemplate: nukeTemplate.createTemplate,
+        pythonStubs: stubs.addStubs,
+        nukeServerSocket: nuke.addNukeServerSocket,
+        vimDcc: nuke.addVimDcc,
+    };
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.clearPackagesCache", () => {
+        vscode.commands.registerCommand("nuke-tools.addPackages", () => {
+            const picker = vscode.window.createQuickPick();
+            picker.items = Object.keys(addExtras).map((key) => {
+                return {
+                    label: key,
+                };
+            });
+
+            picker.onDidChangeSelection((selection) => {
+                if (selection[0]) {
+                    addExtras[selection[0].label]();
+                    picker.hide();
+                }
+            });
+
+            picker.onDidHide(() => picker.dispose());
+            picker.show();
+        })
+    );
+}
+
+function registerExtraCommands(context: vscode.ExtensionContext): void {
+    const extras: Record<string, () => void> = {
+        clearPackagesCache: () => {
             initializePackageLog();
             fetchPackagesLatestVersion();
             vscode.window.showInformationMessage("Packages cached cleared.");
-        })
-    );
+        },
+        testRunInsideNuke: () => {
+            void socket.sendDebugMessage();
+        },
+        showNetworkAddresses: () => {
+            vscode.window.showInformationMessage(socket.getAddresses());
+        },
+    };
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.addPysideTemplate", () => {
-            void nukeTemplate.createTemplate();
-        })
-    );
+        vscode.commands.registerCommand("nuke-tools.extras", () => {
+            const picker = vscode.window.createQuickPick();
+            picker.items = Object.keys(extras).map((key) => {
+                return {
+                    label: key,
+                };
+            });
 
-    context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.addPythonStubs", () => {
-            stubs.addStubs();
-        })
-    );
+            picker.onDidChangeSelection((selection) => {
+                if (selection[0]) {
+                    extras[selection[0].label]();
+                    picker.hide();
+                }
+            });
 
-    context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.addNukeServerSocket", () => {
-            nuke.addNukeServerSocket();
-        })
-    );
-
-    context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.addVimDcc", () => {
-            nuke.addVimDcc();
+            picker.onDidHide(() => picker.dispose());
+            picker.show();
         })
     );
 }
@@ -112,14 +149,48 @@ function registerExecutablesCommands(context: vscode.ExtensionContext): void {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.launchNukeAlt", () => {
-            executables.launchSecondaryExecutable();
+        vscode.commands.registerCommand("nuke-tools.launchNukeOptArgs", () => {
+            void executables.launchPromptExecutable();
         })
     );
 
+    const nukeExecutables = getConfig("executablesMap");
+
+    if (nukeExecutables) {
+        for (const [name, config] of Object.entries(nukeExecutables)) {
+            context.subscriptions.push(
+                vscode.commands.registerCommand(`nuke-tools.${name}`, () => {
+                    executables.launchExecutable(name, config);
+                })
+            );
+        }
+    }
+
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.launchNukeOptArgs", () => {
-            void executables.launchPromptExecutable();
+        vscode.commands.registerCommand("nuke-tools.showExecutables", () => {
+            const picker = vscode.window.createQuickPick();
+
+            picker.items = Object.keys(nukeExecutables).map((key) => {
+                const executable = nukeExecutables[key];
+                return {
+                    label: key,
+                    description: executable.args,
+                    detail: executable.bin,
+                };
+            });
+
+            picker.onDidChangeSelection((selection) => {
+                if (selection[0]) {
+                    executables.launchExecutable(
+                        selection[0].label,
+                        nukeExecutables[selection[0].label]
+                    );
+                    picker.hide();
+                }
+            });
+
+            picker.onDidHide(() => picker.dispose());
+            picker.show();
         })
     );
 }
@@ -135,6 +206,7 @@ export function activate(context: vscode.ExtensionContext): void {
     registerBlinkScriptCommands(context);
     registerPackagesCommands(context);
     registerExecutablesCommands(context);
+    registerExtraCommands(context);
 
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider("python", new NukeCompletionProvider(), "(")
@@ -147,14 +219,22 @@ export function activate(context: vscode.ExtensionContext): void {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.testRunInsideNuke", () => {
-            void socket.sendDebugMessage();
-        })
-    );
+        vscode.commands.registerCommand("nuke-tools.openNukeScript", () => {
+            const editor = vscode.window.activeTextEditor;
+            if (!editor) {
+                return null;
+            }
+            const file = editor.document.fileName;
 
-    context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.showNetworkAddresses", () => {
-            vscode.window.showInformationMessage(socket.getAddresses());
+            if (file === null || !file.endsWith(".nk")) {
+                vscode.window.showWarningMessage("Not a Nuke script (.nk)");
+                return;
+            }
+
+            executables.launchExecutable(path.basename(file), {
+                bin: getConfig("executablePath"),
+                args: file,
+            });
         })
     );
 }

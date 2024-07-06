@@ -1,5 +1,71 @@
 # Change Log
 
+## [0.15.0] - TBD
+
+The main goal of this release is to simplify the extension commands and settings, making it easier to use and understand. This caused some breaking changes, but the extension is now more user-friendly.
+
+### Added
+
+Commands:
+
+- `NukeTools: Open Script in Nuke`: A new command that opens the current active Nuke script with the main executable.
+- `NukeTools: Show Executables`: A new command that shows the list of executables added to the extension. via the new setting `nukeTools.executablesMap`.
+- `NukeTools: Add Packages`: Show the list of packages available to add to the extension.
+- `NukeTools: Extras`: Show the list of extra commands available in the extension.
+
+Settings:
+
+- `nukeTools.executablesMap`: A new setting that allows the user to add multiple executables to the extension.
+
+    ```json
+    {
+        "nuke": {
+            "path": "/path/to/nuke",
+            "args": "-t",
+        },
+        "nukex": {
+            "path": "/path/to/nuke",
+            "args": "--nukex",
+        },
+        "maya": {
+            "path": "/path/to/maya",
+            "args": "",
+        }
+    }
+    ```
+
+### Changed
+
+- All the settings namespaces have been updated thus breaking the previous saved ones.
+- The packages commands (Stubs, NukeServerSocket, etc.) are now part of the `NukeTools: Add Packages` command.
+- Merged other commands into the `NukeTools: Extras` command.
+- Network settings (`host`, `port` and `enable manual connection`) were merged into the new settings `nukeTools.network.manualConnection`.
+
+```json
+{
+    "nukeTools.network.manualConnection": {
+        "active": false,
+        "host": "localhost",
+        "port": "49512"
+    }
+}
+```
+
+### Removed
+
+Commands:
+
+- `NukeTools: Launch Alternative Executable`
+- `nukeTools.other.UseSystemEnvVars`: Removed the setting that allows the use of system environment variables. The settings `nukeTools.environmentVariables` now allows the use of the system environment variables directly in the settings.
+
+```json
+{
+    "nukeTools.environmentVariables": {
+        "NUKE_PATH": "${workspaceFolder}/bin:$NUKE_PATH",
+    }
+}
+```
+
 ## [0.14.0] - 02/18/2024
 
 ### Changed

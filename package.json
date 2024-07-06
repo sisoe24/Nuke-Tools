@@ -3,7 +3,7 @@
     "displayName": "Nuke Tools",
     "publisher": "virgilsisoe",
     "description": "A set of tools related to Nuke that simplify the process of writing code for it.",
-    "version": "0.14.0",
+    "version": "0.14.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/sisoe24/Nuke-Tools"
@@ -53,14 +53,33 @@
             },
             {
                 "category": "Nuke",
-                "command": "nuke-tools.launchNukeAlt",
-                "title": "Launch alternative executable"
-            },
-            {
-                "category": "Nuke",
                 "command": "nuke-tools.launchNukeOptArgs",
                 "shortTitle": "Launch Nuke",
                 "title": "Launch main executable with prompt"
+            },
+            {
+                "category": "Nuke",
+                "command": "nuke-tools.addPackages",
+                "shortTitle": "Add Packages",
+                "title": "Add Packages"
+            },
+            {
+                "category": "Nuke",
+                "command": "nuke-tools.extras",
+                "shortTitle": "Extras",
+                "title": "Extras"
+            },
+            {
+                "category": "Nuke",
+                "command": "nuke-tools.openNukeScript",
+                "shortTitle": "Open Script in Nuke",
+                "title": "Open Script in Nuke"
+            },
+            {
+                "category": "Nuke",
+                "command": "nuke-tools.showExecutables",
+                "shortTitle": "Show Executables",
+                "title": "Show Executables"
             },
             {
                 "category": "Nuke",
@@ -71,42 +90,6 @@
                     "light": "resources/icons/light/run_code.svg"
                 },
                 "title": "Run Code Inside Nuke"
-            },
-            {
-                "category": "Nuke",
-                "command": "nuke-tools.showNetworkAddresses",
-                "title": "Show Network addresses"
-            },
-            {
-                "category": "Nuke",
-                "command": "nuke-tools.testRunInsideNuke",
-                "title": "Debug Message"
-            },
-            {
-                "category": "Nuke",
-                "command": "nuke-tools.addPythonStubs",
-                "title": "Add Python Stubs"
-            },
-            {
-                "category": "Nuke",
-                "command": "nuke-tools.addNukeServerSocket",
-                "title": "Add NukeServerSocket"
-            },
-            {
-                "category": "Nuke",
-                "command": "nuke-tools.addPysideTemplate",
-                "shortTitle": "Nuke",
-                "title": "Add PySide2 template"
-            },
-            {
-                "category": "Nuke",
-                "command": "nuke-tools.addVimDcc",
-                "title": "Add VimDcc"
-            },
-            {
-                "category": "Nuke",
-                "command": "nuke-tools.clearPackagesCache",
-                "title": "Clear Packages Cache"
             }
         ],
         "configuration": [
@@ -114,57 +97,64 @@
                 "properties": {
                     "nukeTools.network.debug": {
                         "default": false,
-                        "markdownDescription": "Show debugging information the in output window.",
+                        "markdownDescription": "Show network debug information in the output window. Enabling this option will not clean the console output after code execution.",
                         "type": "boolean"
                     },
-                    "nukeTools.network.enableManualConnection": {
+                    "nukeTools.network.manualConnection": {
+                        "markdownDescription": "Connect to a different NukeServerSocket instance (not your computer).",
+                        "type": "object",
+                        "default": {
+                            "active": false,
+                            "host": "localhost",
+                            "port": "54321"
+                        }
+                    },
+                    "nukeTools.executablePath": {
+                        "description": "A path to an executable to be used by the command `Nuke: Launch main executable`.",
+                        "type": "string"
+                    },
+                    "nukeTools.executableArgs": {
+                        "markdownDescription": "Command line arguments to be added when launching `#nukeTools.executablePath#`. [Nuke documentation](https://learn.foundry.com/nuke/content/comp_environment/configuring_nuke/command_line_operations.html). (e.g. `--nukex`)",
+                        "type": "string"
+                    },
+                    "nukeTools.executablesMap": {
+                        "description": "A map of executables to be used by the command `Nuke: Show Executables`.",
+                        "type": "object",
+                        "examples": [
+                            {
+                                "Nuke": {
+                                    "bin": "/usr/local/Nuke15.0v4/Nuke15.0",
+                                    "args": ""
+                                },
+                                "NukeX": {
+                                    "bin": "/usr/local/Nuke15.0v4/Nuke15.0",
+                                    "args": "--nukex"
+                                },
+                                "Maya20": {
+                                    "bin": "/usr/autodesk/maya2020/bin/maya",
+                                    "args": ""
+                                }
+                            }
+                        ]
+                    },
+                    "nukeTools.restartTerminalInstance": {
                         "default": false,
-                        "markdownDescription": "If enabled, `#nukeTools.network.port#` and `#nukeTools.network.host#` will override the default settings.",
+                        "markdownDescription": "Restart the terminal instance instead of creating new one. **NOTE:** This will terminate all Nuke processes spawned by the extension (helpful for quick GUI plugin testing).",
                         "type": "boolean"
                     },
-                    "nukeTools.network.host": {
-                        "markdownDescription": "Specify a different host/ip for the connection. This will work only if `#nukeTools.network.enableManualConnection#` is enabled.",
-                        "type": "string"
+                    "nukeTools.environmentVariables": {
+                        "description": "Environment variables that will be added when running an executable.",
+                        "type": "object",
+                        "examples": [
+                            {
+                                "NUKE_PATH": "${workspaceFolder}/gizmos:$NUKE_PATH"
+                            }
+                        ]
                     },
-                    "nukeTools.network.port": {
-                        "markdownDescription": "Specify a different port for the connection. This will work only if `#nukeTools.network.enableManualConnection#` is enabled. Port value should be in range `49512` - `65535`",
-                        "type": "string"
-                    },
-                    "nukeTools.nukeExecutable.options.defaultCommandLineArguments": {
-                        "markdownDescription": "Command line arguments to be added when launching `#nukeTools.nukeExecutable.secondaryExecutablePath#`. [Nuke documentation](https://learn.foundry.com/nuke/content/comp_environment/configuring_nuke/command_line_operations.html)",
-                        "type": "string"
-                    },
-                    "nukeTools.nukeExecutable.options.restartInstance": {
+                    "nukeTools.clearPreviousOutput": {
                         "default": false,
-                        "markdownDescription": "**Use with caution**. Restart the terminal instance instead of creating new ones.",
+                        "description": "Clear previous console output before next code execution.",
                         "type": "boolean"
-                    },
-                    "nukeTools.nukeExecutable.primaryExecutablePath": {
-                        "description": "Path to Nuke executable file.",
-                        "type": "string"
-                    },
-                    "nukeTools.nukeExecutable.secondaryExecutablePath": {
-                        "description": "Path to alternative Nuke executable file.",
-                        "type": "string"
-                    },
-                    "nukeTools.other.clearPreviousOutput": {
-                        "default": false,
-                        "description": "Clear previous console output before next execution.",
-                        "type": "boolean"
-                    },
-                    "nukeTools.other.envVars": {
-                        "description": "A list of environment variable to be added before launching Nuke from NukeTools.",
-                        "type": "object"
-                    },
-                    "nukeTools.other.useSystemEnvVars": {
-                        "description": "Use system environment variables. This will add the system environment variables to the environment variables list.",
-                        "type": "boolean",
-                        "default": false
-                    },
-                    "nukeTools.other.nukePaths": {
-                        "deprecationMessage": "This setting is deprecated. Use envVars instead.",
-                        "description": "A list of paths to be added to NUKE_PATH before launching Nuke from NukeTools.",
-                        "type": "array"
                     }
                 },
                 "title": "Nuke Tools"
@@ -265,8 +255,7 @@
     },
     "dependencies": {
         "@terascope/fetch-github-release": "^0.8.7",
-        "extract-zip": "^2.0.1",
-        "uuid": "^9.0.0"
+        "extract-zip": "^2.0.1"
     },
     "devDependencies": {
         "@types/glob": "^7.1.3",
