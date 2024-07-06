@@ -9,13 +9,13 @@ The main goal of this release is to simplify the extension commands and settings
 Commands:
 
 - `NukeTools: Open Script in Nuke`: A new command that opens the current active Nuke script with the main executable.
-- `NukeTools: Show Executables`: A new command that shows the list of executables added to the extension. via the new setting `nukeTools.executable.executables`.
+- `NukeTools: Show Executables`: A new command that shows the list of executables added to the extension. via the new setting `nukeTools.executableMaps`.
 - `NukeTools: Add Packages`: Show the list of packages available to add to the extension.
 - `NukeTools: Extras`: Show the list of extra commands available in the extension.
 
 Settings:
 
-- `nukeTools.executable.executablesMap`: A new setting that allows the user to add multiple executables to the extension.
+- `nukeTools.executableMaps`: A new setting that allows the user to add multiple executables to the extension.
 
     ```json
     {
@@ -26,6 +26,10 @@ Settings:
         "nukex": {
             "path": "/path/to/nuke",
             "args": "--nukex",
+        },
+        "maya": {
+            "path": "/path/to/maya",
+            "args": "",
         }
     }
     ```
@@ -34,17 +38,7 @@ Settings:
 
 - All the settings namespaces have been updated thus breaking the previous saved ones.
 - The packages commands (Stubs, NukeServerSocket, etc.) are now part of the `NukeTools: Add Packages` command.
-- Some extras commands are now part of the `NukeTools: Extras` command.
-- Many settings names were changed to reflect the new changes in the extension.
-
-### Removed
-
-Commands:
-
-- `NukeTools: Launch Alternative Executable`
-
-Settings:
-
+- Merged other commands into the `NukeTools: Extras` command.
 - Network settings (`host`, `port` and `enable manual connection`) were merged into the new settings `nukeTools.network.manualConnection`.
 
 ```json
@@ -57,11 +51,16 @@ Settings:
 }
 ```
 
-- `nukeTools.other.UseSystemEnvVars`: Removed the setting that allows the use of system environment variables. The new settings `nukeTools.executable.envVars` now allows the use of the system environment variables directly in the executable settings.
+### Removed
+
+Commands:
+
+- `NukeTools: Launch Alternative Executable`
+- `nukeTools.other.UseSystemEnvVars`: Removed the setting that allows the use of system environment variables. The settings `nukeTools.environmentVariables` now allows the use of the system environment variables directly in the settings.
 
 ```json
 {
-    "nukeTools.executable.envVars": {
+    "nukeTools.environmentVariables": {
         "NUKE_PATH": "${workspaceFolder}/bin:$NUKE_PATH",
     }
 }
