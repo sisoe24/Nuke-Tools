@@ -38,7 +38,9 @@ Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to
     - [1.6.2. Known Issues and Limitations](#162-known-issues-and-limitations)
   - [1.7. BlinkScript](#17-blinkscript)
   - [1.8. Available Commands](#18-available-commands)
-  - [1.9. Extension Settings](#19-extension-settings)
+  - [1.9. Environment Variables](#19-environment-variables)
+  - [1.9.1. Additional Settings](#191-additional-settings)
+    - [1.9.2. Network Settings](#192-network-settings)
   - [1.10. Windows Users](#110-windows-users)
   - [1.11. Included packages](#111-included-packages)
   - [1.12. Known Issues](#112-known-issues)
@@ -46,17 +48,16 @@ Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to
 
 ## 1.1. Features
 
-- Execute code and view Nuke execution output in Visual Studio Code. Just run `nukeserversocket` within Nuke - no config needed on the same machine.
+- Execute code and view Nuke execution output in Visual Studio Code. Just connect `nukeserversocket` inside Nuke - no config needed on the same machine.
 - Nuke/Hiero Python stubs for auto-complete suggestions.
 - BlinkScript support.
 - PySide2 plugin template.
-- Commands for launching Nuke with default or optional arguments via the terminal.
-- Add environment variables to running Nuke instances.
+- Commands for launching executables with optional arguments and environment variables.
 - And more...
 
 ## 1.2. Requirements
 
-Some commands require `nukeserversocket` to be installed and running in Nuke. The extension will automatically download and install the latest version of `nukeserversocket` for you.
+Some commands require `nukeserversocket` to be installed and running in Nuke.
 
 ## 1.3. Execute code
 
@@ -81,7 +82,7 @@ If you encounter any issues, please open an issue on the GitHub repository.
 
 ### 1.5.1. Stubs are not working?
 
-If you're experiencing issues with the stubs in the latest versions of VSCode, you may find it helpful to adjust the `python.analysis.packageIndexDepths` setting. Try setting it to something like this:
+If you're experiencing issues with the stubs in the latest versions of VSCode, you may find it helpful to adjust the `python.analysis.packageIndexDepths` setting.
 
 ```json
 "python.analysis.packageIndexDepths": [
@@ -108,26 +109,22 @@ The nodes panel allows you to view and interact with nodes in the current DAG in
 
 ### 1.6.1. Usage
 
-To access the nodes panel, click on the Nuke icon in the Activity Bar. Connect to the nukeserversocket and the panel will show nodes from the current DAG.
-
-To assign a new knob to a node, click the `+` button on the node panel. Edit each knob's file reference and sync it with the knob using the "Send code to Knob" button. To use `knobChanged`, type its name into the input dialog when creating a new knob.
-
-If you add a new knob, click "Refresh" to view it. If you change a node's name, click "Sync Nodes" to sync it with the panel.
+Click Nuke icon in Activity Bar for nodes panel. Connect to nukeserversocket to see DAG nodes. Add knobs with `+` button. Edit file references and sync with "Send code to Knob". For `knobChanged`, enter name when creating knob. Click "Refresh" for new knobs, "Sync Nodes" for renamed nodes.
 
 ### 1.6.2. Known Issues and Limitations
 
 - The panel only works with nukeserversocket Scritp Editor engine (see [Known Issues](#19-known-issues)).
-- Knob scripts are tied to the current Workspace, which means that once you create a knob file, it will be saved in the current `$workspace/.nuketools` directory. If you change the Workspace, the panel will not be able to find the knob files.
+- Knob scripts are tied to the current Workspace (`$workspace/.nuketools`). If you change the Workspace, the panel will not be able to find the knob files.
+- Use alphanumeric characters and underscores for knob names.
 - After syncing the knob's value, Nuke may not execute the code until you execute a command in the Script Editor. This is a Nuke-specific issue and not related to the extension. I am still trying to understand why this happens so if you have any ideas, let me know.
-- The knob name input prompt is not as restrictive as in Nuke. Use only letters, numbers, and underscores to avoid issues.
 
 ## 1.7. BlinkScript
 
-BlinkScript features are currently basic, but you can request more or contribute by opening a PR. Also, try using Material Icon Theme which adds a Nuke icon for the .blink file.
+BlinkScript's features include code execution, syntax highlighting, and suggestions. Use Material Icon extension for icons.
 
-Features include code execution, syntax highlighting, formatting, simple code suggestion, and a startup saturation snippet. When using the extension, a blinkscript node will be created with the same name as the active file, and if the node already exists, the code will be updated and recompiled. Accepted file extensions are `.cpp` or `.blink` .
+Create/update BlinkScript nodes by running code with `.cpp` or `.blink` extensions via `Nuke: Run code inside nuke`. When running the code, a node with the same name as the file will be created in the current DAG. If the node already exists, the code will be updated and recompiled.
 
-To create a new BlinkScript node, make sure that the nukeserversocket Code execution engine is set to the `Script Editor` (see [Known Issues](#19-known-issues)). Once done, create a new file with the `.cpp` or `.blink` extension, and run the code with the command `Nuke: Run code inside nuke`. The node will be created in the current DAG. If you want to update the code, simply run the code again.
+> Ensure nukeserversocket is set to `Script Editor`. See [Known Issues](#19-known-issues) for setup.
 
 ## 1.8. Available Commands
 
@@ -147,6 +144,7 @@ NOTES:
 
 - Running `Nuke: Add Package` will add the corresponding plugin to `$HOME/.nuke/NukeTools` and generate an import statement in the menu.py file. If menu.py doesn't exist, it will be created.
 - By default, the extension does not provide any shortcut. But you can assign each command to one. (see [Key Bindings for Visual Studio Code](https://code.visualstudio.com/docs/getstarted/keybindings) for more information).
+
     Example `keybindings.json` :
 
     ```json
@@ -163,77 +161,65 @@ NOTES:
     ]
     ```
 
-## 1.9. Extension Settings
+## 1.9. Environment Variables
 
-- `nukeTools.nukeExecutable.primaryExecutablePath`: `string`
-    A path for an executable file.
-  - On macOS, you can find the file in _Show Package Contents -> Contents/MacOS/Nuke..._
+Add environment variables to the terminal instance with `$VAR_NAME` for system variables or `${workspaceFolder}` for the workspace folder.
 
-- `nukeTools.nukeExecutable.commandLineArguments`: `string`
-    Command-line arguments you can add at when running the primary executable.
-
-- `nukeTools.nukeExecutable.nukeExecutable.restartInstance`: `boolean`
-    Restart the terminal instance instead of creating new ones. **NOTE:** This option will terminate every Nuke process spawned by the extension. Useful when rapid testing GUI plugins.
-
-- `nukeTools.nukeExecutable.envVars`: `{key: string: value: string}`
-
-    Add environment variables the current running Nuke instance. If you want to add
-    the system environment variables, you can use the `$VAR_NAME` syntax. Additionally, you can 
-    use the `${workspaceFolder}` variable to get the current workspace folder.
-
-    ```json
-    {
-        "nukeTools.nukeExecutable.envVars": {
-            "NUKE_PATH": "${workspaceFolder}/gizmo:$NUKE_PATH",
-            "PYTHONPATH": "$PYTHONPATH:/path/to/python/lib",
-            "API_KEY": "0a9f0381-aebb-4e40-a77a-2c381b08e0ea"
-        }
+```json
+{
+    "nukeTools.environmentVariables": {
+        "NUKE_PATH": "${workspaceFolder}/gizmo:$NUKE_PATH",
+        "PYTHONPATH": "$PYTHONPATH:/path/to/python/lib",
+        "API_KEY": "0a9f0381-aebb-4e40-a77a-2c381b08e0ea"
     }
-    ```
+}
+```
 
-- `nukeTools.nukeExecutable.executables`: `{key: string: value: string}`
+## 1.9.1. Additional Settings
 
-    Add multiple executables to the extension. The key is the name of the executable, and the value is an object with the `bin` and `args` keys. The `bin` key is the path to the executable, and the `args` key is the command-line arguments you can add when running the executable.
+You can define multiple executables for the extension by specifying their names, paths (bin), and command-line arguments (args).
 
-    ```json
-    {
-      "nukeTools.nukeExecutable.executables": {
-        "NukeX": {
-            "bin": "/usr/local/Nuke15.0v4/Nuke15.0",
-            "args": "--nukex"
-        },
-        "Maya20": {
-            "bin": "/usr/autodesk/maya2020/bin/maya",
-            "args": ""
-        }
+```json
+{
+  "nukeTools.executableMaps": {
+    "NukeX": {
+        "bin": "/usr/local/Nuke15.0v4/Nuke15.0",
+        "args": "--nukex"
+    },
+    "Maya20": {
+        "bin": "/usr/autodesk/maya2020/bin/maya",
+        "args": ""
     }
-    ```
+  }
+}
+```
 
-    To select an executable, use the `Nuke: Show Executables` command. A quick pick will show up with the available executables. Additionally, you can assign a keybinding to each executable with the command ID `nuke-tools.<executableName>`.
+Use `Nuke: Show Executables` to choose an executable from a quick pick menu. You can also ASsign keybindings with `nuke-tools.<executableName>`.
 
-    ```json
-    {
-        "key": "alt+shift+m",
-        "command": "nuke-tools.Maya20",
+```json
+{
+    "key": "alt+shift+m",
+    "command": "nuke-tools.Maya20",
+}
+```
+
+### 1.9.2. Network Settings
+
+If you want to manually connect to a difference NukeServerSocket instance, you can set the `active` key to `true` and add the `host` and `port` keys.
+
+```json
+{
+    "nukeTools.network.manualConnection": {
+        "active": false,
+        "host": "localhost",
+        "port": "49512"
     }
-    ```
-
-- `nukeTools.other.clearPreviousOutput`: `boolean`
-    Clear the previous console output text.
-
-- `nukeTools.network.enableManualConnection`: `boolean`
-    If enabled, `nukeTools.network.port` and `nukeTools.network.host` will take over the default settings. You might need this option when connecting to another computer.
-  - `nukeTools.network.port`: `string`
-        Specify a different port for the connection. This option only works if `nukeTools.network.enableManualConnection` is active. The server address should be the same as in the Nuke plugin.
-  - `nukeTools.network.host`: `string`
-        Same as the port. The host could be the local host or the local IP.
-
-- `nukeTools.network.debug`: `boolean`
-    Show network debug information in the output window. Enabling this option will not clean the console output after code execution.
+}
+```
 
 ## 1.10. Windows Users
 
-From NukeTools 0.15.0, the extension is more Windows-friendly. Environment variables are now supported for both PowerShell and Command Prompt. The extension will automatically detect the shell you are using and set the environment variables accordingly. Same applies for the executables paths. You should be able to use the windows-style paths without any issues. If you encounter any issues, please open an issue on the GitHub repository.
+From NukeTools 0.15.0, the extension supports environment variables in PowerShell and Command Prompt, auto-detects the shell, and handles Windows-style paths. If you encounter any issues, please open an issue on the GitHub repository..
 
 ## 1.11. Included packages
 
@@ -244,12 +230,11 @@ The extension includes the following packages:
 - [pyside2-template](https://github.com/sisoe24/pyside2-template#readme) - A PySide2 template project for Nuke.
 - [vimdcc](https://github.com/sisoe24/vimdcc) - A Vim-like experience for Nuke's default Script Editor.
 
-> When you add any of these packages, the extension will automatically download the latest version from the GitHub repository, install it and cache it for you. Subsequent updates will also be handled by the extension automatically every month. If you notice and version discrepancies, you can use the command `Nuke Extras` -> `Clear Packages Cache` to clear the cache.
+> The extension auto-downloads and installs the latest package versions from GitHub, updating monthly. Use `Nuke Extras` -> `Clear Packages Cache` for version issues.
 
 ## 1.12. Known Issues
 
 - There is a bug in nukeserversocket <= 0.6.1 that wrongly assumes the server is set on using the Script Editor engine. The NodesPanel and the BlinkScript features do not work with the Nuke Internal engine, so you'll need to switch to the Internal Engine and then back to the ScriptEditor engine. This will force nukeserversocket to use the Script Editor engine. This issue is fixed in 0.6.2 and above.
-  - If you are using nukeserversocket >= 1.0.0, you will not have this option. The extension uses the Script Editor engine by default.
 
 ## 1.13. Contributing
 
