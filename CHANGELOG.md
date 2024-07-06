@@ -1,6 +1,6 @@
 # Change Log
 
-## [0.15.0] - TBD
+## [0.15.0] - 06/07/2024
 
 The main goal of this release is to simplify the extension commands and settings, making it easier to use and understand. This caused some breaking changes, but the extension is now more user-friendly.
 
@@ -24,7 +24,7 @@ Settings:
             "args": "-t",
         },
         "nukex": {
-            "path": "/path/to/nuke",
+            "path": "/path/to/nuke"****,
             "args": "--nukex",
         },
         "maya": {
