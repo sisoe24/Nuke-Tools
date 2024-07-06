@@ -203,6 +203,8 @@ Use `Nuke: Show Executables` to choose an executable from a quick pick menu. You
 }
 ```
 
+> Note: You need to restart vscode after adding new executables.
+
 ### 1.9.2. Network Settings
 
 If you want to manually connect to a difference NukeServerSocket instance, you can set the `active` key to `true` and add the `host` and `port` keys.
