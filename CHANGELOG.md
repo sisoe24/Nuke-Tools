@@ -24,7 +24,7 @@ Settings:
             "args": "-t",
         },
         "nukex": {
-            "path": "/path/to/nuke"****,
+            "path": "/path/to/nuke",
             "args": "--nukex",
         },
         "maya": {
