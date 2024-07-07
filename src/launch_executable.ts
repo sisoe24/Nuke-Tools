@@ -19,7 +19,6 @@ const isUnixShell = () => {
     return !isPowerShell() && !isCmdShell();
 };
 
-
 /**
  * ExecutablePath object class.
  */
@@ -71,14 +70,12 @@ export class ExecutablePath {
 }
 
 /**
- * Concatenate the user's environment variables with the system's environment variables.
+ * Replace placeholders in a string with their corresponding values.
  *
- * @param userEnvironmentVars EnvVars object containing the user's environment variables
- * return an EnvVars object containing the concatenated environment variables
+ * @param value The string to replace placeholders in
+ * @returns The string with placeholders replaced
  */
-function concatEnv(userEnvironmentVars: EnvVars): EnvVars {
-    const env: EnvVars = {};
-
+function replacePlaceholders(value: string): string {
     let workspaceFolder = vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
 
     // on windows we need to convert the path to a unix-like path
@@ -90,11 +87,30 @@ function concatEnv(userEnvironmentVars: EnvVars): EnvVars {
         });
     }
 
+    // always escape the backslashes in the placeholder
+    const placeholders = {
+        "\\$\\{workspaceFolder\\}": workspaceFolder,
+    };
+
+    for (const [placeholder, replacement] of Object.entries(placeholders)) {
+        value = value.replace(new RegExp(placeholder, "g"), replacement);
+    }
+
+    return value;
+}
+
+/**
+ * Concatenate the user's environment variables with the system's environment variables.
+ *
+ * @param userEnvironmentVars EnvVars object containing the user's environment variables
+ * return an EnvVars object containing the concatenated environment variables
+ */
+function concatEnv(userEnvironmentVars: EnvVars): EnvVars {
+    const env: EnvVars = {};
+
     for (const [k, v] of Object.entries(userEnvironmentVars)) {
         // Replace all instances of $envVar with the system environment variable
         env[k] = v.replace(new RegExp(`\\$${k}`, "g"), process.env[k] || "");
-
-        env[k] = env[k].replace(/\${workspaceFolder}/g, workspaceFolder);
 
         // Clean up the path separator in the beginning and end of the string
         env[k] = env[k].replace(/^[\s:;]+|[\s:;]+$/g, "");
@@ -148,9 +164,9 @@ function execCommand(execPath: ExecutablePath): void {
     }
 
     const env = stringifyEnv(concatEnv(getConfig("environmentVariables")));
-    const command = `${env} ${execPath.buildExecutableCommand()}`.trim();
-
+    const command = replacePlaceholders(`${env} ${execPath.buildExecutableCommand()}`.trim());
     const terminal = vscode.window.createTerminal(terminalName);
+
     terminal.sendText(command);
     terminal.show(true);
 }
