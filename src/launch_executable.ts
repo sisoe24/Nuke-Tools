@@ -70,36 +70,6 @@ export class ExecutablePath {
 }
 
 /**
- * Replace placeholders in a string with their corresponding values.
- *
- * @param value The string to replace placeholders in
- * @returns The string with placeholders replaced
- */
-function replacePlaceholders(value: string): string {
-    let workspaceFolder = vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
-
-    // on windows we need to convert the path to a unix-like path
-    if (IS_WINDOWS && isUnixShell()) {
-        workspaceFolder = workspaceFolder.replace(/\\/g, "/");
-        // Convert the drive letter to lowercase and add a leading slash (e.g. C: -> /c)
-        workspaceFolder = workspaceFolder.replace(/^([a-zA-Z]):/, (_, driveLetter) => {
-            return `/${driveLetter.toLowerCase()}`;
-        });
-    }
-
-    // always escape the backslashes in the placeholder
-    const placeholders = {
-        "\\$\\{workspaceFolder\\}": workspaceFolder,
-    };
-
-    for (const [placeholder, replacement] of Object.entries(placeholders)) {
-        value = value.replace(new RegExp(placeholder, "g"), replacement);
-    }
-
-    return value;
-}
-
-/**
  * Concatenate the user's environment variables with the system's environment variables.
  *
  * @param userEnvironmentVars EnvVars object containing the user's environment variables
@@ -144,6 +114,36 @@ function stringifyEnv(env: EnvVars): string {
     }
 
     return envString;
+}
+
+/**
+ * Replace placeholders in a string with their corresponding values.
+ *
+ * @param value The string to replace placeholders in
+ * @returns The string with placeholders replaced
+ */
+function replacePlaceholders(value: string): string {
+    let workspaceFolder = vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
+
+    // on windows we need to convert the path to a unix-like path
+    if (IS_WINDOWS && isUnixShell()) {
+        workspaceFolder = workspaceFolder.replace(/\\/g, "/");
+        // Convert the drive letter to lowercase and add a leading slash (e.g. C: -> /c)
+        workspaceFolder = workspaceFolder.replace(/^([a-zA-Z]):/, (_, driveLetter) => {
+            return `/${driveLetter.toLowerCase()}`;
+        });
+    }
+
+    // always escape the backslashes in the placeholder
+    const placeholders = {
+        "\\$\\{workspaceFolder\\}": workspaceFolder,
+    };
+
+    for (const [placeholder, replacement] of Object.entries(placeholders)) {
+        value = value.replace(new RegExp(placeholder, "g"), replacement);
+    }
+
+    return value;
 }
 
 /**
