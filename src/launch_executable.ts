@@ -134,13 +134,14 @@ function replacePlaceholders(value: string): string {
         });
     }
 
-    // always escape the backslashes in the placeholder
     const placeholders = {
-        "\\$\\{workspaceFolder\\}": workspaceFolder,
+        "workspaceFolder": workspaceFolder,
+        "workspaceFolderBasename": path.basename(workspaceFolder),
+        "userHome": os.homedir(),
     };
 
     for (const [placeholder, replacement] of Object.entries(placeholders)) {
-        value = value.replace(new RegExp(placeholder, "g"), replacement);
+        value = value.replace(new RegExp(`\\$\\{${placeholder}\\}`, "g"), replacement);
     }
 
     return value;
