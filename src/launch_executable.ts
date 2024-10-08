@@ -101,9 +101,7 @@ function resolveEnvVariables(text: string):string {
         text = text.replace(new RegExp(`\\$\\{${placeholder}\\}`, "g"), replacement);
     }
 
-    const shellVar = /\$\w+/.exec(text);
-    if (shellVar) {
-        const match = shellVar[0];
+    for (const match of text.match(/\$\w+/g) || []) {
         text = text.replace(match, process.env[match.replace("$", "")] || match);
     }
 
@@ -157,11 +155,13 @@ function execCommand(execPath: ExecutablePath): void {
     }
 
     const env = stringifyEnv(getConfig("environmentVariables"));
+    console.log(env);
     const command = resolveEnvVariables(`${env} ${execPath.buildExecutableCommand()}`.trim());
+    console.log(command);
     const terminal = vscode.window.createTerminal(terminalName);
 
-    terminal.sendText(command);
-    terminal.show(true);
+    // terminal.sendText(command);
+    // terminal.show(true);
 }
 
 /**
