@@ -143,11 +143,21 @@
                         "type": "boolean"
                     },
                     "nukeTools.environmentVariables": {
-                        "description": "Environment variables that will be added when running an executable.",
+                        "description": "An object with environment variables that will be added when running an executable.",
                         "type": "object",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
                         "examples": [
                             {
-                                "NUKE_PATH": "${workspaceFolder}/gizmos:$NUKE_PATH"
+                                "NUKE_PATH": [
+                                    "${workspaceFolder}/${workspaceFolderBasename}/bin",
+                                    "${userHome}/.nuke",
+                                    "$NUKE_PATH"
+                                ]
                             }
                         ]
                     },

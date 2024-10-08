@@ -70,23 +70,44 @@ export class ExecutablePath {
 }
 
 /**
- * Concatenate the user's environment variables with the system's environment variables.
+ * Replace placeholders in a string with their corresponding values.
+ * 
+ * @example
+ * resolveEnvVariables("foo ${workspaceFolder} $SHELL bar");
+ * // => "foo /home/user /bin/bash bar"
  *
- * @param userEnvironmentVars EnvVars object containing the user's environment variables
- * return an EnvVars object containing the concatenated environment variables
+ * @param text - The text to resolve the placeholders in.
+ * @return - The text with the placeholders resolved.
  */
-function concatEnv(userEnvironmentVars: EnvVars): EnvVars {
-    const env: EnvVars = {};
+function resolveEnvVariables(text: string):string {
+    let workspaceFolder = vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
 
-    for (const [k, v] of Object.entries(userEnvironmentVars)) {
-        // Replace all instances of $envVar with the system environment variable
-        env[k] = v.replace(new RegExp(`\\$${k}`, "g"), process.env[k] || "");
-
-        // Clean up the path separator in the beginning and end of the string
-        env[k] = env[k].replace(/^[\s:;]+|[\s:;]+$/g, "");
+    // on windows we need to convert the path to a unix-like path
+    if (IS_WINDOWS && isUnixShell()) {
+        workspaceFolder = workspaceFolder.replace(/\\/g, "/");
+        // Convert the drive letter to lowercase and add a leading slash (e.g. C: -> /c)
+        workspaceFolder = workspaceFolder.replace(/^([a-zA-Z]):/, (_, driveLetter) => {
+            return `/${driveLetter.toLowerCase()}`;
+        });
     }
 
-    return env;
+    const placeholders: { [key: string]: string } = {
+        workspaceFolder: workspaceFolder,
+        workspaceFolderBasename: path.basename(workspaceFolder),
+        userHome: os.homedir(),
+    };
+
+    for (const [placeholder, replacement] of Object.entries(placeholders)) {
+        text = text.replace(new RegExp(`\\$\\{${placeholder}\\}`, "g"), replacement);
+    }
+
+    const shellVar = /\$\w+/.exec(text);
+    if (shellVar) {
+        const match = shellVar[0];
+        text = text.replace(match, process.env[match.replace("$", "")] || match);
+    }
+
+    return text;
 }
 
 /**
@@ -99,14 +120,15 @@ function stringifyEnv(env: EnvVars): string {
     let envString = "";
 
     for (const [k, v] of Object.entries(env)) {
+        const envPath = v.join(path.delimiter);
         if (isPowerShell()) {
-            envString += `$env:${k}="${v}"; `;
+            envString += `$env:${k}="${envPath}"; `;
         } else if (isUnixShell()) {
-            envString += `${k}=${v} `;
+            envString += `${k}=${envPath} `;
         } else if (isCmdShell()) {
-            envString += `set ${k}=${v}&&`;
+            envString += `set ${k}=${envPath}&&`;
         } else {
-            envString += `${k}=${v} `;
+            envString += `${k}=${envPath} `;
             vscode.window.showWarningMessage(
                 `Unknown shell detected ${vscode.env.shell}. Environment variables may not be set correctly.`
             );
@@ -116,36 +138,6 @@ function stringifyEnv(env: EnvVars): string {
     return envString;
 }
 
-/**
- * Replace placeholders in a string with their corresponding values.
- *
- * @param value The string to replace placeholders in
- * @returns The string with placeholders replaced
- */
-function replacePlaceholders(value: string): string {
-    let workspaceFolder = vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
-
-    // on windows we need to convert the path to a unix-like path
-    if (IS_WINDOWS && isUnixShell()) {
-        workspaceFolder = workspaceFolder.replace(/\\/g, "/");
-        // Convert the drive letter to lowercase and add a leading slash (e.g. C: -> /c)
-        workspaceFolder = workspaceFolder.replace(/^([a-zA-Z]):/, (_, driveLetter) => {
-            return `/${driveLetter.toLowerCase()}`;
-        });
-    }
-
-    const placeholders = {
-        "workspaceFolder": workspaceFolder,
-        "workspaceFolderBasename": path.basename(workspaceFolder),
-        "userHome": os.homedir(),
-    };
-
-    for (const [placeholder, replacement] of Object.entries(placeholders)) {
-        value = value.replace(new RegExp(`\\$\\{${placeholder}\\}`, "g"), replacement);
-    }
-
-    return value;
-}
 
 /**
  * Execute the command in the terminal. Before executing the command, if restartInstance
@@ -164,8 +156,8 @@ function execCommand(execPath: ExecutablePath): void {
         });
     }
 
-    const env = stringifyEnv(concatEnv(getConfig("environmentVariables")));
-    const command = replacePlaceholders(`${env} ${execPath.buildExecutableCommand()}`.trim());
+    const env = stringifyEnv(getConfig("environmentVariables"));
+    const command = resolveEnvVariables(`${env} ${execPath.buildExecutableCommand()}`.trim());
     const terminal = vscode.window.createTerminal(terminalName);
 
     terminal.sendText(command);
