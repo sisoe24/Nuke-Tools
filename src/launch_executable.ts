@@ -160,8 +160,8 @@ function execCommand(execPath: ExecutablePath): void {
     console.log(command);
     const terminal = vscode.window.createTerminal(terminalName);
 
-    // terminal.sendText(command);
-    // terminal.show(true);
+    terminal.sendText(command);
+    terminal.show(true);
 }
 
 /**
