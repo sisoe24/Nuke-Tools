@@ -1,5 +1,13 @@
 # Change Log
 
+## [0.16.0] - 07/07/2024
+
+### Changed
+
+- Changed the `nuketools.environmentVariables` keys to use an array of strings rather than a single string (`{"VAR_NAME": ["value1", "value2", ...]}`)
+- Added new placeholders for the `nuketools.environmentVariables` setting: `${workspaceFolderBasename}` and `${userHome}`.
+- Added the ability to use any system environment variable in the `nuketools.environmentVariables` setting.
+
 ## [0.15.1] - 07/07/2024
 
 ### Fixed
