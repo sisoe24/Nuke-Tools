@@ -39,6 +39,7 @@ Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to
   - [1.7. BlinkScript](#17-blinkscript)
   - [1.8. Available Commands](#18-available-commands)
   - [1.9. Environment Variables](#19-environment-variables)
+    - [Placeholders and Variables](#placeholders-and-variables)
   - [1.9.1. Additional Settings](#191-additional-settings)
     - [1.9.2. Network Settings](#192-network-settings)
   - [1.10. Windows Users](#110-windows-users)
@@ -163,19 +164,43 @@ NOTES:
 
 ## 1.9. Environment Variables
 
-Add environment variables to the terminal instance with `$VAR_NAME` for system variables or `${workspaceFolder}` for the workspace folder.
+Add environment variables to the terminal instance using the `nukeTools.environmentVariables` setting.
 
 ```json
 {
-    "nukeTools.environmentVariables": {
-        "NUKE_PATH": "${workspaceFolder}/gizmo:$NUKE_PATH",
-        "PYTHONPATH": "$PYTHONPATH:/path/to/python/lib",
-        "API_KEY": "0a9f0381-aebb-4e40-a77a-2c381b08e0ea"
-    }
+  "nukeTools.environmentVariables": {
+    "VAR_NAME": ["value1", "value2", ...]
+  }
 }
 ```
 
-> Note: From my testing it seems that you can use the ':' separator for multiple paths even on Windows.
+### Placeholders and Variables
+
+- `${workspaceFolder}`: Current workspace folder
+- `${workspaceFolderBasename}`: Name of the workspace folder
+- `${userHome}`: User's home directory
+- `$VAR_NAME`: System environment variables
+
+Example
+
+```json
+{
+  "nukeTools.environmentVariables": {
+    "NUKE_PATH": [
+      "${workspaceFolder}/gizmo",
+      "$NUKE_PATH"
+    ],
+    "PYTHONPATH": [
+      "${userHome}/path/to/python/lib"
+    ],
+    "API_KEY": [
+      "0a9f0381-aebb-4e40-a77a-2c381b08e0ea"
+    ]
+  }
+}
+```
+
+The extension combines arrays of strings using the appropriate separator for the detected shell and operating system.
 
 ## 1.9.1. Additional Settings
 
