@@ -18,7 +18,7 @@ import { NukeCompletionProvider } from "./nuke/completitions";
 import { NukeNodesInspectorProvider } from "./nuke/nodes_tree";
 
 import { showNotification } from "./notification";
-import { fetchPackagesLatestVersion } from "./fetch_packages";
+import { fetchPackagesLatestVersion } from "./packages_fetch";
 import { initializePackageLog } from "./packages";
 import { getConfig } from "./config";
 
