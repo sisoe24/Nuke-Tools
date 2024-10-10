@@ -1,9 +1,7 @@
 import * as vscode from "vscode";
 
 const _msg = `
-0.15.0 Introduces some breaking changes in the settings. 
-Please review the settings and update them accordingly. 
-See the changelog for more information.
+0.16.0. Breaking Changes: 'nuketools.environmentVariables' keys now uses an array of strings rather than a single string
 `;
 
 

@@ -9,7 +9,7 @@ type ExecutableMap = {
     [key: string]: ExecutableConfig;
 };
 
-export type EnvVars = { [key: string]: string };
+export type EnvVars = { [key: string]: Array<string> };
 
 type CommandMappings = "executablesMap";
 
