@@ -8,6 +8,11 @@
 - Added new placeholders for the `nuketools.environmentVariables` setting: `${workspaceFolderBasename}` and `${userHome}`.
 - Added the ability to use any system environment variable in the `nuketools.environmentVariables` setting.
 
+### Fixed
+
+- Fixed light theme icon
+- Extensions commands for extra and packages now properly show a label rather than a variable name.
+
 ## [0.15.1] - 07/07/2024
 
 ### Fixed
