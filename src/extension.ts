@@ -72,69 +72,88 @@ function registerBlinkScriptCommands(context: vscode.ExtensionContext): void {
     );
 }
 
+type Action = {
+    label: string;
+    execute: () => void;
+};
+
+interface ActionItem extends vscode.QuickPickItem {
+    execute: () => void;
+}
+
+function showActionPicker(items: Array<Action>) {
+    const picker = vscode.window.createQuickPick();
+    picker.items = items.map((item) => {
+        return {
+            label: item.label,
+            execute: item.execute,
+        };
+    });
+
+    picker.onDidChangeSelection((selection) => {
+        const selected = selection[0] as ActionItem;
+        if (selected) {
+            selected.execute();
+            picker.hide();
+        }
+    });
+
+    picker.onDidHide(() => picker.dispose());
+    picker.show();
+}
+
 function registerPackagesCommands(context: vscode.ExtensionContext): void {
-    const addExtras: Record<string, () => void> = {
-        pysideTemplate: nukeTemplate.createTemplate,
-        pythonStubs: stubs.addStubs,
-        nukeServerSocket: nuke.addNukeServerSocket,
-        vimDcc: nuke.addVimDcc,
-    };
+    const actions: Array<Action> = [
+        {
+            label: "Pyside Template",
+            execute: nukeTemplate.createTemplate,
+        },
+        {
+            label: "Python Stubs",
+            execute: stubs.addStubs,
+        },
+        {
+            label: "Nuke Server Socket",
+            execute: nuke.addNukeServerSocket,
+        },
+        {
+            label: "Vim DCC",
+            execute: nuke.addVimDcc,
+        },
+    ];
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.addPackages", () => {
-            const picker = vscode.window.createQuickPick();
-            picker.items = Object.keys(addExtras).map((key) => {
-                return {
-                    label: key,
-                };
-            });
-
-            picker.onDidChangeSelection((selection) => {
-                if (selection[0]) {
-                    addExtras[selection[0].label]();
-                    picker.hide();
-                }
-            });
-
-            picker.onDidHide(() => picker.dispose());
-            picker.show();
+            showActionPicker(actions);
         })
     );
 }
 
 function registerExtraCommands(context: vscode.ExtensionContext): void {
-    const extras: Record<string, () => void> = {
-        clearPackagesCache: () => {
-            initializePackageLog();
-            fetchPackagesLatestVersion();
-            vscode.window.showInformationMessage("Packages cached cleared.");
+    const actions: Array<Action> = [
+        {
+            label: "Clear Package Cache",
+            execute: () => {
+                initializePackageLog();
+                fetchPackagesLatestVersion();
+                vscode.window.showInformationMessage("Packages cached cleared.");
+            },
         },
-        testRunInsideNuke: () => {
-            void socket.sendDebugMessage();
+        {
+            label: "Send Debug Message",
+            execute: socket.sendDebugMessage,
         },
-        showNetworkAddresses: () => {
-            vscode.window.showInformationMessage(socket.getAddresses());
+        {
+            label: "Show Network Addresses",
+            execute: () => {
+                vscode.window.showInformationMessage(socket.getAddresses());
+            },
         },
-    };
+    ];
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.extras", () => {
-            const picker = vscode.window.createQuickPick();
-            picker.items = Object.keys(extras).map((key) => {
-                return {
-                    label: key,
-                };
-            });
-
-            picker.onDidChangeSelection((selection) => {
-                if (selection[0]) {
-                    extras[selection[0].label]();
-                    picker.hide();
-                }
-            });
-
-            picker.onDidHide(() => picker.dispose());
-            picker.show();
+            showActionPicker(actions);
         })
     );
 }
