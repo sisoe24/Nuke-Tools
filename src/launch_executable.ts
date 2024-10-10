@@ -92,7 +92,7 @@ function resolveEnvVariables(text: string):string {
     }
 
     const placeholders: { [key: string]: string } = {
-        workspaceFolder: workspaceFolder,
+        workspaceFolder,
         workspaceFolderBasename: path.basename(workspaceFolder),
         userHome: os.homedir(),
     };
@@ -155,9 +155,7 @@ function execCommand(execPath: ExecutablePath): void {
     }
 
     const env = stringifyEnv(getConfig("environmentVariables"));
-    console.log(env);
     const command = resolveEnvVariables(`${env} ${execPath.buildExecutableCommand()}`.trim());
-    console.log(command);
     const terminal = vscode.window.createTerminal(terminalName);
 
     terminal.sendText(command);
