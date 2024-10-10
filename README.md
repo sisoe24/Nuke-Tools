@@ -191,7 +191,7 @@ Example
       "$NUKE_PATH"
     ],
     "PYTHONPATH": [
-      "${userHome}/path/to/python/lib"
+      "$MYLIB/path/to/python/lib"
     ],
     "API_KEY": [
       "0a9f0381-aebb-4e40-a77a-2c381b08e0ea"
