@@ -102,7 +102,7 @@ function resolveEnvVariables(text: string):string {
     }
 
     for (const match of text.match(/\$\w+/g) || []) {
-        text = text.replace(match, process.env[match.replace("$", "")] || match);
+        text = text.replace(match, process.env[match.replace("$", "")] || "");
     }
 
     return text;
