@@ -17,4 +17,3 @@ if (!fs.existsSync(ASSETS_PATH )) {
 }
 
 export const ASSETS_LOG_PATH = path.join(PACKAGE_RESOURCES_PATH, "included_assets.json");
-

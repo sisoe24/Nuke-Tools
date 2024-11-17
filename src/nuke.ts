@@ -8,9 +8,9 @@ const MENU_PY = path.join(NUKE_DIR, "menu.py");
 
 /**
  * Add a menu import to the menu.py file in the .nuke folder.
- * 
+ *
  * Only adds the import if it doesn't already exist.
- * 
+ *
  * @param importText The import statement to add to the menu.py file.
  */
 export function addMenuImport(importText: string): void {
@@ -25,8 +25,8 @@ export function addMenuImport(importText: string): void {
 }
 
 /**
- * Cleanup the legacy NukeServerSocket import from the menu.py file. 
- * 
+ * Cleanup the legacy NukeServerSocket import from the menu.py file.
+ *
  * NukeServerSocket < 1.0.0 used to have a different import statement which is now deprecated
  * and should be removed from the menu.py file if it exists.
  */

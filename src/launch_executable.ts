@@ -71,7 +71,7 @@ export class ExecutablePath {
 
 /**
  * Replace placeholders in a string with their corresponding values.
- * 
+ *
  * @example
  * resolveEnvVariables("foo ${workspaceFolder} $SHELL bar");
  * // => "foo /home/user /bin/bash bar"
