@@ -24,13 +24,13 @@ Includes the following packages:
 
 ---
 
-Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to write, execute, and debug Nuke scripts with ease.
+VS Code extension for running Nuke/Houdini Python code directly from your editor.
 
 - [1. Nuke Tools README](#1-nuke-tools-readme)
   - [1.1. Features](#11-features)
   - [1.2. Requirements](#12-requirements)
   - [1.3. Execute code](#13-execute-code)
-  - [1.4. nukeserversocket](#14-nukeserversocket)
+  - [1.4 Houdini support](#14-houdini-support)
   - [1.5. Python stubs](#15-python-stubs)
     - [1.5.1. Stubs are not working?](#151-stubs-are-not-working)
   - [1.6. Nodes Panel](#16-nodes-panel)
@@ -44,12 +44,12 @@ Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to
     - [1.9.2. Network Settings](#192-network-settings)
   - [1.10. Windows Users](#110-windows-users)
   - [1.11. Included packages](#111-included-packages)
-  - [1.12. Known Issues](#112-known-issues)
-  - [1.13. Contributing](#113-contributing)
+  - [1.12. Contributing](#112-contributing)
 
 ## 1.1. Features
 
-- Execute code and view Nuke execution output in Visual Studio Code. Just connect `nukeserversocket` inside Nuke - no config needed on the same machine.
+- NEW: Houdini Python support.
+- Execute code and view output in Visual Studio Code. Simply connect `nukeserversocket` - no config needed on the same machine.
 - Nuke/Hiero Python stubs for auto-complete suggestions.
 - BlinkScript support.
 - PySide2 plugin template.
@@ -58,21 +58,19 @@ Seamlessly integrate Nuke into your Visual Studio Code workflow, enabling you to
 
 ## 1.2. Requirements
 
-Some commands require `nukeserversocket` to be installed and running in Nuke.
+Some commands require `nukeserversocket` to be installed and running.
 
 ## 1.3. Execute code
 
-1. Download and install the companion plugin `nukeserversocket` via the command: `Nuke: Add Packages` -> `nukeServerSocket`.
-2. Connect `nukeserversocket` inside Nuke.
+1. Download and install the companion plugin `nukeserversocket` via the command: `Nuke: Add Packages` -> `Nuke Server Socket`.
+2. Connect `nukeserversocket` inside Nuke/Houdini.
 3. With an active Python/BlinkScript file, use the command `Nuke: Run Inside Nuke` from the Command Palette or use the dedicated button in the editor's top right corner (see Key Bindings for Visual Studio Code for more information).
 
 ![CodeExecution](/resources/images/execute_code.gif)
 
-## 1.4. nukeserversocket
+## 1.4 Houdini support
 
-NukeServerSocket has been updated to version 1.0.0. There are some breaking changes, such as dropping support for Python 2.7 and changing the configuration file. The extension still supports the old configuration file (NukeServerSocket.ini), in case you still need to use any version <= 0.6.2 but its up to you to download and install it since the extension will only download the latest version. Also the package name has been changed from `NukeServerSocket` to `nukeserversocket`.
-
-If you encounter any issues, please open an issue on the GitHub repository.
+`nukeserversocket >= 1.2.0` works with Houdini! Note that, while we still uses Nuke-style installation paths and naming conventions, Nuke itself isn't required. Check [nukeserversocket#houdini-installation](https://github.com/sisoe24/nukeserversocket/tree/main?tab=readme-ov-file#122-houdini-installation) for setup instructions.
 
 ## 1.5. Python stubs
 
@@ -204,24 +202,44 @@ The extension combines arrays of strings using the appropriate separator for the
 
 ## 1.9.1. Additional Settings
 
-You can define multiple executables for the extension by specifying their names, paths (bin), and command-line arguments (args).
+You can define multiple executables for the extension by specifying their names, paths (bin), command-line arguments (args) and environment variables (env).
 
 ```json
 {
   "nukeTools.executablesMap": {
     "NukeX": {
         "bin": "/usr/local/Nuke15.0v4/Nuke15.0",
-        "args": "--nukex"
+        "args": "--nukex",
+        "env": {
+            "NUKE_PATH": [
+                "/my/nodes",
+                "$NUKE_PATH"
+            ]
+        }
     },
     "Maya20": {
         "bin": "/usr/autodesk/maya2020/bin/maya",
         "args": ""
+    },
+    "Houdini": {
+        "bin": "/opt/hfs19.5/bin/houdini",
+        "args": "",
+        "env": {
+            "$PYTHONPATH": [
+                "/my/scripts",
+                "$PYTHONPATH"
+            ],
+            "HOUDINI_PATH": [
+                "&",
+                "/my/houdini/assets"
+            ]
+        }
     }
   }
 }
 ```
 
-Use `Nuke: Show Executables` to choose an executable from a quick pick menu. You can also ASsign keybindings with `nuke-tools.<executableName>`.
+Use `Nuke: Show Executables` to choose an executable from a quick pick menu. You can also assign keybindings with `nuke-tools.<executableName>`.
 
 ```json
 {
@@ -230,7 +248,8 @@ Use `Nuke: Show Executables` to choose an executable from a quick pick menu. You
 }
 ```
 
-> Note: You need to restart vscode after adding new executables.
+>[!IMPORTANT]
+> You need to restart vscode after updating the executables map.
 
 ### 1.9.2. Network Settings
 
@@ -248,7 +267,7 @@ If you want to manually connect to a difference NukeServerSocket instance, you c
 
 ## 1.10. Windows Users
 
-From NukeTools 0.15.0, the extension supports environment variables in PowerShell and Command Prompt, auto-detects the shell, and handles Windows-style paths. If you encounter any issues, please open an issue on the GitHub repository..
+From NukeTools 0.15.0, the extension supports environment variables in PowerShell and Command Prompt, auto-detects the shell, and handles Windows-style paths. If you encounter any issues, please open an issue on the GitHub repository.
 
 ## 1.11. Included packages
 
@@ -261,10 +280,6 @@ The extension includes the following packages:
 
 > The extension auto-downloads and installs the latest package versions from GitHub, updating monthly. Use `Nuke Extras` -> `Clear Packages Cache` for version issues.
 
-## 1.12. Known Issues
-
-- There is a bug in nukeserversocket <= 0.6.1 that wrongly assumes the server is set on using the Script Editor engine. The NodesPanel and the BlinkScript features do not work with the Nuke Internal engine, so you'll need to switch to the Internal Engine and then back to the ScriptEditor engine. This will force nukeserversocket to use the Script Editor engine. This issue is fixed in 0.6.2 and above.
-
-## 1.13. Contributing
+## 1.12. Contributing
 
 Contributions are welcome! If you have any ideas or suggestions, please open an issue or a pull request. At the moment, the extension tests are broken. I will try to fix them as soon as possible.
