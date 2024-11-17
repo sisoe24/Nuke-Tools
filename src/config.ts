@@ -1,15 +1,16 @@
 import * as vscode from "vscode";
 
+export type EnvVars = { [key: string]: Array<string> };
+
 export type ExecutableConfig = {
     bin: string;
-    args: string;
+    args?: string;
+    env?: EnvVars;
 };
 
 type ExecutableMap = {
     [key: string]: ExecutableConfig;
 };
-
-export type EnvVars = { [key: string]: Array<string> };
 
 type CommandMappings = "executablesMap";
 
