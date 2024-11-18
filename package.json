@@ -136,7 +136,7 @@
                                     "bin": "/opt/hfs19.5/bin/houdini",
                                     "args": "",
                                     "env": {
-                                        "$PYTHONPATH": [
+                                        "PYTHONPATH": [
                                             "/my/scripts",
                                             "$PYTHONPATH"
                                         ],
