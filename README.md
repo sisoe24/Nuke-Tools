@@ -30,21 +30,21 @@ VS Code extension for running Nuke/Houdini Python code directly from your editor
   - [1.1. Features](#11-features)
   - [1.2. Requirements](#12-requirements)
   - [1.3. Execute code](#13-execute-code)
-  - [1.4 Houdini support](#14-houdini-support)
+  - [1.4. Houdini support](#14-houdini-support)
   - [1.5. Python stubs](#15-python-stubs)
     - [1.5.1. Stubs are not working?](#151-stubs-are-not-working)
-  - [1.6. Nodes Panel](#16-nodes-panel)
-    - [1.6.1. Usage](#161-usage)
-    - [1.6.2. Known Issues and Limitations](#162-known-issues-and-limitations)
-  - [1.7. BlinkScript](#17-blinkscript)
-  - [1.8. Available Commands](#18-available-commands)
-  - [1.9. Environment Variables](#19-environment-variables)
-    - [Placeholders and Variables](#placeholders-and-variables)
-  - [1.9.1. Additional Settings](#191-additional-settings)
-    - [1.9.2. Network Settings](#192-network-settings)
+  - [1.6. BlinkScript](#16-blinkscript)
+  - [1.7. Available Commands](#17-available-commands)
+  - [1.8. Environment Variables](#18-environment-variables)
+    - [1.8.1. Placeholders and Variables](#181-placeholders-and-variables)
+  - [1.9. Additional Settings](#19-additional-settings)
+    - [1.9.1. Network Settings](#191-network-settings)
   - [1.10. Windows Users](#110-windows-users)
   - [1.11. Included packages](#111-included-packages)
-  - [1.12. Contributing](#112-contributing)
+  - [1.12. Nodes Panel](#112-nodes-panel)
+    - [1.12.1. Usage](#1121-usage)
+    - [1.12.2. Known Issues and Limitations](#1122-known-issues-and-limitations)
+  - [1.13. Contributing](#113-contributing)
 
 ## 1.1. Features
 
@@ -68,13 +68,13 @@ Some commands require `nukeserversocket` to be installed and running.
 
 ![CodeExecution](/resources/images/execute_code.gif)
 
-## 1.4 Houdini support
+## 1.4. Houdini support
 
 `nukeserversocket >= 1.2.0` works with Houdini! Note that, while we still uses Nuke-style installation paths and naming conventions, Nuke itself isn't required. Check [nukeserversocket#houdini-installation](https://github.com/sisoe24/nukeserversocket/tree/main?tab=readme-ov-file#122-houdini-installation) for setup instructions.
 
 ## 1.5. Python stubs
 
-1. Use the command `Nuke: Add Packages` -> `pythonStubs` to add the stubs to your user `python.analysis.extraPaths` setting. The stubs will be located in the `~/.nuke/NukeTools/stubs` directory.
+1. Use the command `Nuke: Add Packages` -> `Python Stubs` to add the stubs to your user `python.analysis.extraPaths` setting. The stubs will be located in the `~/.nuke/NukeTools/stubs` directory.
 2. Write `import nuke` into your script and you should see the auto-complete suggestions.
 
 ![PythonStubs](/resources/images/auto_complete.gif)
@@ -98,34 +98,13 @@ If you're experiencing issues with the stubs in the latest versions of VSCode, y
 ]
 ```
 
-## 1.6. Nodes Panel
-
-> The nodes panel is currently in Preview and may not work as expected. If you encounter any issues, please open an issue on the GitHub repository. You can also request new features or contribute by opening a PR.
-
-![NodesPanel](/resources/images/nodes_panel.gif)
-
-The nodes panel allows you to view and interact with nodes in the current DAG in Nuke. Currently, the panel only supports adding and editing Python Knobs, including the `knobChanged` knob.
-
-### 1.6.1. Usage
-
-Click Nuke icon in Activity Bar for nodes panel. Connect to nukeserversocket to see DAG nodes. Add knobs with `+` button. Edit file references and sync with "Send code to Knob". For `knobChanged`, enter name when creating knob. Click "Refresh" for new knobs, "Sync Nodes" for renamed nodes.
-
-### 1.6.2. Known Issues and Limitations
-
-- The panel only works with nukeserversocket Scritp Editor engine (see [Known Issues](#19-known-issues)).
-- Knob scripts are tied to the current Workspace (`$workspace/.nuketools`). If you change the Workspace, the panel will not be able to find the knob files.
-- Use alphanumeric characters and underscores for knob names.
-- After syncing the knob's value, Nuke may not execute the code until you execute a command in the Script Editor. This is a Nuke-specific issue and not related to the extension. I am still trying to understand why this happens so if you have any ideas, let me know.
-
-## 1.7. BlinkScript
+## 1.6. BlinkScript
 
 BlinkScript's features include code execution, syntax highlighting, and suggestions. Use Material Icon extension for icons.
 
 Create/update BlinkScript nodes by running code with `.cpp` or `.blink` extensions via `Nuke: Run code inside nuke`. When running the code, a node with the same name as the file will be created in the current DAG. If the node already exists, the code will be updated and recompiled.
 
-> Ensure nukeserversocket is set to `Script Editor`. See [Known Issues](#19-known-issues) for setup.
-
-## 1.8. Available Commands
+## 1.7. Available Commands
 
 - All commands are available by opening the Command Palette (`Command+Shift+P` on macOS and `Ctrl+Shift+P` on Windows/Linux) and typing in one of the following Command Name:
 
@@ -160,19 +139,22 @@ NOTES:
     ]
     ```
 
-## 1.9. Environment Variables
+## 1.8. Environment Variables
 
-Add environment variables to the terminal instance using the `nukeTools.environmentVariables` setting.
+Add environment variables to the terminal instance using the `nukeTools.environmentVariables` setting. The extension assumes that if the key has multiple values, it is to be considered a path and it joins them using the appropriate separator for the detected shell and operating system. Additionally, you can choose to prepend or append the original key as needed.
 
 ```json
 {
   "nukeTools.environmentVariables": {
-    "VAR_NAME": ["value1", "value2", ...]
+    "PATH": ["path1", "path2", "$PATH"]
   }
 }
 ```
 
-### Placeholders and Variables
+>[!TIP]
+> These variables apply to all executables. To apply them to specific ones, use the executablesMap option.
+
+### 1.8.1. Placeholders and Variables
 
 - `${workspaceFolder}`: Current workspace folder
 - `${workspaceFolderBasename}`: Name of the workspace folder
@@ -198,11 +180,9 @@ Example
 }
 ```
 
-The extension combines arrays of strings using the appropriate separator for the detected shell and operating system.
+## 1.9. Additional Settings
 
-## 1.9.1. Additional Settings
-
-You can define multiple executables for the extension by specifying their names, paths (bin), command-line arguments (args) and environment variables (env).
+You can specify multiple executables for the extension by defining their names, paths (bin), command-line arguments (args), and environment variables (env).
 
 ```json
 {
@@ -225,7 +205,7 @@ You can define multiple executables for the extension by specifying their names,
         "bin": "/opt/hfs19.5/bin/houdini",
         "args": "",
         "env": {
-            "$PYTHONPATH": [
+            "PYTHONPATH": [
                 "/my/scripts",
                 "$PYTHONPATH"
             ],
@@ -248,10 +228,7 @@ Use `Nuke: Show Executables` to choose an executable from a quick pick menu. You
 }
 ```
 
->[!IMPORTANT]
-> You need to restart vscode after updating the executables map.
-
-### 1.9.2. Network Settings
+### 1.9.1. Network Settings
 
 If you want to manually connect to a difference NukeServerSocket instance, you can set the `active` key to `true` and add the `host` and `port` keys.
 
@@ -279,7 +256,24 @@ The extension includes the following packages:
 - [vimdcc](https://github.com/sisoe24/vimdcc) - A Vim-like experience for Nuke's default Script Editor.
 
 > The extension auto-downloads and installs the latest package versions from GitHub, updating monthly. Use `Nuke Extras` -> `Clear Packages Cache` for version issues.
+## 1.12. Nodes Panel
 
-## 1.12. Contributing
+> The nodes panel is currently in Preview and may not work as expected. If you encounter any issues, please open an issue on the GitHub repository. You can also request new features or contribute by opening a PR.
+
+![NodesPanel](/resources/images/nodes_panel.gif)
+
+The nodes panel allows you to view and interact with nodes in the current DAG in Nuke. Currently, the panel only supports adding and editing Python Knobs, including the `knobChanged` knob.
+
+### 1.12.1. Usage
+
+Click Nuke icon in Activity Bar for nodes panel. Connect to nukeserversocket to see DAG nodes. Add knobs with `+` button. Edit file references and sync with "Send code to Knob". For `knobChanged`, enter name when creating knob. Click "Refresh" for new knobs, "Sync Nodes" for renamed nodes.
+
+### 1.12.2. Known Issues and Limitations
+
+- Knob scripts are tied to the current Workspace (`$workspace/.nuketools`). If you change the Workspace, the panel will not be able to find the knob files.
+- Use alphanumeric characters and underscores for knob names.
+- After syncing the knob's value, Nuke may not execute the code until you execute a command in the Script Editor. This is a Nuke-specific issue and not related to the extension. I am still trying to understand why this happens so if you have any ideas, let me know.
+
+## 1.13. Contributing
 
 Contributions are welcome! If you have any ideas or suggestions, please open an issue or a pull request. At the moment, the extension tests are broken. I will try to fix them as soon as possible.
