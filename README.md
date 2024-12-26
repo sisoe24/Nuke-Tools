@@ -66,7 +66,7 @@ Some commands require `nukeserversocket` to be installed and running.
 2. Connect `nukeserversocket` inside Nuke/Houdini.
 3. With an active Python/BlinkScript file, use the command `Nuke: Run Inside Nuke` from the Command Palette or use the dedicated button in the editor's top right corner (see Key Bindings for Visual Studio Code for more information).
 
-![CodeExecution](/resources/images/execute_code.gif)
+![CodeExecution](/resources/demo/execute_code.gif)
 
 ## 1.4. Houdini support
 
@@ -77,7 +77,7 @@ Some commands require `nukeserversocket` to be installed and running.
 1. Use the command `Nuke: Add Packages` -> `Python Stubs` to add the stubs to your user `python.analysis.extraPaths` setting. The stubs will be located in the `~/.nuke/NukeTools/stubs` directory.
 2. Write `import nuke` into your script and you should see the auto-complete suggestions.
 
-![PythonStubs](/resources/images/auto_complete.gif)
+![PythonStubs](/resources/demo/auto_complete.gif)
 
 ### 1.5.1. Stubs are not working?
 
@@ -260,7 +260,7 @@ The extension includes the following packages:
 
 > The nodes panel is currently in Preview and may not work as expected. If you encounter any issues, please open an issue on the GitHub repository. You can also request new features or contribute by opening a PR.
 
-![NodesPanel](/resources/images/nodes_panel.gif)
+![NodesPanel](/resources/demo/nodes_panel.gif)
 
 The nodes panel allows you to view and interact with nodes in the current DAG in Nuke. Currently, the panel only supports adding and editing Python Knobs, including the `knobChanged` knob.
 
