@@ -256,23 +256,27 @@ The extension includes the following packages:
 - [vimdcc](https://github.com/sisoe24/vimdcc) - A Vim-like experience for Nuke's default Script Editor.
 
 > The extension auto-downloads and installs the latest package versions from GitHub, updating monthly. Use `Nuke Extras` -> `Clear Packages Cache` for version issues.
+
 ## 1.12. Nodes Panel
 
-> The nodes panel is currently in Preview and may not work as expected. If you encounter any issues, please open an issue on the GitHub repository. You can also request new features or contribute by opening a PR.
+> **Preview Feature:** The nodes panel is in Preview and may not work as expected. Report issues or suggest features on GitHub via issues or PRs.
 
 ![NodesPanel](/resources/demo/nodes_panel.gif)
 
-The nodes panel allows you to view and interact with nodes in the current DAG in Nuke. Currently, the panel only supports adding and editing Python Knobs, including the `knobChanged` knob.
+The nodes panel enables interaction with nodes in the current Nuke DAG. It currently supports adding and editing Python Knobs, including `knobChanged`.
 
 ### 1.12.1. Usage
 
-Click Nuke icon in Activity Bar for nodes panel. Connect to nukeserversocket to see DAG nodes. Add knobs with `+` button. Edit file references and sync with "Send code to Knob". For `knobChanged`, enter name when creating knob. Click "Refresh" for new knobs, "Sync Nodes" for renamed nodes.
+- Open the nodes panel via the Nuke icon in the Activity Bar.
+- Connect to `nukeserversocket` to access DAG nodes.
+- Add knobs with the `+` button and sync using "Send code to Knob."
+- Use "Refresh" for new knobs and "Sync Nodes" for renamed nodes.
 
 ### 1.12.2. Known Issues and Limitations
 
-- Knob scripts are tied to the current Workspace (`$workspace/.nuketools`). If you change the Workspace, the panel will not be able to find the knob files.
+- Knob scripts are stored in the Workspace directory (`$workspace/.nuketools`). Changing Workspace breaks knob file references.
 - Use alphanumeric characters and underscores for knob names.
-- After syncing the knob's value, Nuke may not execute the code until you execute a command in the Script Editor. This is a Nuke-specific issue and not related to the extension. I am still trying to understand why this happens so if you have any ideas, let me know.
+- After syncing a knob value, Nuke may require a command in the Script Editor to execute it. This is a Nuke-specific issue under investigation—contributions or ideas are welcome.
 
 ## 1.13. Contributing
 
