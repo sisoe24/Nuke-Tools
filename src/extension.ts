@@ -7,7 +7,7 @@ import * as nuke from "./nuke";
 import * as socket from "./socket";
 import { Version } from "./version";
 
-import * as executables from "./launch_executable";
+import * as execs from "./launch_executable";
 import * as nukeTemplate from "./create_project";
 
 import { BlinkSnippets } from "./blinkscript/blink_snippet";
@@ -20,7 +20,7 @@ import { NukeNodesInspectorProvider } from "./nuke/nodes_tree";
 import { showNotification } from "./notification";
 import { fetchPackagesLatestVersion } from "./packages_fetch";
 import { initializePackageLog } from "./packages";
-import { getConfig } from "./config";
+import { ExecutableConfig, getConfig } from "./config";
 
 function registerNodesInspectorCommands(context: vscode.ExtensionContext): void {
     const nukeProvider = new NukeNodesInspectorProvider();
@@ -158,58 +158,59 @@ function registerExtraCommands(context: vscode.ExtensionContext): void {
     );
 }
 
+class ExecutablePickItem implements vscode.QuickPickItem {
+    detail?: string | undefined;
+    description?: string | undefined;
+    constructor(public label: string, public config: ExecutableConfig) {
+        this.detail = config.bin;
+        this.description = config.args;
+    }
+}
+
 function registerExecutablesCommands(context: vscode.ExtensionContext): void {
     context.subscriptions.push(
+        vscode.commands.registerCommand("nuke-tools.showExecutables", () => {
+            const picker = vscode.window.createQuickPick();
+
+            const items: ExecutablePickItem[] = [];
+            for (const [name, config] of Object.entries(getConfig("executablesMap"))) {
+                items.push(new ExecutablePickItem(name, config));
+            }
+
+            picker.items = items;
+            picker.onDidChangeSelection((selection) => {
+                if (selection[0]) {
+                    const item = selection[0] as ExecutablePickItem;
+                    execs.launchExecutable(item.label, item.config);
+                    picker.hide();
+                }
+            });
+
+            picker.show();
+            picker.onDidHide(() => picker.dispose());
+        })
+    );
+
+    context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.launchNuke", () => {
-            executables.launchPrimaryExecutable();
+            execs.launchPrimaryExecutable();
         })
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.launchNukeOptArgs", () => {
-            void executables.launchPromptExecutable();
+            void execs.launchPromptExecutable();
         })
     );
 
-    const nukeExecutables = getConfig("executablesMap");
-
-    if (nukeExecutables) {
-        for (const [name, config] of Object.entries(nukeExecutables)) {
-            context.subscriptions.push(
-                vscode.commands.registerCommand(`nuke-tools.${name}`, () => {
-                    executables.launchExecutable(name, config);
-                })
-            );
-        }
+    // register the exectables to commands so user can add a shortcut
+    for (const [name, config] of Object.entries(getConfig("executablesMap"))) {
+        context.subscriptions.push(
+            vscode.commands.registerCommand(`nuke-tools.${name}`, () => {
+                execs.launchExecutable(name, config);
+            })
+        );
     }
-
-    context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.showExecutables", () => {
-            const picker = vscode.window.createQuickPick();
-
-            picker.items = Object.keys(nukeExecutables).map((key) => {
-                const executable = nukeExecutables[key];
-                return {
-                    label: key,
-                    description: executable.args,
-                    detail: executable.bin,
-                };
-            });
-
-            picker.onDidChangeSelection((selection) => {
-                if (selection[0]) {
-                    executables.launchExecutable(
-                        selection[0].label,
-                        nukeExecutables[selection[0].label]
-                    );
-                    picker.hide();
-                }
-            });
-
-            picker.onDidHide(() => picker.dispose());
-            picker.show();
-        })
-    );
 }
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -248,7 +249,7 @@ export function activate(context: vscode.ExtensionContext): void {
                 return;
             }
 
-            executables.launchExecutable(path.basename(file), {
+            execs.launchExecutable(path.basename(file), {
                 bin: getConfig("executablePath"),
                 args: file,
             });

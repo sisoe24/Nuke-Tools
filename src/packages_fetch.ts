@@ -54,7 +54,7 @@ type IncludedPackagesLog = {
 
 /**
  * Fetch the latest release of a package from github api and save it to the log file.
- * 
+ *
  * @see IncludedPackagesLog
  * @param packages a list of packages to fetch the latest release
  */

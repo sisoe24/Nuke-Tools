@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/sisoe24/Nuke-Tools"
     },
-    "icon": "resources/images/nuke_icon.png",
+    "icon": "resources/icons/nuke_icon.png",
     "engines": {
         "vscode": "^1.58.0"
     },
@@ -122,17 +122,29 @@
                         "type": "object",
                         "examples": [
                             {
-                                "Nuke": {
+                                "nukeX": {
                                     "bin": "/usr/local/Nuke15.0v4/Nuke15.0",
-                                    "args": ""
+                                    "args": "--nukex",
+                                    "env": {
+                                        "NUKE_PATH": [
+                                            "/my/nodes",
+                                            "$NUKE_PATH"
+                                        ]
+                                    }
                                 },
-                                "NukeX": {
-                                    "bin": "/usr/local/Nuke15.0v4/Nuke15.0",
-                                    "args": "--nukex"
-                                },
-                                "Maya20": {
-                                    "bin": "/usr/autodesk/maya2020/bin/maya",
-                                    "args": ""
+                                "houdini": {
+                                    "bin": "/opt/hfs19.5/bin/houdini",
+                                    "args": "",
+                                    "env": {
+                                        "PYTHONPATH": [
+                                            "/my/scripts",
+                                            "$PYTHONPATH"
+                                        ],
+                                        "HOUDINI_PATH": [
+                                            "&",
+                                            "/my/houdini/assets"
+                                        ]
+                                    }
                                 }
                             }
                         ]

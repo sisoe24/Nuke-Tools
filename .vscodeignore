@@ -21,6 +21,7 @@ tmp/
 
 resources/included_assets.json
 resources/assets
+resources/demo
 
 src/**
 .gitignore

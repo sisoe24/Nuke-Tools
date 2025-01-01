@@ -26,6 +26,7 @@ export class ExecutablePath {
     name: string;
     path: string;
     args: string;
+    env: EnvVars;
 
     /**
      * Init method for the ExecutablePath object.
@@ -33,11 +34,13 @@ export class ExecutablePath {
      * @param name - The name of the executable.
      * @param path - The path for the executable file.
      * @param args - Optional arguments for the command line
+     * @param env - Optional environment variables
      */
-    constructor(name: string, path: string, args = "") {
+    constructor(name: string, path: string, args = "", env: EnvVars = {}) {
         this.name = name;
         this.path = path;
         this.args = args;
+        this.env = env;
     }
 
     /**
@@ -71,7 +74,7 @@ export class ExecutablePath {
 
 /**
  * Replace placeholders in a string with their corresponding values.
- * 
+ *
  * @example
  * resolveEnvVariables("foo ${workspaceFolder} $SHELL bar");
  * // => "foo /home/user /bin/bash bar"
@@ -79,7 +82,7 @@ export class ExecutablePath {
  * @param text - The text to resolve the placeholders in.
  * @return - The text with the placeholders resolved.
  */
-function resolveEnvVariables(text: string):string {
+function resolveEnvVariables(text: string): string {
     let workspaceFolder = vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
 
     // on windows we need to convert the path to a unix-like path
@@ -102,7 +105,7 @@ function resolveEnvVariables(text: string):string {
     }
 
     for (const match of text.match(/\$\w+/g) || []) {
-        text = text.replace(match, process.env[match.replace("$", "")] || match);
+        text = text.replace(match, process.env[match.replace("$", "")] || "");
     }
 
     return text;
@@ -136,7 +139,6 @@ function stringifyEnv(env: EnvVars): string {
     return envString;
 }
 
-
 /**
  * Execute the command in the terminal. Before executing the command, if restartInstance
  * is enabled, will dispose of the previous terminal instance.
@@ -154,8 +156,12 @@ function execCommand(execPath: ExecutablePath): void {
         });
     }
 
-    const env = stringifyEnv(getConfig("environmentVariables"));
+    const globalEnv = stringifyEnv(getConfig("environmentVariables"));
+    const localEnv = stringifyEnv(execPath.env);
+    // we dont care if user writes duplicate keys
+    const env = `${globalEnv} ${localEnv}`.trim();
     const command = resolveEnvVariables(`${env} ${execPath.buildExecutableCommand()}`.trim());
+
     const terminal = vscode.window.createTerminal(terminalName);
 
     terminal.sendText(command);
@@ -204,7 +210,12 @@ export async function launchPromptExecutable(): Promise<ExecutablePath> {
 }
 
 export function launchExecutable(name: string, executableConfig: ExecutableConfig): void {
-    const execObj = new ExecutablePath(name, executableConfig.bin, executableConfig.args);
+    const execObj = new ExecutablePath(
+        name,
+        executableConfig.bin,
+        executableConfig.args,
+        executableConfig.env
+    );
 
     if (execObj.exists()) {
         execCommand(execObj);

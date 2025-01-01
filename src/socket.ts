@@ -221,8 +221,8 @@ export async function sendData(
          */
         client.on("error", function (error: Error) {
             const msg = `
-            Couldn't connect to nukeserversocket. Check the plugin and try again. 
-            If manual connection is enable, verify that the port and host address are correct. 
+            Couldn't connect to nukeserversocket. Check the plugin and try again.
+            If manual connection is enable, verify that the port and host address are correct.
             ${error.message}`;
             vscode.window.showErrorMessage(msg);
 
