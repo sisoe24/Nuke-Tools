@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 
 const _msg = `
-0.16.0. Breaking Changes: 'nuketools.environmentVariables' keys now uses an array of strings rather than a single string
+0.17.0. Houdini Python Support: NukeTools/NukeServerSocket now works on Houdini!
 `;
 
 
