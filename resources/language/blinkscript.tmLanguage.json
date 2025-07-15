@@ -89,16 +89,16 @@
         "operators": {
             "patterns": [
                 {
+                    "name": "keyword.operator.comparison.blink",
+                    "match": "(<=|>=|<|>|==|!=)"
+                },
+                {
                     "name": "keyword.operator.arithmetic.blink",
                     "match": "(\\+|\\*|/|-|=|%)"
                 },
                 {
                     "name": "keyword.operator.ternary.blink",
                     "match": "\\?"
-                },
-                {
-                    "name": "keyword.operator.comparison.blink",
-                    "match": "(<=|>=|<|>|==|!=)"
                 }
             ]
         },
