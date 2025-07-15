@@ -18,6 +18,10 @@
     [
       "(",
       ")"
+    ],
+    [
+      "<",
+      ">"
     ]
   ],
   "autoClosingPairs": [
@@ -34,6 +38,14 @@
       "close": ")"
     },
     {
+      "open": "<",
+      "close": ">",
+      "notIn": [
+        "string",
+        "comment"
+      ]
+    },
+    {
       "open": "'",
       "close": "'",
       "notIn": [
@@ -46,14 +58,6 @@
       "close": "\"",
       "notIn": [
         "string"
-      ]
-    },
-    {
-      "open": "`",
-      "close": "`",
-      "notIn": [
-        "string",
-        "comment"
       ]
     },
     {
@@ -79,27 +83,71 @@
       ")"
     ],
     [
+      "<",
+      ">"
+    ],
+    [
       "'",
       "'"
     ],
     [
       "\"",
       "\""
-    ],
-    [
-      "`",
-      "`"
     ]
   ],
   "folding": {
     "markers": {
       "start": "^\\s*//\\s*#?region\\b",
       "end": "^\\s*//\\s*#?endregion\\b"
-    }
+    },
+    "offSide": true
   },
   "wordPattern": "(-?\\d*\\.\\d\\w*)|([^\\`\\~\\!\\@\\#\\%\\^\\&\\*\\(\\)\\-\\=\\+\\[\\{\\]\\}\\\\\\|\\;\\:\\'\\\"\\,\\.\\<\\>\\/\\?\\s]+)",
   "indentationRules": {
-    "increaseIndentPattern": "^((?!\\/\\/).)*(\\{[^}\"'`]*|\\([^)\"'`]*|\\[[^\\]\"'`]*)$",
-    "decreaseIndentPattern": "^((?!.*?\\/\\*).*\\*/)?\\s*[\\}\\]].*$"
-  }
+    "increaseIndentPattern": "^((?!\\/\\/).)*(\\{[^}\"'`]*|\\([^)\"'`]*|\\[[^\\]\"'`]*|\\b(kernel|param|local)\\s*:\\s*)$",
+    "decreaseIndentPattern": "^((?!.*?\\/\\*).*\\*/)?\\s*[\\}\\]].*$",
+    "indentNextLinePattern": "^\\s*(param|local)\\s*:\\s*$",
+    "unIndentedLinePattern": "^\\s*(#\\w+|\\b(public|private|protected)\\s*:).*$"
+  },
+  "onEnterRules": [
+    {
+      "beforeText": "^\\s*\\*\\*([^\\*]|\\*(?!\\*))*\\*\\*\\s*$",
+      "action": {
+        "indent": "none",
+        "appendText": "* "
+      }
+    },
+    {
+      "beforeText": "^\\s*\\*([^\\*]|\\*(?!\\*))*$",
+      "action": {
+        "indent": "none",
+        "appendText": "* "
+      }
+    },
+    {
+      "beforeText": "^\\s*\\*\\/$",
+      "action": {
+        "indent": "none",
+        "removeText": 1
+      }
+    },
+    {
+      "beforeText": "^\\s*(?:param|local)\\s*:\\s*$",
+      "action": {
+        "indent": "indent"
+      }
+    },
+    {
+      "beforeText": ".*\\{\\s*$",
+      "action": {
+        "indent": "indent"
+      }
+    },
+    {
+      "beforeText": "^\\s*#(define|include)\\s+.*$",
+      "action": {
+        "indent": "none"
+      }
+    }
+  ]
 }
