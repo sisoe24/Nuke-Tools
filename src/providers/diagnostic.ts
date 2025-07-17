@@ -69,7 +69,7 @@ export class GenericDiagnosticProvider {
 /**
  * Register a generic diagnostic provider with VS Code.
  */
-export function registerGenericDiagnosticProvider(
+export function registerDiagnosticProvider(
     context: vscode.ExtensionContext,
     languageId: string,
     validator: ValidatorFunction
