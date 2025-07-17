@@ -1,5 +1,3 @@
-import * as path from "path";
-
 import * as vscode from "vscode";
 
 import * as stubs from "./stubs";
@@ -21,8 +19,11 @@ import { showNotification } from "./notification";
 import { fetchPackagesLatestVersion } from "./packages_fetch";
 import { initializePackageLog } from "./packages";
 import { ExecutableConfig, getConfig } from "./config";
+import { NukeScriptFormat } from "./nuke/nuke_format";
+import { registerGenericDiagnosticProvider } from "./providers/diagnostic";
+import { nukeValidator } from "./nuke/nuke_script_diagnostic";
 
-function registerNodesInspectorCommands(context: vscode.ExtensionContext): void {
+function registerNukeCommands(context: vscode.ExtensionContext): void {
     const nukeProvider = new NukeNodesInspectorProvider();
 
     vscode.window.registerTreeDataProvider("nuke-tools", nukeProvider);
@@ -50,6 +51,12 @@ function registerNodesInspectorCommands(context: vscode.ExtensionContext): void 
             nukeProvider.syncKnob(item)
         )
     );
+
+    context.subscriptions.push(
+        vscode.languages.registerDocumentFormattingEditProvider("nuke", new NukeScriptFormat())
+    );
+
+    registerGenericDiagnosticProvider(context, "nuke", nukeValidator);
 }
 
 function registerBlinkScriptCommands(context: vscode.ExtensionContext): void {
@@ -220,7 +227,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
     showNotification(context);
 
-    registerNodesInspectorCommands(context);
+    registerNukeCommands(context);
     registerBlinkScriptCommands(context);
     registerPackagesCommands(context);
     registerExecutablesCommands(context);
