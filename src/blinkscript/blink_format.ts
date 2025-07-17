@@ -1,5 +1,3 @@
-import * as vscode from "vscode";
-
 /**
  * Clean empty lines.
  *
@@ -65,12 +63,11 @@ export function unindentBlock(text: string): string {
  *
  * @param text text to format
  * @param tabSize number of spaces for indentation
- * @param insertSpaces use spaces instead of tabs
  * @returns formatted text
  */
-export function applyIndentation(text: string, tabSize = 2, insertSpaces = true): string {
+export function applyIndentation(text: string, tabSize = 2): string {
     const lines = text.split("\n");
-    const indentString = insertSpaces ? " ".repeat(tabSize) : "\t";
+    const indentString = " ".repeat(tabSize);
     let indentLevel = 0;
     let inParamOrLocal = false;
 
@@ -136,7 +133,7 @@ export function applyIndentation(text: string, tabSize = 2, insertSpaces = true)
  * @param insertSpaces use spaces instead of tabs
  * @returns formatted text
  */
-export function formatFile(text: string, tabSize = 2, insertSpaces = true): string {
+export function blinkScriptFormatter(text: string, tabSize = 2): string {
     // Apply basic cleaning
     text = cleanEmptyLines(text);
     text = cleanMultiSpace(text);
@@ -145,40 +142,10 @@ export function formatFile(text: string, tabSize = 2, insertSpaces = true): stri
     text = unindentBlock(text);
 
     // Apply proper indentation first
-    text = applyIndentation(text, tabSize, insertSpaces);
+    text = applyIndentation(text, tabSize);
 
     // Format inline else statements AFTER indentation
     text = formatInlineElse(text);
 
     return text;
-}
-
-/**
- * Enhanced BlinkScript formatting provider.
- */
-export class BlinkScriptFormat implements vscode.DocumentFormattingEditProvider {
-    /**
-     * Provide document formatting edits.
-     *
-     * @param document vscode document to analyze
-     * @param options vscode formatting options
-     * @returns an array with the provider result
-     */
-    public provideDocumentFormattingEdits(
-        document: vscode.TextDocument,
-        options: vscode.FormattingOptions
-    ): vscode.ProviderResult<vscode.TextEdit[]> {
-        const tabSize = options.tabSize || 2;
-        const insertSpaces = options.insertSpaces ?? true;
-        const text = formatFile(document.getText(), tabSize, insertSpaces);
-
-        const fullRange = new vscode.Range(
-            0,
-            0,
-            document.lineCount - 1,
-            document.lineAt(document.lineCount - 1).text.length
-        );
-
-        return [vscode.TextEdit.replace(fullRange, text)];
-    }
 }
