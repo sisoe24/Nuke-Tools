@@ -13,14 +13,45 @@
         },
         {
             "include": "#variables"
+        },
+        {
+            "include": "#file_paths"
         }
     ],
     "repository": {
+        "file_paths": {
+            "patterns": [
+             {
+                    "name": "string.quoted.path.windows.backslash.nuke",
+                    "match": "\\b[A-Za-z]:\\\\[^\\s\"'\\[\\]{}]+(?:\\.\\w+)?\\b"
+                },
+                {
+                    "name": "string.quoted.path.windows.forward.nuke",
+                    "match": "\\b[A-Za-z]:/[^\\s\"'\\[\\]{}]+(?:\\.\\w+)?\\b"
+                },
+                {
+                    "name": "string.quoted.path.unix.nuke",
+                    "match": "\\b/[^\\s\"'\\[\\]{}]+(?:\\.\\w+)?\\b"
+                },
+                {
+                    "name": "string.quoted.path.sequence.percent.nuke",
+                    "match": "\\b(?:[A-Za-z]:[/\\\\]|/)[^\\s\"'\\[\\]{}]*%\\d*d[^\\s\"'\\[\\]{}]*(?:\\.\\w+)?\\b"
+                },
+                {
+                    "name": "string.quoted.path.sequence.hash.nuke",
+                    "match": "\\b(?:[A-Za-z]:[/\\\\]|/)[^\\s\"'\\[\\]{}]*#+[^\\s\"'\\[\\]{}]*(?:\\.\\w+)?\\b"
+                }
+            ]
+        },
         "variables": {
             "patterns": [
                 {
+                    "name": "entity.name.function.nuke",
+                    "match": "\\b(cut_paste_input|end_group|inputs|clone|push|set|stack)\\b"
+                },
+                {
                     "name": "constant.numeric.hex.nk",
-                    "match": "0[xX][0-9a-fA-F]+"
+                    "match": "0?[xX][0-9a-fA-F]+"
                 },
                 {
                     "name": "constant.numeric.dec.nk",
@@ -41,10 +72,6 @@
                 {
                     "name": "entity.name.class.nk",
                     "match": "\\b[A-Z]\\w+"
-                },
-                {
-                    "name": "entity.name.function.nk",
-                    "match": "\\b(cut_paste_input|end_group|stack)\\b"
                 },
                 {
                     "name": "entity.name.type.nk",
