@@ -1,5 +1,38 @@
 # Change Log
 
+## [0.18.0] - 2025-07-17
+
+### Added
+
+- Introduced a formatting provider with dedicated formatters for BlinkScript and Nuke scripts.
+- Added a Nuke script diagnostic validator to surface script errors in VS Code.
+- Added a generic VS Code diagnostic provider as a shared foundation for language diagnostics.
+
+### Changed
+
+- Refactored extension initialization and updated internal extension methods.
+- Updated the Nuke language syntax specification.
+- Improved the BlinkScript formatter with better pattern matching and internal restructuring.
+- Updated schema URLs in BlinkScript and Nuke language configuration files.
+- Updated resource path configuration in the extension manifest.
+
+## [0.17.0] - 2025-01-01
+
+### Added
+
+- Added environment variable support to the single executable map setting.
+
+### Changed
+
+- Refactored the executable maps quick picker to reload on invocation rather than requiring a VS Code restart.
+- Reorganized demo resources into a dedicated `resources/demo/` folder.
+- Updated README documentation.
+
+### Fixed
+
+- Environment variables that cannot be resolved are now substituted with an empty string instead of passing the literal variable name (e.g. `$VAR`) to the path.
+- Fixed styling and code quality issues across several source files.
+
 ## [0.16.0] - 07/07/2024
 
 ### Changed

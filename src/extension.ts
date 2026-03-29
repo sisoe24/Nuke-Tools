@@ -1,28 +1,30 @@
-import * as path from "path";
-
 import * as vscode from "vscode";
 
 import * as stubs from "./stubs";
 import * as nuke from "./nuke";
 import * as socket from "./socket";
 import { Version } from "./version";
+import { showNotification } from "./notification";
+import { initializePackageLog } from "./packages";
+import { fetchPackagesLatestVersion } from "./packages_fetch";
+import { ExecutableConfig, getConfig } from "./config";
 
 import * as execs from "./launch_executable";
 import * as nukeTemplate from "./create_project";
 
 import { BlinkSnippets } from "./blinkscript/blink_snippet";
-import { BlinkScriptFormat } from "./blinkscript/blink_format";
+import { blinkScriptFormatter } from "./blinkscript/blink_format";
 import { BlinkScriptCompletionProvider } from "./blinkscript/blink_completion";
 
+import { nukeValidator } from "./nuke/nuke_script_diagnostic";
+import { nukeScriptFormatter } from "./nuke/nuke_script_format";
 import { NukeCompletionProvider } from "./nuke/completitions";
 import { NukeNodesInspectorProvider } from "./nuke/nodes_tree";
 
-import { showNotification } from "./notification";
-import { fetchPackagesLatestVersion } from "./packages_fetch";
-import { initializePackageLog } from "./packages";
-import { ExecutableConfig, getConfig } from "./config";
+import { registerFormatterProvider } from "./providers/formatter";
+import { registerDiagnosticProvider as registerDiagnosticProvider } from "./providers/diagnostic";
 
-function registerNodesInspectorCommands(context: vscode.ExtensionContext): void {
+function registerNukeCommands(context: vscode.ExtensionContext): void {
     const nukeProvider = new NukeNodesInspectorProvider();
 
     vscode.window.registerTreeDataProvider("nuke-tools", nukeProvider);
@@ -50,15 +52,13 @@ function registerNodesInspectorCommands(context: vscode.ExtensionContext): void 
             nukeProvider.syncKnob(item)
         )
     );
+
+    registerDiagnosticProvider(context, "nuke", nukeValidator);
+    registerFormatterProvider(context, "nuke", nukeScriptFormatter);
 }
 
 function registerBlinkScriptCommands(context: vscode.ExtensionContext): void {
-    context.subscriptions.push(
-        vscode.languages.registerDocumentFormattingEditProvider(
-            "blinkscript",
-            new BlinkScriptFormat()
-        )
-    );
+    registerFormatterProvider(context, "blinkscript", blinkScriptFormatter);
 
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider(
@@ -220,7 +220,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
     showNotification(context);
 
-    registerNodesInspectorCommands(context);
+    registerNukeCommands(context);
     registerBlinkScriptCommands(context);
     registerPackagesCommands(context);
     registerExecutablesCommands(context);

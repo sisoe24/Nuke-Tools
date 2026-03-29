@@ -185,12 +185,12 @@
         "grammars": [
             {
                 "language": "blinkscript",
-                "path": "./language/blinkscript.tmLanguage.json",
+                "path": "./resources/language/blinkscript.tmLanguage.json",
                 "scopeName": "source.blink"
             },
             {
                 "language": "nuke",
-                "path": "./language/nuke.tmLanguage.json",
+                "path": "./resources/language/nuke.tmLanguage.json",
                 "scopeName": "source.nk"
             }
         ],
@@ -200,7 +200,7 @@
                     "BlinkScript",
                     "blinkscript"
                 ],
-                "configuration": "./language/language-configuration.json",
+                "configuration": "./resources/language/language-configuration.json",
                 "extensions": [
                     ".blink"
                 ],
