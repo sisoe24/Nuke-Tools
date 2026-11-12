@@ -52,7 +52,18 @@ export function formatInlineElse(text: string): string {
  * @returns formatted text
  */
 export function unindentBlock(text: string): string {
-    return text.replace(/\s*{/gm, " {");
+    return text.replace(/\s*{/gm, (match: string, offset: number) => {
+        if (match.includes("\n")) {
+            const lineStart = text.lastIndexOf("\n", offset - 1) + 1;
+            const previousLine = text.slice(lineStart, offset);
+
+            // A brace pulled up here would become part of the comment or the directive.
+            if (/\/\/|^\s*#/.test(previousLine)) {
+                return match;
+            }
+        }
+        return " {";
+    });
 }
 
 /**

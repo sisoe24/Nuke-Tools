@@ -1,3 +1,4 @@
+import * as path from "path";
 import * as vscode from "vscode";
 
 import * as stubs from "./stubs";
@@ -251,7 +252,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
             execs.launchExecutable(path.basename(file), {
                 bin: getConfig("executablePath"),
-                args: file,
+                args: `"${file}"`,
             });
         })
     );

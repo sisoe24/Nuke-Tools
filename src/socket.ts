@@ -143,16 +143,25 @@ export async function sendData(
             error: false,
             errorMessage: "",
         };
+        let received = "";
+
+        // decode here so a multi-byte character split across two chunks stays intact
+        client.setEncoding("utf8");
 
         logDebugNetwork(`Try connecting to ${host}:${port}`);
 
         /**
          * Set connection timeout.
          *
-         * Once emitted will close the socket with an error: 'connection timeout'.
+         * Once emitted will close the socket with an error: 'connection timeout'. If data was
+         * already received, the socket closes without error and the data is returned.
          */
         client.setTimeout(timeout, () => {
             logDebugNetwork("Connection timeout.");
+            if (received) {
+                client.destroy();
+                return;
+            }
             client.destroy(new Error("Connection timeout"));
             reject(status);
         });
@@ -179,20 +188,13 @@ export async function sendData(
         /**
          * Emitted when data is received.
          *
-         * The argument data will be a Buffer or String. Encoding of data is set by socket.setEncoding().
+         * A reply can span many chunks. It is complete when the server closes the socket.
          */
-        client.on("data", function (data: string | Buffer) {
-            const textData = data.toString();
-
-            const oneLineData = textData.replace(/\n/g, "\\n");
+        client.on("data", function (data: string) {
+            const oneLineData = data.replace(/\n/g, "\\n");
             logDebugNetwork(`Received: "${oneLineData}"\n`);
 
-            const filePath = JSON.parse(text)["file"];
-            writeToOutputWindow(textData, filePath);
-
-            status.message = data.toString().trim();
-            resolve(status);
-            client.end();
+            received += data;
         });
 
         /**
@@ -245,6 +247,17 @@ export async function sendData(
          */
         client.on("close", function (hadError: boolean) {
             logDebugNetwork(`Connection closed. Had Errors: ${hadError.toString()}`);
+
+            // the promise was already rejected by the error handler
+            if (hadError) {
+                return;
+            }
+
+            const filePath = JSON.parse(text)["file"];
+            writeToOutputWindow(received, filePath);
+
+            status.message = received.trim();
+            resolve(status);
         });
 
         /**
