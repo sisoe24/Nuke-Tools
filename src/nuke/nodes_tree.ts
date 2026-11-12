@@ -3,7 +3,7 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 
-import { isConnected, sendCommand } from "../socket";
+import { sendCommand } from "../socket";
 
 const setupCodeSnippet = (knobFile: KnobFile) => `
 nuketools_tab = nuke.Tab_Knob('nuketools', 'NukeTools')
@@ -80,7 +80,7 @@ async function sendToNuke(text: string) {
 const SEPARATOR = "--";
 const LEGACY_SEPARATOR = "_";
 
-class KnobFile {
+export class KnobFile {
     knob: string;
     node: string;
     nodeClass: string;

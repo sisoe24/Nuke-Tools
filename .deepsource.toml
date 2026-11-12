@@ -1,10 +1,6 @@
 version = 1
 
-test_patterns = ["src/test/suite/*test.ts"]
-
-exclude_patterns = [
-    "src/test/suite/index.ts",
-]
+test_patterns = ["src/test/**/*.test.ts"]
 
 [[analyzers]]
 name = "javascript"
