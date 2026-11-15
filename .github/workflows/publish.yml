@@ -1,0 +1,22 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npx vsce package -o nuke-tools.vsix
+      - run: npx vsce publish --oidc --packagePath nuke-tools.vsix
+      - run: npx -y ovsx@1.4.0 publish nuke-tools.vsix

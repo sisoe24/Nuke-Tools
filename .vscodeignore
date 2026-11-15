@@ -1,4 +1,5 @@
 .vscode/**
+.github/**
 .vscode-test/**
 .vscode-test.mjs
 esbuild.js
