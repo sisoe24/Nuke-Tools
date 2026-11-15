@@ -129,12 +129,14 @@ export function logDebugNetwork(data: string): string {
  * @param port - port address for the connection.
  * @param text - Stringified text to sent as code to be executed inside Nuke.
  * @param timeout - time for the timeout connection. Defaults to 10000 ms (10sec).
+ * @param showError - if true, show an error message when the connection fails.
  */
 export async function sendData(
     host: string,
     port: number,
     text: string,
-    timeout = 10000
+    timeout = 10000,
+    showError = true
 ): Promise<{ message: string; error: boolean; errorMessage: string }> {
     return new Promise((resolve, reject) => {
         const client = new Socket();
@@ -226,7 +228,9 @@ export async function sendData(
             Couldn't connect to nukeserversocket. Check the plugin and try again.
             If manual connection is enable, verify that the port and host address are correct.
             ${error.message}`;
-            vscode.window.showErrorMessage(msg);
+            if (showError) {
+                vscode.window.showErrorMessage(msg);
+            }
 
             status.errorMessage = "Connection refused";
             status.error = true;
@@ -252,9 +256,6 @@ export async function sendData(
             if (hadError) {
                 return;
             }
-
-            const filePath = JSON.parse(text)["file"];
-            writeToOutputWindow(received, filePath);
 
             status.message = received.trim();
             resolve(status);
@@ -302,7 +303,10 @@ export async function sendDebugMessage(): Promise<{
     error: boolean;
     errorMessage: string;
 }> {
-    return await sendData(getHost(), getPort(), JSON.stringify(prepareDebugMsg()));
+    const data = prepareDebugMsg();
+    const result = await sendData(getHost(), getPort(), JSON.stringify(data));
+    writeToOutputWindow(result.message, data.file);
+    return result;
 }
 
 /**
@@ -338,21 +342,24 @@ export async function sendMessage(): Promise<
         text: editor.document.getText(editor.selection) || editor.document.getText(),
     };
 
-    return await sendData(getHost(), getPort(), JSON.stringify(data));
+    const result = await sendData(getHost(), getPort(), JSON.stringify(data));
+    writeToOutputWindow(result.message, data.file);
+    return result;
 }
 
 /**
  * Send an arbitrary command to the socket.
  *
  * @param command a stringified command to be sent to the socket.
+ * @param showError if true, show an error message when the connection fails.
  * @returns
  */
-export function sendCommand(command: string): Promise<{
+export function sendCommand(command: string, showError = true): Promise<{
     message: string;
     error: boolean;
     errorMessage: string;
 }> {
-    return sendData(getHost(), getPort(), command);
+    return sendData(getHost(), getPort(), command, undefined, showError);
 }
 
 /**

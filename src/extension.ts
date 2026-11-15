@@ -183,14 +183,27 @@ function registerExecutablesCommands(context: vscode.ExtensionContext): void {
             void execs.launchPromptExecutable();
         })
     );
+}
 
-    // register the exectables to commands so user can add a shortcut
+/**
+ * Register the executables to commands so user can add a shortcut.
+ *
+ * Must run after all the other commands are registered, so a name that clashes
+ * with an existing command is skipped instead of breaking the activation.
+ */
+function registerExecutableShortcuts(context: vscode.ExtensionContext): void {
     for (const [name, config] of Object.entries(getConfig("executablesMap"))) {
-        context.subscriptions.push(
-            vscode.commands.registerCommand(`nuke-tools.${name}`, () => {
-                execs.launchExecutable(name, config);
-            })
-        );
+        try {
+            context.subscriptions.push(
+                vscode.commands.registerCommand(`nuke-tools.${name}`, () => {
+                    execs.launchExecutable(name, config);
+                })
+            );
+        } catch {
+            vscode.window.showWarningMessage(
+                `NukeTools: Executable "${name}" has the same name as a command. Rename it in nukeTools.executablesMap.`
+            );
+        }
     }
 }
 
@@ -232,4 +245,6 @@ export function activate(context: vscode.ExtensionContext): void {
             });
         })
     );
+
+    registerExecutableShortcuts(context);
 }

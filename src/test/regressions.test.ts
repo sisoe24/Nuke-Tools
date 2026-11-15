@@ -6,6 +6,7 @@ import { sendData } from "../socket";
 import { KnobFile } from "../nuke/nodes_tree";
 import { nukeValidator } from "../nuke/nuke_script_diagnostic";
 import { blinkScriptFormatter } from "../blinkscript/blink_format";
+import { nukeScriptFormatter } from "../nuke/nuke_script_format";
 
 const validate = (text: string) =>
     nukeValidator({ getText: () => text } as vscode.TextDocument).map((d) => d.code);
@@ -14,6 +15,13 @@ suite("Regressions", () => {
     test("blinkscript formatter keeps a brace out of a line comment", () => {
         const formatted = blinkScriptFormatter("if (x) // check\n{\n  y = 1;\n}\n", 2);
         assert.ok(!formatted.includes("// check {"), formatted);
+    });
+
+    test("nuke formatter gives the same result when run twice", () => {
+        const script = "Grade {\n curves {\n  a b\n }\n name G\n}\nGrade {\n curves {x}\n name G2\n}\n";
+        const once = nukeScriptFormatter(script, 2);
+        assert.strictEqual(nukeScriptFormatter(once, 2), once);
+        assert.ok(once.includes("\n}\nGrade {\n  curves {x}\n  name G2\n}"), once);
     });
 
     test("nuke validator accepts valid scripts", () => {

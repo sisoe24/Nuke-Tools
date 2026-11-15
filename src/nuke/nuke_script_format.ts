@@ -43,7 +43,8 @@ function applyIndentation(text: string, tabSize = 2): string {
 
         // Check for complex data structures (like curves, toolbox)
         const complexDataPattern = /^(curves|toolbox)\s*\{/;
-        if (complexDataPattern.test(trimmed)) {
+        const opensBlock = trimmed.split("{").length > trimmed.split("}").length;
+        if (complexDataPattern.test(trimmed) && opensBlock) {
             inComplexData = true;
             return indentString.repeat(nodeIndentLevel) + trimmed;
         }
@@ -55,9 +56,8 @@ function applyIndentation(text: string, tabSize = 2): string {
                 inComplexData = false;
                 return indentString.repeat(nodeIndentLevel) + trimmed;
             }
-            // For complex data content, preserve original spacing but add node-level indent
-            const originalSpacing = line.match(/^\s*/)?.[0] || "";
-            return indentString.repeat(nodeIndentLevel) + originalSpacing + trimmed;
+            // For complex data content, preserve the original line
+            return line;
         }
 
         // Handle simple properties inside nodes

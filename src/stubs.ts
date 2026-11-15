@@ -29,7 +29,7 @@ export function getPythonLspKey(): string {
  */
 function updatePythonExtraPaths(nukeToolsStubsPath: string) {
     const config = vscode.workspace.getConfiguration(getPythonLspKey(), null);
-    const extraPaths = config.get("extraPaths") as string[];
+    const extraPaths = config.get<string[]>("extraPaths", []);
 
     if (!extraPaths.includes(nukeToolsStubsPath)) {
         extraPaths.push(nukeToolsStubsPath);
