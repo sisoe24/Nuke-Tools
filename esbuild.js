@@ -37,8 +37,7 @@ async function main() {
         sourcesContent: false,
         platform: "node",
         outfile: "out/main.js",
-        // keyv loads its storage adapters with dynamic requires, so it ships unbundled
-        external: ["vscode", "keyv"],
+        external: ["vscode"],
         logLevel: "warning",
         plugins: [esbuildProblemMatcherPlugin],
     });

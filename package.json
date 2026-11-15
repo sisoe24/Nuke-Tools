@@ -3,18 +3,17 @@
     "displayName": "Nuke Tools",
     "publisher": "virgilsisoe",
     "description": "A set of tools related to Nuke that simplify the process of writing code for it.",
-    "version": "0.17.0",
+    "version": "0.18.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/sisoe24/Nuke-Tools"
     },
     "icon": "resources/icons/nuke_icon.png",
     "engines": {
-        "vscode": "^1.58.0"
+        "vscode": "^1.90.0"
     },
     "activationEvents": [
-        "onStartupFinished",
-        "onView:nuke-tools"
+        "onStartupFinished"
     ],
     "capabilities": {
         "untrustedWorkspaces": {
@@ -53,10 +52,6 @@
                 "command": "nuke-tools.syncKnob",
                 "title": "Send code to Knob",
                 "icon": "$(sync)"
-            },
-            {
-                "command": "nuke-tools.deleteEntry",
-                "title": "Delete"
             },
             {
                 "category": "Nuke",
@@ -262,6 +257,15 @@
                 }
             ]
         },
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "icon": "resources/icons/nuke.svg",
+                    "id": "nodes-inspector",
+                    "title": "Nuke Tools"
+                }
+            ]
+        },
         "views": {
             "nodes-inspector": [
                 {
@@ -269,15 +273,6 @@
                     "icon": "resources/icons/nuke.svg",
                     "id": "nuke-tools",
                     "name": "Nodes Panel"
-                }
-            ]
-        },
-        "viewsContainers": {
-            "activitybar": [
-                {
-                    "icon": "resources/icons/nuke.svg",
-                    "id": "nodes-inspector",
-                    "title": "Nuke Tools"
                 }
             ]
         },
@@ -289,14 +284,13 @@
         ]
     },
     "dependencies": {
-        "@terascope/fetch-github-release": "^0.8.7",
         "extract-zip": "^2.0.1"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
         "@types/mocha": "^10.0.10",
-        "@types/node": "14.x",
-        "@types/vscode": "^1.58.0",
+        "@types/node": "20.x",
+        "@types/vscode": "^1.90.0",
         "@vscode/test-cli": "^0.0.15",
         "@vscode/test-electron": "^3.1.0",
         "@vscode/vsce": "^4.1.0",
@@ -329,4 +323,5 @@
         "lint": "eslint src",
         "pretest": "npm run compile-tests && npm run compile && npm run lint",
         "test": "vscode-test"
-    }}
+    }
+}

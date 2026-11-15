@@ -57,12 +57,3 @@ export async function addNukeServerSocket(): Promise<void> {
         );
     }
 }
-
-/**
- * Add vimdcc to the .nuke folder and import it inside the menu.py
- */
-export async function addVimDcc(): Promise<void> {
-    if (await packages.addPackage(packages.PackageIds.vimdcc)) {
-        addMenuImport("from NukeTools.vimdcc import vimdcc\nvimdcc.install_nuke()");
-    }
-}

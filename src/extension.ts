@@ -4,14 +4,10 @@ import * as vscode from "vscode";
 import * as stubs from "./stubs";
 import * as nuke from "./nuke";
 import * as socket from "./socket";
-import { Version } from "./version";
 import { showNotification } from "./notification";
-import { initializePackageLog } from "./packages";
-import { fetchPackagesLatestVersion } from "./packages_fetch";
 import { ExecutableConfig, getConfig } from "./config";
 
 import * as execs from "./launch_executable";
-import * as nukeTemplate from "./create_project";
 
 import { BlinkSnippets } from "./blinkscript/blink_snippet";
 import { blinkScriptFormatter } from "./blinkscript/blink_format";
@@ -106,20 +102,12 @@ function showActionPicker(items: Array<Action>) {
 function registerPackagesCommands(context: vscode.ExtensionContext): void {
     const actions: Array<Action> = [
         {
-            label: "Pyside Template",
-            execute: nukeTemplate.createTemplate,
-        },
-        {
             label: "Python Stubs",
             execute: stubs.addStubs,
         },
         {
             label: "Nuke Server Socket",
             execute: nuke.addNukeServerSocket,
-        },
-        {
-            label: "Vim DCC",
-            execute: nuke.addVimDcc,
         },
     ];
 
@@ -132,14 +120,6 @@ function registerPackagesCommands(context: vscode.ExtensionContext): void {
 
 function registerExtraCommands(context: vscode.ExtensionContext): void {
     const actions: Array<Action> = [
-        {
-            label: "Clear Package Cache",
-            execute: () => {
-                initializePackageLog();
-                fetchPackagesLatestVersion();
-                vscode.window.showInformationMessage("Packages cached cleared.");
-            },
-        },
         {
             label: "Send Debug Message",
             execute: socket.sendDebugMessage,
@@ -215,10 +195,6 @@ function registerExecutablesCommands(context: vscode.ExtensionContext): void {
 }
 
 export function activate(context: vscode.ExtensionContext): void {
-    Version.update(context);
-
-    fetchPackagesLatestVersion();
-
     showNotification(context);
 
     registerNukeCommands(context);

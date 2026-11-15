@@ -15,6 +15,13 @@
 - Improved the BlinkScript formatter with better pattern matching and internal restructuring.
 - Updated schema URLs in BlinkScript and Nuke language configuration files.
 - Updated resource path configuration in the extension manifest.
+- Adding a package now downloads its latest GitHub release every time. Removed the monthly version check and the package cache.
+- Minimum VS Code version is now 1.90.
+
+### Removed
+
+- PySide2 template and VimDCC packages. Both are still available from their GitHub repositories.
+- `Nuke: Extras` -> `Clear Package Cache`.
 
 ## [0.17.0] - 2025-01-01
 

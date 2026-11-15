@@ -19,8 +19,6 @@ Includes the following packages:
 
 [![nukeserversocket](https://img.shields.io/github/v/release/sisoe24/nukeserversocket?label=nukeserversocket)](https://github.com/sisoe24/nukeserversocket/releases)
 [![stubs](https://img.shields.io/github/v/release/sisoe24/nuke-python-stubs?label=nuke-python-stubs)](https://github.com/sisoe24/nuke-python-stubs/releases)
-[![pysidetemplate](https://img.shields.io/github/v/release/sisoe24/pyside2-template?label=pyside2-template)](https://github.com/sisoe24/pyside2-template/releases)
-[![vimdcc](https://img.shields.io/github/v/release/sisoe24/vimdcc?label=vimdcc)](https://github.com/sisoe24/vimdcc/releases)
 
 ---
 
@@ -52,7 +50,6 @@ VS Code extension for running Nuke/Houdini Python code directly from your editor
 - Execute code and view output in Visual Studio Code. Simply connect `nukeserversocket` - no config needed on the same machine.
 - Nuke/Hiero Python stubs for auto-complete suggestions.
 - BlinkScript support.
-- PySide2 plugin template.
 - Commands for launching executables with optional arguments and environment variables.
 - And more...
 
@@ -252,10 +249,8 @@ The extension includes the following packages:
 
 - [nukeserversocket](https://github.com/sisoe24/nukeserversocket) - A Python plugin for Nuke that allows you to execute code from an external source.
 - [nuke-python-stubs](https://github.com/sisoe24/nuke-python-stubs) - Python stubs for Nuke and Hiero.
-- [pyside2-template](https://github.com/sisoe24/pyside2-template#readme) - A PySide2 template project for Nuke.
-- [vimdcc](https://github.com/sisoe24/vimdcc) - A Vim-like experience for Nuke's default Script Editor.
 
-> The extension auto-downloads and installs the latest package versions from GitHub, updating monthly. Use `Nuke Extras` -> `Clear Packages Cache` for version issues.
+> Adding a package downloads its latest release from GitHub.
 
 ## 1.12. Nodes Panel
 
