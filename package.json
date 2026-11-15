@@ -108,6 +108,11 @@
                         "markdownDescription": "Show network debug information in the output window. Enabling this option will not clean the console output after code execution.",
                         "type": "boolean"
                     },
+                    "nukeTools.packages.checkNukeServerSocketUpdates": {
+                        "default": true,
+                        "markdownDescription": "Check GitHub once a day for a new nukeserversocket release and offer to update it. Only applies to a nukeserversocket installed with the `Add Packages` command.",
+                        "type": "boolean"
+                    },
                     "nukeTools.network.manualConnection": {
                         "markdownDescription": "Connect to a different NukeServerSocket instance (not your computer).",
                         "type": "object",

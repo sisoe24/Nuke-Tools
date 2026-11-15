@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 
+import { isNewerVersion } from "./packages";
+
 const _msg = `
 0.18.0. Removed the PySide2 template and VimDCC packages. Check the changelog for more details.
 `;
@@ -26,7 +28,7 @@ export function showNotification(context: vscode.ExtensionContext, msg: string =
     const currentVersion = context.extension.packageJSON.version;
     context.globalState.update(extVersion, currentVersion);
 
-    if (currentVersion > previousVersion && msg !== previousMsg) {
+    if (previousVersion && isNewerVersion(currentVersion, previousVersion) && msg !== previousMsg) {
         vscode.window.showInformationMessage(msg);
     }
 }

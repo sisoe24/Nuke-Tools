@@ -209,6 +209,7 @@ function registerExecutableShortcuts(context: vscode.ExtensionContext): void {
 
 export function activate(context: vscode.ExtensionContext): void {
     showNotification(context);
+    void nuke.checkNukeServerSocketUpdate(context);
 
     registerNukeCommands(context);
     registerBlinkScriptCommands(context);
