@@ -3,6 +3,7 @@ import * as net from "net";
 import * as vscode from "vscode";
 
 import { sendData } from "../socket";
+import { isNewerVersion } from "../packages";
 import { KnobFile } from "../nuke/nodes_tree";
 import { nukeValidator } from "../nuke/nuke_script_diagnostic";
 import { blinkScriptFormatter } from "../blinkscript/blink_format";
@@ -12,6 +13,14 @@ const validate = (text: string) =>
     nukeValidator({ getText: () => text } as vscode.TextDocument).map((d) => d.code);
 
 suite("Regressions", () => {
+    test("version compare is numeric, not lexical", () => {
+        assert.ok(isNewerVersion("0.18.0", "0.9.0"));
+        assert.ok(isNewerVersion("v1.10.0", "1.4.2"));
+        assert.ok(isNewerVersion("1.4.2.1", "1.4.2"));
+        assert.ok(!isNewerVersion("1.4.2", "v1.4.2"));
+        assert.ok(!isNewerVersion("1.4.2", "1.5.0"));
+    });
+
     test("blinkscript formatter keeps a brace out of a line comment", () => {
         const formatted = blinkScriptFormatter("if (x) // check\n{\n  y = 1;\n}\n", 2);
         assert.ok(!formatted.includes("// check {"), formatted);

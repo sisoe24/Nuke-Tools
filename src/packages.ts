@@ -53,6 +53,42 @@ async function extractPackage(source: string, destination: string): Promise<void
     fs.renameSync(destination + "-master", destination);
 }
 
+type Release = {
+    tag_name: string;
+    html_url: string;
+    assets: { name: string; browser_download_url: string }[];
+};
+
+/**
+ * Fetch the latest GitHub release of a package.
+ *
+ * @param name the package name. It is also the name of the repository.
+ */
+export async function fetchLatestRelease(name: string): Promise<Release> {
+    const response = await fetch(`https://api.github.com/repos/sisoe24/${name}/releases/latest`, {
+        headers: { "User-Agent": "nuke-tools" },
+    });
+    if (!response.ok) {
+        throw new Error(`GitHub API responded ${response.status}`);
+    }
+    return (await response.json()) as Release;
+}
+
+/**
+ * Check if version `a` is newer than version `b`. A leading "v" is ignored.
+ */
+export function isNewerVersion(a: string, b: string): boolean {
+    const parse = (v: string) => v.replace(/^v/, "").split(".").map((n) => parseInt(n, 10) || 0);
+    const [x, y] = [parse(a), parse(b)];
+    for (let i = 0; i < Math.max(x.length, y.length); i++) {
+        const diff = (x[i] ?? 0) - (y[i] ?? 0);
+        if (diff !== 0) {
+            return diff > 0;
+        }
+    }
+    return false;
+}
+
 /**
  * Download the zip asset of the latest GitHub release of a package.
  *
@@ -60,16 +96,7 @@ async function extractPackage(source: string, destination: string): Promise<void
  * @param destination the path of the zip file to write.
  */
 async function downloadLatestRelease(name: string, destination: string): Promise<void> {
-    const response = await fetch(`https://api.github.com/repos/sisoe24/${name}/releases/latest`, {
-        headers: { "User-Agent": "nuke-tools" },
-    });
-    if (!response.ok) {
-        throw new Error(`GitHub API responded ${response.status}`);
-    }
-
-    const release = (await response.json()) as {
-        assets: { name: string; browser_download_url: string }[];
-    };
+    const release = await fetchLatestRelease(name);
     const asset = release.assets.find((asset) => asset.name === `${name}.zip`);
     if (!asset) {
         throw new Error(`${name}.zip not found in the latest release`);

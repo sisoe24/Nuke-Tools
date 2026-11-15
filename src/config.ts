@@ -24,7 +24,8 @@ type BooleanConfig =
     | "restartTerminalInstance"
     | "clearPreviousOutput"
     | "network.enableManualConnection"
-    | "network.debug";
+    | "network.debug"
+    | "packages.checkNukeServerSocketUpdates";
 
 export type ManualConnection = {
     active: boolean;

@@ -3,7 +3,7 @@
     "displayName": "Nuke Tools",
     "publisher": "virgilsisoe",
     "description": "A set of tools related to Nuke that simplify the process of writing code for it.",
-    "version": "0.18.0",
+    "version": "0.19.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/sisoe24/Nuke-Tools"
@@ -106,6 +106,11 @@
                     "nukeTools.network.debug": {
                         "default": false,
                         "markdownDescription": "Show network debug information in the output window. Enabling this option will not clean the console output after code execution.",
+                        "type": "boolean"
+                    },
+                    "nukeTools.packages.checkNukeServerSocketUpdates": {
+                        "default": true,
+                        "markdownDescription": "Check GitHub once a day for a new nukeserversocket release and offer to update it. Only applies to a nukeserversocket installed with the `Add Packages` command.",
                         "type": "boolean"
                     },
                     "nukeTools.network.manualConnection": {

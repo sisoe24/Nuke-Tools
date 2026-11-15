@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.19.0] - 2026-11-15
+
+### Added
+
+- NukeTools checks once a day for a new nukeserversocket release and offers to update it. Turn it off with `nukeTools.packages.checkNukeServerSocketUpdates`.
+
+### Fixed
+
+- The update message compared versions as text, so a version such as 0.9.0 counted as newer than 0.18.0.
+
 ## [0.18.0] - 2026-11-15
 
 ### Added
