@@ -5,9 +5,7 @@ import { sendCommand } from "../socket";
 export class NukeCompletionProvider implements vscode.CompletionItemProvider {
     provideCompletionItems(
         document: vscode.TextDocument,
-        position: vscode.Position,
-        token: vscode.CancellationToken,
-        context: vscode.CompletionContext
+        position: vscode.Position
     ): vscode.ProviderResult<
         vscode.CompletionItem[] | vscode.CompletionList<vscode.CompletionItem>
     > {
@@ -20,7 +18,8 @@ export class NukeCompletionProvider implements vscode.CompletionItemProvider {
 
     private async getAllNodes(): Promise<vscode.CompletionItem[]> {
         return sendCommand(
-            JSON.stringify({ text: "[n.name() for n in nuke.allNodes()]", formatText: "0" })
+            JSON.stringify({ text: "[n.name() for n in nuke.allNodes()]", formatText: "0" }),
+            false
         ).then((data) => {
             const nodes = JSON.parse(data.message.replace(/'/g, '"'));
 

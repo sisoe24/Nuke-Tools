@@ -1,6 +1,6 @@
 # Change Log
 
-## [0.18.0] - 2025-07-17
+## [0.18.0] - 2026-11-15
 
 ### Added
 
@@ -15,6 +15,31 @@
 - Improved the BlinkScript formatter with better pattern matching and internal restructuring.
 - Updated schema URLs in BlinkScript and Nuke language configuration files.
 - Updated resource path configuration in the extension manifest.
+- Adding a package now downloads its latest GitHub release every time. Removed the monthly version check and the package cache.
+- Minimum VS Code version is now 1.90.
+- Nodes Panel knob files now use `--` as separator, so node and knob names can contain underscores. Old files are renamed on the next sync.
+- Settings that launch programs or choose where code is sent are read only from user settings in Restricted Mode.
+- Updated the build, lint and test tooling.
+
+### Fixed
+
+- `Open Script in Nuke` failed every time, and paths with spaces were split.
+- Environment variables were lost in PowerShell, and values with spaces broke the command in other shells.
+- Long output from Nuke was cut off, and a reply without data never completed.
+- Nodes Panel sync renamed knob files to `False_...` when the knob was not in the open script.
+- Knob code containing `'''` or backslashes was changed when sent to Nuke.
+- Adding a package wrote the `menu.py` import even when the download failed.
+- BlinkScript formatter moved `{` onto a comment or `#` line.
+- Nuke script validator reported errors on valid scripts.
+- Nuke script formatter added spaces to curve data on every run.
+- Typing `nuke.toNode(` without a Nuke connection showed an error, and internal commands opened the output panel.
+- Adding stubs failed when the Python `extraPaths` setting did not exist.
+- An executable named like a NukeTools command stopped the extension from starting.
+
+### Removed
+
+- PySide2 template and VimDCC packages. Both are still available from their GitHub repositories.
+- `Nuke: Extras` -> `Clear Package Cache`.
 
 ## [0.17.0] - 2025-01-01
 

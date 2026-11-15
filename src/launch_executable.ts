@@ -104,7 +104,8 @@ function resolveEnvVariables(text: string): string {
         text = text.replace(new RegExp(`\\$\\{${placeholder}\\}`, "g"), replacement);
     }
 
-    for (const match of text.match(/\$\w+/g) || []) {
+    // skip `$env:KEY`, which is the PowerShell syntax built by stringifyEnv
+    for (const match of text.match(/\$(?!env:)\w+/g) || []) {
         text = text.replace(match, process.env[match.replace("$", "")] || "");
     }
 
@@ -125,7 +126,7 @@ function stringifyEnv(env: EnvVars): string {
         if (isPowerShell()) {
             envString += `$env:${k}="${envPath}"; `;
         } else if (isUnixShell()) {
-            envString += `${k}=${envPath} `;
+            envString += `${k}="${envPath}" `;
         } else if (isCmdShell()) {
             envString += `set ${k}=${envPath}&&`;
         } else {

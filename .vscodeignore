@@ -1,10 +1,12 @@
 .vscode/**
+.github/**
 .vscode-test/**
+.vscode-test.mjs
+esbuild.js
+eslint.config.mjs
 out/test/**
 
 node_modules/**
-!node_modules/keyv
-!node_modules/json-buffer
 
 out/
 !out/main.js
@@ -19,8 +21,6 @@ tmp/
 .deepsource.toml
 .pre-commit-config.yaml
 
-resources/included_assets.json
-resources/assets
 resources/demo
 
 src/**

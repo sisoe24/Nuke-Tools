@@ -3,7 +3,7 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 
-import { isConnected, sendCommand } from "../socket";
+import { sendCommand } from "../socket";
 
 const setupCodeSnippet = (knobFile: KnobFile) => `
 nuketools_tab = nuke.Tab_Knob('nuketools', 'NukeTools')
@@ -21,12 +21,12 @@ if not node.knob('${knobFile.knob}'):
 
 const syncKnobChangedSnippet = (knobFile: KnobFile) => `
 node = nuke.toNode('${knobFile.node}')
-node.knob('knobChanged').setValue('''${knobFile.content()}''')
+node.knob('knobChanged').setValue(${JSON.stringify(knobFile.content())})
 `;
 
 const syncKnobCodeSnippet = (knobFile: KnobFile) => `
 node = nuke.toNode('${knobFile.node}')
-node.knob('${knobFile.knob}_${knobFile.id}').setValue('''${knobFile.content()}''')
+node.knob('${knobFile.knob}_${knobFile.id}').setValue(${JSON.stringify(knobFile.content())})
 `;
 
 const syncNodeSnippet = (knobFile: KnobFile) => `
@@ -76,7 +76,11 @@ async function sendToNuke(text: string) {
     );
 }
 
-class KnobFile {
+// Nuke names can contain "_" but not "-", so "--" splits a file name without ambiguity.
+const SEPARATOR = "--";
+const LEGACY_SEPARATOR = "_";
+
+export class KnobFile {
     knob: string;
     node: string;
     nodeClass: string;
@@ -93,11 +97,25 @@ class KnobFile {
         this.filename = path.basename(knobFile);
         this.path = knobFile;
 
-        const split = this.filename.split("_");
+        const separator = this.filename.includes(SEPARATOR) ? SEPARATOR : LEGACY_SEPARATOR;
+        const split = this.filename.replace(/\.py$/, "").split(separator);
         this.node = split[0];
         this.nodeClass = split[1];
         this.knob = split[2];
-        this.id = split[3].replace(".py", "");
+        this.id = split[3];
+    }
+
+    /**
+     * Check if a file name starts with the given signature parts, in either file name format.
+     *
+     * @param filename name of the file to check
+     * @param parts the leading parts of the signature: node name, node class, knob name.
+     * @returns true if the file name matches
+     */
+    static matches(filename: string, ...parts: string[]) {
+        return [SEPARATOR, LEGACY_SEPARATOR].some((separator) =>
+            filename.startsWith(parts.join(separator) + separator)
+        );
     }
 
     /**
@@ -110,7 +128,7 @@ class KnobFile {
      * @returns the signature of the knob file
      */
     private static fileSignature(node: string, nodeClass: string, knob: string, id: string) {
-        return `${node}_${nodeClass}_${knob.replace(" ", "_")}_${id}`;
+        return [node, nodeClass, knob.replace(" ", "_"), id].join(SEPARATOR);
     }
 
     /**
@@ -223,6 +241,15 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
                 vscode.window.showErrorMessage(`Failed to sync ${file}: ${result.errorMessage}`);
                 continue;
             }
+
+            // Keep the file as it is: the node can be in a script that is not open right now.
+            if (!result.message || result.message === "False") {
+                vscode.window.showWarningMessage(
+                    `Skipped ${path.basename(file)}: its knob was not found in the current script.`
+                );
+                continue;
+            }
+
             const newName = knobFile.newName(result.message);
 
             try {
@@ -284,10 +311,15 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
 
-            // Get the knob name file parts without the id to check if the knob already exists.
-            const knobFileName = knobFile.filename.split("_").slice(0, 3).join("_");
-
-            if (path.basename(file).startsWith(knobFileName)) {
+            // Compare without the id to check if the knob already exists.
+            if (
+                KnobFile.matches(
+                    path.basename(file),
+                    knobFile.node,
+                    knobFile.nodeClass,
+                    knobFile.knob
+                )
+            ) {
                 vscode.window.showErrorMessage("Knob already exists");
                 return;
             }
@@ -338,7 +370,7 @@ export class NukeNodesInspectorProvider implements vscode.TreeDataProvider<Depen
         osWalk(KNOBS_DIR).forEach((file) => {
             const filename = path.basename(file);
             // label is the node name and description is the node class
-            if (filename.startsWith(`${element.label}_${element.description}`)) {
+            if (KnobFile.matches(filename, element.label, element.description as string)) {
                 items.push(
                     new Dependency(
                         filename,

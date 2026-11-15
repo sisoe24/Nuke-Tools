@@ -1,16 +1,13 @@
+import * as path from "path";
 import * as vscode from "vscode";
 
 import * as stubs from "./stubs";
 import * as nuke from "./nuke";
 import * as socket from "./socket";
-import { Version } from "./version";
 import { showNotification } from "./notification";
-import { initializePackageLog } from "./packages";
-import { fetchPackagesLatestVersion } from "./packages_fetch";
 import { ExecutableConfig, getConfig } from "./config";
 
 import * as execs from "./launch_executable";
-import * as nukeTemplate from "./create_project";
 
 import { BlinkSnippets } from "./blinkscript/blink_snippet";
 import { blinkScriptFormatter } from "./blinkscript/blink_format";
@@ -105,20 +102,12 @@ function showActionPicker(items: Array<Action>) {
 function registerPackagesCommands(context: vscode.ExtensionContext): void {
     const actions: Array<Action> = [
         {
-            label: "Pyside Template",
-            execute: nukeTemplate.createTemplate,
-        },
-        {
             label: "Python Stubs",
             execute: stubs.addStubs,
         },
         {
             label: "Nuke Server Socket",
             execute: nuke.addNukeServerSocket,
-        },
-        {
-            label: "Vim DCC",
-            execute: nuke.addVimDcc,
         },
     ];
 
@@ -131,14 +120,6 @@ function registerPackagesCommands(context: vscode.ExtensionContext): void {
 
 function registerExtraCommands(context: vscode.ExtensionContext): void {
     const actions: Array<Action> = [
-        {
-            label: "Clear Package Cache",
-            execute: () => {
-                initializePackageLog();
-                fetchPackagesLatestVersion();
-                vscode.window.showInformationMessage("Packages cached cleared.");
-            },
-        },
         {
             label: "Send Debug Message",
             execute: socket.sendDebugMessage,
@@ -202,22 +183,31 @@ function registerExecutablesCommands(context: vscode.ExtensionContext): void {
             void execs.launchPromptExecutable();
         })
     );
+}
 
-    // register the exectables to commands so user can add a shortcut
+/**
+ * Register the executables to commands so user can add a shortcut.
+ *
+ * Must run after all the other commands are registered, so a name that clashes
+ * with an existing command is skipped instead of breaking the activation.
+ */
+function registerExecutableShortcuts(context: vscode.ExtensionContext): void {
     for (const [name, config] of Object.entries(getConfig("executablesMap"))) {
-        context.subscriptions.push(
-            vscode.commands.registerCommand(`nuke-tools.${name}`, () => {
-                execs.launchExecutable(name, config);
-            })
-        );
+        try {
+            context.subscriptions.push(
+                vscode.commands.registerCommand(`nuke-tools.${name}`, () => {
+                    execs.launchExecutable(name, config);
+                })
+            );
+        } catch {
+            vscode.window.showWarningMessage(
+                `NukeTools: Executable "${name}" has the same name as a command. Rename it in nukeTools.executablesMap.`
+            );
+        }
     }
 }
 
 export function activate(context: vscode.ExtensionContext): void {
-    Version.update(context);
-
-    fetchPackagesLatestVersion();
-
     showNotification(context);
 
     registerNukeCommands(context);
@@ -251,8 +241,10 @@ export function activate(context: vscode.ExtensionContext): void {
 
             execs.launchExecutable(path.basename(file), {
                 bin: getConfig("executablePath"),
-                args: file,
+                args: `"${file}"`,
             });
         })
     );
+
+    registerExecutableShortcuts(context);
 }

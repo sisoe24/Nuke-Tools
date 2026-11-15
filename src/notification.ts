@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 
 const _msg = `
-0.17.0. Houdini Python Support: NukeTools/NukeServerSocket now works on Houdini!
+0.18.0. Removed the PySide2 template and VimDCC packages. Check the changelog for more details.
 `;
 
 

@@ -49,18 +49,11 @@ function cleanupLegacyNukeServerSocket(): void {
 /**
  * Add nukeserversocket to the .nuke folder and import it inside the menu.py
  */
-export function addNukeServerSocket(): void {
-    cleanupLegacyNukeServerSocket();
-    packages.addPackage(packages.PackageIds.nukeServerSocket);
-    addMenuImport(
-        "from NukeTools.nukeserversocket import nukeserversocket\nnukeserversocket.install_nuke()"
-    );
-}
-
-/**
- * Add vimdcc to the .nuke folder and import it inside the menu.py
- */
-export function addVimDcc(): void {
-    packages.addPackage(packages.PackageIds.vimdcc);
-    addMenuImport("from NukeTools.vimdcc import vimdcc\nvimdcc.install_nuke()");
+export async function addNukeServerSocket(): Promise<void> {
+    if (await packages.addPackage(packages.PackageIds.nukeServerSocket)) {
+        cleanupLegacyNukeServerSocket();
+        addMenuImport(
+            "from NukeTools.nukeserversocket import nukeserversocket\nnukeserversocket.install_nuke()"
+        );
+    }
 }

@@ -31,7 +31,7 @@ export function nukeValidator(document: vscode.TextDocument): DiagnosticResult[]
         }
 
         // Check for set variable declarations
-        const setMatch = line.match(/set\s(\w+)\s\[stack \d\]/);
+        const setMatch = line.match(/set\s(\w+)\s\[stack \d+\]/);
         if (setMatch) {
             const varName = setMatch[1];
             setVariables.set(varName, {
@@ -40,6 +40,10 @@ export function nukeValidator(document: vscode.TextDocument): DiagnosticResult[]
                 end: setMatch.input?.length ?? line.length,
             });
         }
+
+        // Knob values use $ for TCL variables ($gui, $value), so only the stack commands
+        // are required to reference a variable created by `set`.
+        const isStackCommand = /^\s*(?:push|clone)\s/.test(line);
 
         // Check for $variable usage. We expect a line could have multiple variables
         const variableRegex = /\$(\w+)/g;
@@ -53,12 +57,21 @@ export function nukeValidator(document: vscode.TextDocument): DiagnosticResult[]
                 locations = [];
                 usedVariables.set(varName, locations);
             }
-            locations.push({ line: i, column: varIndex });
+            if (isStackCommand) {
+                locations.push({ line: i, column: varIndex });
+            }
         }
 
-        // Track braces
+        // Track braces. Braces that are escaped or inside a quoted value are plain text.
+        let inQuotes = false;
         for (let j = 0; j < line.length; j++) {
-            if (line[j] === "{") {
+            if (line[j] === "\\") {
+                j++;
+            } else if (line[j] === '"') {
+                inQuotes = !inQuotes;
+            } else if (inQuotes) {
+                continue;
+            } else if (line[j] === "{") {
                 braceBalance++;
                 openBraces.push({ line: i, column: j });
             } else if (line[j] === "}") {

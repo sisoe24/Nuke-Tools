@@ -1,7 +1,5 @@
 out
-assets
 .nuketools
-included_assets.json
 
 coverage
 .nyc_output
