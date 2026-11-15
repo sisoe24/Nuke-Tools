@@ -275,4 +275,4 @@ The nodes panel enables interaction with nodes in the current Nuke DAG. It curre
 
 ## 1.13. Contributing
 
-Contributions are welcome! If you have any ideas or suggestions, please open an issue or a pull request. At the moment, the extension tests are broken. I will try to fix them as soon as possible.
+Contributions are welcome! If you have any ideas or suggestions, please open an issue or a pull request. Run the tests with `npm test`.
