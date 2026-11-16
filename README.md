@@ -71,7 +71,7 @@ Some commands require `nukeserversocket` to be installed and running.
 
 ## 1.5. Python stubs
 
-1. Use the command `Nuke: Add Packages` -> `Python Stubs` to add the stubs to your user `python.analysis.extraPaths` setting. The stubs will be located in the `~/.nuke/NukeTools/stubs` directory.
+1. Use the command `Nuke: Add Packages` -> `Python Stubs` and pick a Nuke version. The stubs go to `~/.nuke/NukeTools/stubs/<version>` and are added to `python.analysis.extraPaths` of the open workspace (user settings when no folder is open).
 2. Write `import nuke` into your script and you should see the auto-complete suggestions.
 
 ![PythonStubs](/resources/demo/auto_complete.gif)

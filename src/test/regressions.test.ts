@@ -1,9 +1,11 @@
 import * as assert from "assert";
 import * as net from "net";
+import * as path from "path";
 import * as vscode from "vscode";
 
 import { sendData } from "../socket";
 import { isNewerVersion } from "../packages";
+import { replaceStubsPath, stubsAssets } from "../stubs";
 import { KnobFile } from "../nuke/nodes_tree";
 import { nukeValidator } from "../nuke/nuke_script_diagnostic";
 import { blinkScriptFormatter } from "../blinkscript/blink_format";
@@ -13,6 +15,41 @@ const validate = (text: string) =>
     nukeValidator({ getText: () => text } as vscode.TextDocument).map((d) => d.code);
 
 suite("Regressions", () => {
+    test("stubs assets are read from the versioned zip names", () => {
+        const asset = (name: string) => ({ name, browser_download_url: `https://x/${name}` });
+        const release = {
+            tag_name: "v0.4.0",
+            html_url: "",
+            assets: [
+                asset("nuke-python-stubs-15.2v9.zip"),
+                asset("nuke-python-stubs-15.2v10.zip"),
+                asset("nuke-python-stubs-17.1v2.zip"),
+                asset("nuke-python-stubs.zip"),
+                asset("nuke-python-stubs-...zip"),
+                asset("nuke-python-stubs-15.2v9.tar.gz"),
+            ],
+        };
+        assert.deepStrictEqual(stubsAssets(release), [
+            { version: "17.1v2", url: "https://x/nuke-python-stubs-17.1v2.zip" },
+            { version: "15.2v10", url: "https://x/nuke-python-stubs-15.2v10.zip" },
+            { version: "15.2v9", url: "https://x/nuke-python-stubs-15.2v9.zip" },
+        ]);
+    });
+
+    test("only one stubs version stays in extraPaths", () => {
+        const root = path.join(path.sep, "home", ".nuke", "NukeTools", "stubs");
+        const other = path.join(path.sep, "libs");
+        const paths = [path.join(root, "15.2v9"), other, root, path.join(root, "17.1v2")];
+        assert.deepStrictEqual(replaceStubsPath(paths, root, path.join(root, "17.1v2")), [
+            other,
+            path.join(root, "17.1v2"),
+        ]);
+        assert.deepStrictEqual(replaceStubsPath([`${root}-old`], root, root + "/x"), [
+            `${root}-old`,
+            root + "/x",
+        ]);
+    });
+
     test("version compare is numeric, not lexical", () => {
         assert.ok(isNewerVersion("0.18.0", "0.9.0"));
         assert.ok(isNewerVersion("v1.10.0", "1.4.2"));
