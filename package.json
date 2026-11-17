@@ -67,9 +67,15 @@
             },
             {
                 "category": "Nuke",
-                "command": "nuke-tools.addPackages",
-                "shortTitle": "Add Packages",
-                "title": "Add Packages"
+                "command": "nuke-tools.addPythonStubs",
+                "shortTitle": "Add Python Stubs",
+                "title": "Add Python Stubs"
+            },
+            {
+                "category": "Nuke",
+                "command": "nuke-tools.addNukeServerSocket",
+                "shortTitle": "Add NukeServerSocket",
+                "title": "Add NukeServerSocket"
             },
             {
                 "category": "Nuke",
@@ -110,7 +116,7 @@
                     },
                     "nukeTools.packages.checkNukeServerSocketUpdates": {
                         "default": true,
-                        "markdownDescription": "Check GitHub once a day for a new nukeserversocket release and offer to update it. Only applies to a nukeserversocket installed with the `Add Packages` command.",
+                        "markdownDescription": "Check GitHub once a day for a new nukeserversocket release and offer to update it. Only applies to a nukeserversocket installed with the `Add NukeServerSocket` command.",
                         "type": "boolean"
                     },
                     "nukeTools.network.manualConnection": {

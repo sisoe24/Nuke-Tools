@@ -4,6 +4,7 @@
 
 ### Changed
 
+- `Nuke: Add Packages` is replaced by two commands: `Nuke: Add Python Stubs` and `Nuke: Add NukeServerSocket`. Keybindings to `nuke-tools.addPackages` must be updated.
 - `Add Python Stubs` now asks for the Nuke version. The stubs go to `~/.nuke/NukeTools/stubs/<version>` and other versions stay on disk.
 - The stubs path goes to the workspace `extraPaths` when a folder is open, else to the user settings. Other stubs paths in that setting are removed, so only one version is active.
 
