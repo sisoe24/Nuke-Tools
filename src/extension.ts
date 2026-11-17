@@ -100,21 +100,9 @@ function showActionPicker(items: Array<Action>) {
 }
 
 function registerPackagesCommands(context: vscode.ExtensionContext): void {
-    const actions: Array<Action> = [
-        {
-            label: "Python Stubs",
-            execute: stubs.addStubs,
-        },
-        {
-            label: "Nuke Server Socket",
-            execute: nuke.addNukeServerSocket,
-        },
-    ];
-
     context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.addPackages", () => {
-            showActionPicker(actions);
-        })
+        vscode.commands.registerCommand("nuke-tools.addPythonStubs", stubs.addStubs),
+        vscode.commands.registerCommand("nuke-tools.addNukeServerSocket", nuke.addNukeServerSocket)
     );
 }
 
@@ -175,12 +163,6 @@ function registerExecutablesCommands(context: vscode.ExtensionContext): void {
     context.subscriptions.push(
         vscode.commands.registerCommand("nuke-tools.launchNuke", () => {
             execs.launchPrimaryExecutable();
-        })
-    );
-
-    context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.launchNukeOptArgs", () => {
-            void execs.launchPromptExecutable();
         })
     );
 }

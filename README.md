@@ -59,7 +59,7 @@ Some commands require `nukeserversocket` to be installed and running.
 
 ## 1.3. Execute code
 
-1. Download and install the companion plugin `nukeserversocket` via the command: `Nuke: Add Packages` -> `Nuke Server Socket`.
+1. Download and install the companion plugin `nukeserversocket` via the command: `Nuke: Add NukeServerSocket`.
 2. Connect `nukeserversocket` inside Nuke/Houdini.
 3. With an active Python/BlinkScript file, use the command `Nuke: Run Inside Nuke` from the Command Palette or use the dedicated button in the editor's top right corner (see Key Bindings for Visual Studio Code for more information).
 
@@ -71,7 +71,7 @@ Some commands require `nukeserversocket` to be installed and running.
 
 ## 1.5. Python stubs
 
-1. Use the command `Nuke: Add Packages` -> `Python Stubs` to add the stubs to your user `python.analysis.extraPaths` setting. The stubs will be located in the `~/.nuke/NukeTools/stubs` directory.
+1. Use the command `Nuke: Add Python Stubs` and pick a Nuke version. The stubs go to `~/.nuke/NukeTools/stubs/<version>` and are added to `python.analysis.extraPaths` of the open workspace (user settings when no folder is open).
 2. Write `import nuke` into your script and you should see the auto-complete suggestions.
 
 ![PythonStubs](/resources/demo/auto_complete.gif)
@@ -109,15 +109,15 @@ Create/update BlinkScript nodes by running code with `.cpp` or `.blink` extensio
 | ------------------------------------- | ------------------------------ | ----------------------------------------------- |
 | `Nuke: Run Inside Nuke`               | `nuke-tools.runCodeInsideNuke` | Execute code inside Nuke                        |
 | `Nuke: Launch main executable`        | `nuke-tools.launchNuke`        | Launch main executable                          |
-| `Nuke: Launch executable with prompt` | `nuke-tools.launchNukeOptArgs` | Launch executable with prompt for optional args |
-| `Nuke: Add Packages`                  | `nuke-tools.addPackages`       | Add packages to `.nuke/NukeTools` dir           |
+| `Nuke: Add Python Stubs`              | `nuke-tools.addPythonStubs`    | Add the Python stubs of a Nuke version          |
+| `Nuke: Add NukeServerSocket`          | `nuke-tools.addNukeServerSocket` | Add `nukeserversocket` to `.nuke/NukeTools` dir |
 | `Nuke: Extras`                        | `nuke-tools.extras`            | Show extra commands                             |
 | `Nuke: Show Executables`              | `nuke-tools.showExecutables`   | Show available executables                      |
 | `Nuke: Open Nuke Script`              | `nuke-tools.openNukeScript`    | Open the current script in Nuke                 |
 
 NOTES:
 
-- Running `Nuke: Add Package` will add the corresponding plugin to `$HOME/.nuke/NukeTools` and generate an import statement in the menu.py file. If menu.py doesn't exist, it will be created.
+- Running `Nuke: Add NukeServerSocket` will add the plugin to `$HOME/.nuke/NukeTools` and generate an import statement in the menu.py file. If menu.py doesn't exist, it will be created.
 - By default, the extension does not provide any shortcut. But you can assign each command to one. (see [Key Bindings for Visual Studio Code](https://code.visualstudio.com/docs/getstarted/keybindings) for more information).
 
     Example `keybindings.json` :

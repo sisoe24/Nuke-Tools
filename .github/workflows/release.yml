@@ -27,6 +27,11 @@ jobs:
             echo "Tag $GITHUB_REF_NAME does not match package.json version $version"
             exit 1
           fi
+          # the GitHub release notes come from this section, so check it before publishing
+          if ! grep -q "^## \[$version\]" CHANGELOG.md; then
+            echo "CHANGELOG.md has no section for $version"
+            exit 1
+          fi
       - run: npx vsce package --out extension.vsix
       - uses: actions/upload-artifact@v4
         with:
@@ -54,3 +59,31 @@ jobs:
         run: npx vsce publish --oidc --packagePath extension.vsix --skip-duplicate
       - name: Publish to Open VSX
         run: npx ovsx publish extension.vsix --trusted-publishing --skip-duplicate
+
+  github-release:
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create GitHub release from the CHANGELOG section
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          previous="$(git describe --tags --abbrev=0 "$GITHUB_REF_NAME^")"
+          {
+            awk -v v="$version" '
+              index($0, "## [" v "]") == 1 { found = 1; next }
+              found && /^## \[/ { exit }
+              # keep blank lines only between text, to trim the section ends
+              found && !NF { if (printed) blank++; next }
+              found { for (; blank; blank--) print ""; print; printed = 1 }
+            ' CHANGELOG.md
+            echo
+            echo "**Full Changelog**: https://github.com/$GITHUB_REPOSITORY/compare/$previous...$GITHUB_REF_NAME"
+          } > notes.md
+          gh release create "$GITHUB_REF_NAME" --verify-tag --title "$GITHUB_REF_NAME" --notes-file notes.md

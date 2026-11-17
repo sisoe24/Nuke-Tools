@@ -53,7 +53,7 @@ async function extractPackage(source: string, destination: string): Promise<void
     fs.renameSync(destination + "-master", destination);
 }
 
-type Release = {
+export type Release = {
     tag_name: string;
     html_url: string;
     assets: { name: string; browser_download_url: string }[];
@@ -90,29 +90,28 @@ export function isNewerVersion(a: string, b: string): boolean {
 }
 
 /**
- * Download the zip asset of the latest GitHub release of a package.
- *
- * @param name the package name. It is also the name of the repository and of the zip asset.
- * @param destination the path of the zip file to write.
+ * Download a zip from `url` and extract it into `destination`, replacing any previous content.
  */
-async function downloadLatestRelease(name: string, destination: string): Promise<void> {
-    const release = await fetchLatestRelease(name);
-    const asset = release.assets.find((asset) => asset.name === `${name}.zip`);
-    if (!asset) {
-        throw new Error(`${name}.zip not found in the latest release`);
-    }
+export async function installZip(url: string, destination: string): Promise<void> {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "nuke-tools-"));
+    const archive = path.join(tmpDir, "package.zip");
 
-    const download = await fetch(asset.browser_download_url);
-    if (!download.ok) {
-        throw new Error(`Download responded ${download.status}`);
+    try {
+        const download = await fetch(url);
+        if (!download.ok) {
+            throw new Error(`Download responded ${download.status}`);
+        }
+        fs.writeFileSync(archive, Buffer.from(await download.arrayBuffer()));
+        await extractPackage(archive, destination);
+    } finally {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
     }
-    fs.writeFileSync(destination, Buffer.from(await download.arrayBuffer()));
 }
 
 /**
  * Add a package to the .nuke/NukeTools folder.
  *
- * The latest release of the package is downloaded from GitHub and extracted
+ * The `<name>.zip` asset of the latest GitHub release is downloaded and extracted
  * into the package destination, replacing any previous version.
  *
  * @param packageId the package to add
@@ -125,19 +124,18 @@ export async function addPackage(packageId: PackageIds): Promise<PackageType | n
         throw new Error(`Package ${packageId} not found`);
     }
 
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "nuke-tools-"));
-    const archive = path.join(tmpDir, `${pkg.name}.zip`);
-
     try {
-        await downloadLatestRelease(pkg.name, archive);
-        await extractPackage(archive, pkg.destination);
+        const release = await fetchLatestRelease(pkg.name);
+        const asset = release.assets.find((asset) => asset.name === `${pkg.name}.zip`);
+        if (!asset) {
+            throw new Error(`${pkg.name}.zip not found in the latest release`);
+        }
+        await installZip(asset.browser_download_url, pkg.destination);
     } catch (err) {
         vscode.window.showWarningMessage(
             `NukeTools: Failed to add package ${pkg.name}: ${(err as Error).message}`
         );
         return null;
-    } finally {
-        fs.rmSync(tmpDir, { recursive: true, force: true });
     }
 
     vscode.window.showInformationMessage(`NukeTools: Package added: ${pkg.name}`);

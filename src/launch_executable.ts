@@ -188,28 +188,6 @@ export function launchPrimaryExecutable(): ExecutablePath {
     return execObj;
 }
 
-/**
- * Launch main executable with prompt for optional arguments.
- *
- * @returns - the executable path object created.
- */
-export async function launchPromptExecutable(): Promise<ExecutablePath> {
-    const execObj = new ExecutablePath("Main Prompt", getConfig("executablePath"));
-
-    if (execObj.exists()) {
-        const optArgs = await vscode.window.showInputBox({
-            ignoreFocusOut: true,
-            placeHolder: "Optional arguments for current instance",
-        });
-
-        if (optArgs) {
-            execObj.args = optArgs;
-        }
-        execCommand(execObj);
-    }
-    return execObj;
-}
-
 export function launchExecutable(name: string, executableConfig: ExecutableConfig): void {
     const execObj = new ExecutablePath(
         name,
