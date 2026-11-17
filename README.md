@@ -109,7 +109,6 @@ Create/update BlinkScript nodes by running code with `.cpp` or `.blink` extensio
 | ------------------------------------- | ------------------------------ | ----------------------------------------------- |
 | `Nuke: Run Inside Nuke`               | `nuke-tools.runCodeInsideNuke` | Execute code inside Nuke                        |
 | `Nuke: Launch main executable`        | `nuke-tools.launchNuke`        | Launch main executable                          |
-| `Nuke: Launch executable with prompt` | `nuke-tools.launchNukeOptArgs` | Launch executable with prompt for optional args |
 | `Nuke: Add Python Stubs`              | `nuke-tools.addPythonStubs`    | Add the Python stubs of a Nuke version          |
 | `Nuke: Add NukeServerSocket`          | `nuke-tools.addNukeServerSocket` | Add `nukeserversocket` to `.nuke/NukeTools` dir |
 | `Nuke: Extras`                        | `nuke-tools.extras`            | Show extra commands                             |

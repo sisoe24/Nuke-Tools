@@ -165,12 +165,6 @@ function registerExecutablesCommands(context: vscode.ExtensionContext): void {
             execs.launchPrimaryExecutable();
         })
     );
-
-    context.subscriptions.push(
-        vscode.commands.registerCommand("nuke-tools.launchNukeOptArgs", () => {
-            void execs.launchPromptExecutable();
-        })
-    );
 }
 
 /**

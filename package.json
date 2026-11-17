@@ -61,12 +61,6 @@
             },
             {
                 "category": "Nuke",
-                "command": "nuke-tools.launchNukeOptArgs",
-                "shortTitle": "Launch Nuke",
-                "title": "Launch main executable with prompt"
-            },
-            {
-                "category": "Nuke",
                 "command": "nuke-tools.addPythonStubs",
                 "shortTitle": "Add Python Stubs",
                 "title": "Add Python Stubs"
