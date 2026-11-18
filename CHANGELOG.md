@@ -5,6 +5,7 @@
 ### Changed
 
 - The README and the extension description mention the experimental MCP server in `nukeserversocket >= 1.5.0`, which lets AI agents run Python in Nuke.
+- After the update, a notification tells users about the MCP server.
 
 ## [0.20.0] - 2026-11-16
 
