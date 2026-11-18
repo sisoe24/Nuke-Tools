@@ -41,6 +41,7 @@ VS Code extension for running Nuke/Houdini Python code directly from your editor
 ## 1.1. Features
 
 - NEW: Houdini Python support.
+- NEW, experimental: `nukeserversocket >= 1.5.0` includes an MCP server, so AI agents such as Claude Code, Codex and Gemini CLI can run Python in Nuke. `Nuke: Add NukeServerSocket` installs it at `~/.nuke/NukeTools/nukeserversocket/nss_mcp/server.py`. See the [nukeserversocket MCP setup](https://github.com/sisoe24/nukeserversocket#mcp-server).
 - Execute code and view output in Visual Studio Code. Simply connect `nukeserversocket` - no config needed on the same machine.
 - Nuke/Hiero Python stubs for auto-complete suggestions.
 - BlinkScript support.
@@ -241,7 +242,7 @@ From NukeTools 0.15.0, the extension supports environment variables in PowerShel
 
 The extension includes the following packages:
 
-- [nukeserversocket](https://github.com/sisoe24/nukeserversocket) - A Python plugin for Nuke that allows you to execute code from an external source.
+- [nukeserversocket](https://github.com/sisoe24/nukeserversocket) - A Python plugin for Nuke that allows you to execute code from an external source. It also includes an experimental MCP server for AI agents.
 - [nuke-python-stubs](https://github.com/sisoe24/nuke-python-stubs) - Python stubs for Nuke and Hiero.
 
 > Adding a package downloads its latest release from GitHub.

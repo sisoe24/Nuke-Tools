@@ -2,7 +2,7 @@
     "name": "nuke-tools",
     "displayName": "Nuke Tools",
     "publisher": "virgilsisoe",
-    "description": "A set of tools related to Nuke that simplify the process of writing code for it.",
+    "description": "Run Python and BlinkScript in Nuke and Houdini from VS Code. Includes Nuke Python stubs, BlinkScript tools, and an MCP server for AI agents (via nukeserversocket).",
     "version": "0.20.0",
     "repository": {
         "type": "git",
@@ -314,7 +314,12 @@
         "blink",
         "stubs",
         "gizmo",
-        "pyside"
+        "pyside",
+        "houdini",
+        "mcp",
+        "ai",
+        "agent",
+        "claude"
     ],
     "license": "MIT",
     "main": "./out/main.js",
