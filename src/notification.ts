@@ -3,7 +3,7 @@ import * as vscode from "vscode";
 import { isNewerVersion } from "./packages";
 
 const _msg = `
-0.18.0. Removed the PySide2 template and VimDCC packages. Check the changelog for more details.
+0.20.1. nukeserversocket 1.5.0 adds an experimental MCP server, so AI agents such as Claude Code, Codex and Gemini CLI can run Python in Nuke. Run "Nuke: Add NukeServerSocket" to update it. See the nukeserversocket README for the setup.
 `;
 
 
